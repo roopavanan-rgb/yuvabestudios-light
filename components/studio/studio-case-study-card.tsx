@@ -48,6 +48,7 @@ type StudioCaseStudyCardProps = VariantProps<typeof caseStudyCardVariants> & {
   summary: string;
   services: string[];
   href?: string;
+  onOpenDetails?: () => void;
   media: ReactNode;
   className?: string;
   mediaClassName?: string;
@@ -60,6 +61,7 @@ export function StudioCaseStudyCard({
   summary,
   services,
   href,
+  onOpenDetails,
   media,
   size,
   className,
@@ -72,6 +74,12 @@ export function StudioCaseStudyCard({
   const glowY = useMotionValue(220);
   const borderOpacity = useMotionValue(0);
   const borderGlow = useMotionTemplate`radial-gradient(300px circle at ${glowX}px ${glowY}px, rgba(255,202,45,0.18), rgba(249,169,31,0.06) 10%, rgba(104,56,255,0.98) 24%, rgba(88,41,199,0.94) 46%, rgba(120,86,223,0.72) 64%, rgba(150,136,192,0.24) 80%, rgba(88,41,199,0.04) 92%, rgba(88,41,199,0) 100%)`;
+  const canOpenDetails = Boolean(onOpenDetails);
+
+  // The shared opener keeps card clicks and the icon action aligned around the same detail-dialog behavior.
+  function handleOpenDetails() {
+    onOpenDetails?.();
+  }
 
   // The cursor-tracked border glow keeps the effect anchored to the frame edge instead of flooding the card body.
   function handlePointerMove(event: PointerEvent<HTMLDivElement>) {
@@ -92,8 +100,22 @@ export function StudioCaseStudyCard({
   return (
     <motion.div
       ref={cardRef}
-      className={cn("h-full", href ? "cursor-pointer" : undefined)}
+      className={cn("h-full", href || canOpenDetails ? "cursor-pointer" : undefined)}
       onPointerMove={handlePointerMove}
+      onClick={canOpenDetails && !href ? handleOpenDetails : undefined}
+      onKeyDown={
+        canOpenDetails && !href
+          ? (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleOpenDetails();
+              }
+            }
+          : undefined
+      }
+      role={canOpenDetails && !href ? "button" : undefined}
+      tabIndex={canOpenDetails && !href ? 0 : undefined}
+      aria-label={canOpenDetails && !href ? `Open ${title} case study details` : undefined}
       onHoverStart={() => {
         if (!shouldReduceMotion) {
           borderOpacity.set(1);
@@ -151,6 +173,22 @@ export function StudioCaseStudyCard({
                   <Link href={href} aria-label={`Open ${title} case study`}>
                     <Maximize2 className="size-4" />
                   </Link>
+                </Button>
+              </div>
+            ) : canOpenDetails ? (
+              <div className="shrink-0 self-start rounded-[1rem] border border-[rgba(209,213,219,0.9)] bg-[rgba(255,255,255,0.96)] text-[rgb(75,85,99)] shadow-[0_8px_20px_rgba(11,15,25,0.06)]">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    handleOpenDetails();
+                  }}
+                  className="size-12 rounded-[1rem] border-0 bg-transparent text-current shadow-none hover:bg-transparent cursor-pointer sm:size-14"
+                  aria-label={`Open ${title} case study details`}
+                >
+                  <Maximize2 className="size-4" />
                 </Button>
               </div>
             ) : null}
