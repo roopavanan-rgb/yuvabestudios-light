@@ -1,5 +1,6 @@
 import { Bot, LayoutGrid, Sparkles } from "lucide-react";
 
+import { BillingSurfacePreview } from "@/app/design-system/components/billing-surface-preview";
 import { StudioCaseStudyCard } from "@/components/studio/studio-case-study-card";
 import { PremiumSurface } from "@/components/ui/premium-surface";
 
@@ -48,6 +49,9 @@ export default function ComponentsPage() {
             </span>
           </PremiumSurface>
         </section>
+
+        {/* This specimen captures the brighter aurora-style product backdrop as a reusable premium surface. */}
+        <BillingSurfacePreview />
 
         {/* The preview grid shows the feature and standard sizes together so their rhythm can be reviewed side by side. */}
         <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
