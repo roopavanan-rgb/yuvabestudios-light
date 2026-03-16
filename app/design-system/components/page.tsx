@@ -2,6 +2,7 @@ import { Bot, LayoutGrid, Sparkles } from "lucide-react";
 
 import { BillingSurfacePreview } from "@/app/design-system/components/billing-surface-preview";
 import { StudioCaseStudyCard } from "@/components/studio/studio-case-study-card";
+import { Badge } from "@/components/ui/badge";
 import { PremiumSurface } from "@/components/ui/premium-surface";
 
 // This preview route documents the light case-study card and premium surface shells as part of the shared component system.
@@ -48,6 +49,69 @@ export default function ComponentsPage() {
               AI-first product studio for startups
             </span>
           </PremiumSurface>
+        </section>
+
+        {/* The frosted-glass preview documents the reusable pill and compact-panel family before it spreads to live sections. */}
+        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+          <PremiumSurface
+            tone="glassPanelSubtle"
+            elevation="sm"
+            blur="lg"
+            radius="xl"
+            className="space-y-5 p-6"
+          >
+            <div className="space-y-2">
+              <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">Premium / Frosted glass</p>
+              <h2 className="text-heading-md text-foreground">Reusable pill and micro-panel family</h2>
+              <p className="text-body-md text-muted-foreground">
+                A lighter adaptation of the frosted-glass reference for service badges, compact filters, and quiet floating controls.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-3">
+              <Badge variant="service">Positioning</Badge>
+              <Badge variant="service">Branding</Badge>
+              <Badge variant="service">Content system</Badge>
+            </div>
+          </PremiumSurface>
+
+          <div className="grid gap-4">
+            <PremiumSurface
+              tone="glassPillSubtle"
+              elevation="sm"
+              blur="md"
+              radius="full"
+              className="inline-flex items-center justify-center px-4 py-2 text-label-md"
+            >
+              Glass pill subtle
+            </PremiumSurface>
+
+            <PremiumSurface
+              tone="glassPillStrong"
+              elevation="sm"
+              blur="md"
+              radius="full"
+              className="inline-flex items-center justify-center px-4 py-2 text-label-md"
+            >
+              Glass pill strong
+            </PremiumSurface>
+
+            <PremiumSurface
+              tone="glassPanelSubtle"
+              elevation="sm"
+              blur="lg"
+              radius="lg"
+              className="flex items-center justify-between gap-4 p-4"
+            >
+              <div className="space-y-1">
+                <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">Compact panel</p>
+                <p className="text-body-sm text-foreground">Use for quiet floating chrome and micro-controls.</p>
+              </div>
+              <span className="flex size-9 items-center justify-center rounded-full bg-white/40 text-[var(--purple-500)]">
+                <Sparkles className="size-4" />
+              </span>
+            </PremiumSurface>
+          </div>
         </section>
 
         {/* This specimen captures the brighter aurora-style product backdrop as a reusable premium surface. */}

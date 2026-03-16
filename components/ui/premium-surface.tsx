@@ -10,6 +10,12 @@ const premiumSurfaceVariants = cva("relative border text-foreground transition-[
       glass:
         "border-white/50 bg-[linear-gradient(180deg,rgba(255,255,255,0.64),rgba(255,255,255,0.38))]",
       glassSubtle: "border-white/50 bg-white/45",
+      glassPillSubtle:
+        "isolate overflow-hidden border-[var(--color-border-glass-pill-subtle)] ds-glass-pill-subtle text-[var(--color-text-glass-pill)] before:pointer-events-none before:absolute before:inset-x-[16%] before:top-[10%] before:h-[44%] before:rounded-full before:bg-[radial-gradient(circle,rgba(255,255,255,0.28)_0%,rgba(255,255,255,0.1)_54%,transparent_84%)] before:blur-md after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_1px_0_var(--color-highlight-glass-pill-subtle)]",
+      glassPillStrong:
+        "isolate overflow-hidden border-[var(--color-border-glass-pill-strong)] ds-glass-pill-strong text-[var(--color-text-glass-pill)] before:pointer-events-none before:absolute before:inset-x-[14%] before:top-[9%] before:h-[46%] before:rounded-full before:bg-[radial-gradient(circle,rgba(255,255,255,0.34)_0%,rgba(255,255,255,0.12)_52%,transparent_82%)] before:blur-md after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_1px_0_var(--color-highlight-glass-pill-strong)]",
+      glassPanelSubtle:
+        "isolate overflow-hidden border-[var(--color-border-glass-panel-subtle)] ds-glass-panel-subtle text-[var(--color-text-glass-panel)] before:pointer-events-none before:absolute before:inset-x-[10%] before:top-[8%] before:h-[38%] before:rounded-[999px] before:bg-[radial-gradient(circle,rgba(255,255,255,0.58)_0%,rgba(255,255,255,0.18)_44%,transparent_80%)] before:blur-lg after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:shadow-[inset_0_1px_0_var(--color-highlight-glass-panel-subtle)]",
       billing:
         "isolate overflow-hidden border-[var(--color-border-premium-aurora)] ds-surface-billing-aurora [&>*]:relative [&>*]:z-10 before:pointer-events-none before:absolute before:inset-x-[10%] before:top-[7%] before:h-[34%] before:rounded-[999px] before:bg-[radial-gradient(circle,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.6)_40%,transparent_74%)] before:blur-2xl after:pointer-events-none after:absolute after:inset-x-[6%] after:bottom-[-18%] after:h-[48%] after:rounded-[999px] after:bg-[radial-gradient(circle,rgba(255,255,255,0.46)_0%,rgba(255,255,255,0.14)_36%,transparent_76%)] after:blur-3xl",
       billingSunrise:

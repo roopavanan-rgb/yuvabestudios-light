@@ -52,7 +52,19 @@
   --color-background-brand: var(--purple-500);
   --color-background-brand-subtle: var(--lavender-200);
   --color-background-warm: var(--yellow-500);
+  --gradient-glass-pill-subtle:
+    linear-gradient(180deg, rgb(107 114 128 / 0.54) 0%, rgb(75 85 99 / 0.42) 100%);
+  --gradient-glass-pill-strong:
+    linear-gradient(180deg, rgb(75 85 99 / 0.68) 0%, rgb(55 65 81 / 0.56) 100%);
+  --gradient-glass-panel-subtle:
+    linear-gradient(180deg, rgb(255 255 255 / 0.56) 0%, rgb(241 242 244 / 0.34) 100%);
   --color-border-premium-aurora: color-mix(in srgb, var(--lavender-200) 62%, white);
+  --color-border-glass-pill-subtle: rgb(255 255 255 / 0.44);
+  --color-border-glass-pill-strong: rgb(255 255 255 / 0.58);
+  --color-border-glass-panel-subtle: rgb(255 255 255 / 0.62);
+  --color-highlight-glass-pill-subtle: rgb(255 255 255 / 0.24);
+  --color-highlight-glass-pill-strong: rgb(255 255 255 / 0.3);
+  --color-highlight-glass-panel-subtle: rgb(255 255 255 / 0.34);
   --gradient-premium-billing-aurora:
     radial-gradient(122% 78% at 50% 16%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.97) 26%, rgba(255, 255, 255, 0.84) 42%, rgba(255, 255, 255, 0.12) 62%, rgba(255, 255, 255, 0) 100%),
     radial-gradient(84% 62% at 12% 78%, color-mix(in srgb, var(--yellow-500) 82%, white) 0%, color-mix(in srgb, var(--orange-500) 66%, white) 24%, rgba(249, 169, 31, 0.3) 48%, rgba(249, 169, 31, 0) 72%),
@@ -75,6 +87,8 @@
   --color-border-strong: var(--neutral-300);
   --color-border-brand: var(--purple-500);
   --color-border-focus: var(--purple-500);
+  --color-text-glass-pill: var(--neutral-0);
+  --color-text-glass-panel: color-mix(in srgb, var(--neutral-800) 88%, white);
 
   /* Semantic action tokens keep buttons and inputs ready for later reuse. */
   --color-action-primary-bg: var(--purple-500);
@@ -197,6 +211,27 @@ body {
 /* This shared utility offers a cooler, slightly more technical spectrum blend. */
 .ds-surface-billing-prism {
   background-image: var(--gradient-premium-billing-prism);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* This shared utility provides the default frosted pill fill for badges and chips. */
+.ds-glass-pill-subtle {
+  background-image: var(--gradient-glass-pill-subtle);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* This stronger glass utility increases contrast for pills that need more separation. */
+.ds-glass-pill-strong {
+  background-image: var(--gradient-glass-pill-strong);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* This shared utility gives compact controls and small panels a lighter frosted shell. */
+.ds-glass-panel-subtle {
+  background-image: var(--gradient-glass-panel-subtle);
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }
