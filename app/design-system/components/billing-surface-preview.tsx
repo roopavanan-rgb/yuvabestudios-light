@@ -1,4 +1,4 @@
-﻿import { StudioCaseStudyMockCard } from "@/components/studio/studio-case-study-mock-card";
+import { StudioCaseStudyMockCard } from "@/components/studio/studio-case-study-mock-card";
 
 const caseStudyPreviewCards = [
   {
@@ -8,6 +8,7 @@ const caseStudyPreviewCards = [
     services: ["Positioning", "UX/UI", "Brand system"],
     imageSrc: "/assets/GA_cover.png",
     imageAlt: "General Aeronautics mobile product mock",
+    mockViewport: "portrait" as const,
     variant: "aurora" as const,
   },
   {
@@ -17,6 +18,7 @@ const caseStudyPreviewCards = [
     services: ["AI integration", "ML", "ESG reporting"],
     imageSrc: "/assets/Bevolve_cover.png",
     imageAlt: "Bevolve.ai product experience mock",
+    mockViewport: "landscape" as const,
     variant: "sunrise" as const,
   },
   {
@@ -26,6 +28,7 @@ const caseStudyPreviewCards = [
     services: ["Product UX", "Interface direction", "Campaign assets"],
     imageSrc: "/assets/GA_bg.png",
     imageAlt: "General Aeronautics interface and proof layer mock",
+    mockViewport: "landscape" as const,
     variant: "prism" as const,
   },
 ];
@@ -45,6 +48,7 @@ function PreviewBloomCard(props: (typeof caseStudyPreviewCards)[number]) {
         services={props.services}
         imageSrc={props.imageSrc}
         imageAlt={props.imageAlt}
+        mockViewport={props.mockViewport}
         variant={props.variant}
       />
     </div>

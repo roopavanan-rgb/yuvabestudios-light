@@ -1,4 +1,4 @@
-﻿import {
+import {
   BarChart3,
   Bot,
   LayoutGrid,
@@ -8,7 +8,7 @@
 } from "lucide-react";
 import type { ReactNode } from "react";
 
-import type { StudioCaseStudyMockCardLayout, StudioCaseStudyMockVariant } from "@/components/studio/studio-case-study-mock-card";
+import type { StudioCaseStudyMockCardLayout, StudioCaseStudyMockVariant, StudioCaseStudyMockViewport } from "@/components/studio/studio-case-study-mock-card";
 
 export type StudioCaseStudyId = "general-aeronautics" | "bevolve" | "tvam" | "kittykat" | "ageshift" | "general-aeronautics-ops";
 
@@ -51,6 +51,7 @@ export type StudioCaseStudySummary = {
   mockImageAlt?: string;
   mockVariant?: StudioCaseStudyMockVariant;
   mockLayout?: StudioCaseStudyMockCardLayout;
+  mockViewport?: StudioCaseStudyMockViewport;
   mockImageClassName?: string;
   size?: "default" | "feature";
   modalIntro?: string;
@@ -75,6 +76,7 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
     services: ["Positioning", "UX/UI", "Brand system"],
     mockImageSrc: "/assets/GA_cover.png",
     mockImageAlt: "General Aeronautics mobile product mock",
+    mockViewport: "portrait",
     mockVariant: "aurora",
     modalIntro:
       "General Aeronautics builds drone systems across agriculture, defense, humanitarian response, and warehouse automation. As the business expanded, its digital presence needed to explain that breadth with more clarity, confidence, and usability.",
@@ -149,7 +151,7 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
     ],
     modalTestimonial: {
       quote:
-        "The engagement turned a technically strong business into a much clearer market story. Product, brand, and communication started working together instead of asking buyers to piece it together on their own.",
+        "The work made a technically complex drone business easier to understand and easier to trust. Website, product UX, and supporting assets finally reinforced the same story instead of fragmenting it.",
       attribution: "General Aeronautics engagement",
       ctaLabel: "See more work",
       ctaHref: "#work",
@@ -166,6 +168,7 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
     services: ["AI integration", "ML", "ESG reporting"],
     mockImageSrc: "/assets/Bevolve_cover.png",
     mockImageAlt: "Bevolve.ai product experience mock",
+    mockViewport: "landscape",
     mockVariant: "sunrise",
     modalIntro:
       "Bevolve.ai needed a product experience that could bring together fragmented ESG and sustainability data, automate reporting workflows, and make decision support easier for teams navigating compliance pressure.",
@@ -240,7 +243,7 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
     ],
     modalTestimonial: {
       quote:
-        "The platform became easier to trust because the reporting flow, AI guidance, and decision support finally felt like one system. That clarity made complex ESG work faster to navigate and easier to act on.",
+        "The strongest shift was not just automation, but coherence. Reporting, benchmarking, and AI-guided analysis started feeling like one usable system, which made complex ESG work easier to navigate and easier to act on.",
       attribution: "Bevolve.ai engagement",
       ctaLabel: "See more work",
       ctaHref: "#work",

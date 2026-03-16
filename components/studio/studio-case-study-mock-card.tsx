@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRef, type PointerEvent } from "react";
 import Image from "next/image";
@@ -12,6 +12,7 @@ const easeOut = [0.22, 1, 0.36, 1] as const;
 
 export type StudioCaseStudyMockVariant = "aurora" | "sunrise" | "prism";
 export type StudioCaseStudyMockCardLayout = "feature" | "compact" | "wide";
+export type StudioCaseStudyMockViewport = "portrait" | "landscape";
 
 const mockCardVariantStyles: Record<
   StudioCaseStudyMockVariant,
@@ -32,7 +33,7 @@ const mockCardVariantStyles: Record<
   sunrise: {
     iconAccentClassName: "bg-[rgba(255,248,234,0.92)] text-[color:color-mix(in_srgb,var(--orange-500)_72%,var(--purple-500))]",
     mockFrameClassName:
-      "w-fit max-w-full rounded-[2.2rem] border border-white/72 bg-[rgba(255,255,255,0.62)] p-3 shadow-[0_30px_86px_rgba(240,78,40,0.18)] backdrop-blur-sm rotate-[-4deg] origin-bottom",
+      "w-fit max-w-full rounded-[2.2rem] border border-white/72 bg-[rgba(255,255,255,0.62)] p-3 shadow-[0_30px_86px_rgba(240,78,40,0.18)] backdrop-blur-sm",
     mockImageClassName: "rounded-[1.55rem]",
     tone: "billingSunrise",
   },
@@ -40,7 +41,7 @@ const mockCardVariantStyles: Record<
     iconAccentClassName: "bg-[rgba(237,249,251,0.92)] text-[color:color-mix(in_srgb,var(--cyan-500)_72%,var(--purple-500))]",
     mockFrameClassName:
       "w-fit max-w-full rounded-[2.1rem] border border-white/72 bg-[rgba(255,255,255,0.64)] p-3 shadow-[0_28px_82px_rgba(43,183,199,0.16)] backdrop-blur-sm",
-    mockImageClassName: "rounded-[1.5rem] saturate-[1.03] object-contain",
+    mockImageClassName: "rounded-[1.5rem] saturate-[1.03]",
     tone: "billingPrism",
   },
 };
@@ -86,6 +87,16 @@ const mockCardLayoutStyles: Record<
   },
 };
 
+const mockViewportStyles: Record<StudioCaseStudyMockViewport, { frameClassName: string; imageClassName: string }> = {
+  portrait: {
+    frameClassName: "h-[320px] w-[200px] sm:h-[360px] sm:w-[220px] lg:h-[390px] lg:w-[240px]",
+    imageClassName: "object-cover object-center",
+  },
+  landscape: {
+    frameClassName: "h-[180px] w-[260px] sm:h-[210px] sm:w-[320px] lg:h-[240px] lg:w-[380px]",
+    imageClassName: "object-cover object-center",
+  },
+};
 export type StudioCaseStudyMockCardProps = {
   sector: string;
   title: string;
@@ -94,6 +105,7 @@ export type StudioCaseStudyMockCardProps = {
   imageSrc: string;
   imageAlt: string;
   imageClassName?: string;
+  mockViewport?: StudioCaseStudyMockViewport;
   variant?: StudioCaseStudyMockVariant;
   layout?: StudioCaseStudyMockCardLayout;
   onOpenDetails?: () => void;
@@ -107,6 +119,7 @@ export function StudioCaseStudyMockCard({
   imageClassName,
   imageSrc,
   layout = "feature",
+  mockViewport = "portrait",
   onOpenDetails,
   sector,
   services,
@@ -123,6 +136,7 @@ export function StudioCaseStudyMockCard({
   const transform = useMotionTemplate`perspective(1200px) rotateX(${springRotateX}deg) rotateY(${springRotateY}deg) translateY(-4px)`;
   const variantStyles = mockCardVariantStyles[variant];
   const layoutStyles = mockCardLayoutStyles[layout];
+  const viewportStyles = mockViewportStyles[mockViewport];
   const serviceLabel = services.join(" • ");
   const canOpenDetails = Boolean(onOpenDetails);
 
@@ -226,13 +240,13 @@ export function StudioCaseStudyMockCard({
                   "relative max-w-[500px] transition-[box-shadow] duration-300 ease-out group-hover:shadow-[0_34px_110px_rgba(11,15,25,0.22)]",
                 )}
               >
-                <div className="overflow-hidden rounded-[1.6rem] bg-[rgba(17,24,39,0.05)]">
+                <div className={cn("relative overflow-hidden rounded-[1.6rem] bg-[rgba(17,24,39,0.05)]", viewportStyles.frameClassName)}>
                   <Image
                     src={imageSrc}
                     alt={imageAlt}
-                    width={402}
-                    height={804}
-                    className={cn("w-auto max-w-full", layoutStyles.imageClassName, variantStyles.mockImageClassName, imageClassName)}
+                    fill
+                    sizes={mockViewport === "portrait" ? "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px" : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"}
+                    className={cn(viewportStyles.imageClassName, variantStyles.mockImageClassName, imageClassName)}
                     priority={false}
                   />
                 </div>
@@ -260,4 +274,5 @@ export function StudioCaseStudyMockCard({
     </motion.div>
   );
 }
+
 

@@ -119,7 +119,7 @@ export function StudioTrustStrip() {
 
           {/* The duplicated groups keep the marquee loop seamless across the strip width. */}
           <div className="marquee-viewport">
-            <div className="marquee-track pt-4 pb-4">
+            <div className="marquee-track py-8">
               <TrustStripGroup groupKey="primary" />
               <TrustStripGroup groupKey="duplicate" ariaHidden />
             </div>

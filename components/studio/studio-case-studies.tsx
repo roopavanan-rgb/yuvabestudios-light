@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { BarChart3, Bot, LayoutGrid, ScanSearch, Sparkles, type LucideIcon } from "lucide-react";
@@ -22,8 +22,9 @@ const additionalCaseStudies: StudioCaseStudySummary[] = [
     summary: "Built advisor-style AI tools that simplified health, policy, and exam-prep workflows through one clearer product system.",
     services: ["AI integration", "Website design", "Cloud deployment"],
     media: <ProofIcon icon={Bot} />,
-    mockImageSrc: "/assets/illustration1.png",
-    mockImageAlt: "TVAM product proof illustration",
+    mockImageSrc: "/assets/tvam_cover.jpeg",
+    mockImageAlt: "TVAM case study cover",
+    mockViewport: "portrait",
     mockVariant: "aurora",
     mockLayout: "compact",
     modalIntro:
@@ -51,44 +52,76 @@ const additionalCaseStudies: StudioCaseStudySummary[] = [
         icon: Sparkles,
       },
     ],
+    modalTestimonial: {
+      quote:
+        "What mattered most here was orchestration. Multiple AI tools, retrieval workflows, and cloud systems were brought into one product experience that felt useful, reliable, and much easier to navigate.",
+      attribution: "TVAM engagement",
+      ctaLabel: "See more work",
+      ctaHref: "#work",
+    },
   },
   {
     id: "kittykat",
     sector: "Fashion AI visuals",
     title: "KittyKat",
-    summary: "Built a generative AI fashion workflow that turned product photos into scalable model visuals with faster turnaround and better quality.",
-    services: ["Generative AI", "Image workflows", "Model refinement"],
+    summary: "Built a generative AI fashion platform that turned product photos into realistic model visuals at scale with faster turnaround and less production overhead.",
+    services: ["Generative AI", "Data preprocessing", "Image refinement"],
     media: <ProofIcon icon={Sparkles} />,
-    mockImageSrc: "/assets/kittykat.svg",
-    mockImageAlt: "KittyKat brand mark",
+    mockImageSrc: "/assets/KK-cover.png",
+    mockImageAlt: "KittyKat AI fashion workflow cover",
+    mockViewport: "portrait",
     mockVariant: "sunrise",
     mockLayout: "compact",
-    mockImageClassName: "bg-white/70 p-10 object-contain",
     modalIntro:
-      "KittyKat needed a way to generate premium fashion visuals at scale without the delay and cost of repeated production shoots. The work centered on turning AI image generation into a more realistic, reliable branded workflow.",
+      "KittyKat needed a way to generate realistic fashion imagery at scale without the delay and cost of repeated production shoots. The work focused on turning product-to-model image generation into a more reliable AI workflow with the quality required for premium brand presentation.",
     modalOutcomes: [
-      "Built a generative AI fashion platform for product-to-model image generation.",
-      "Improved facial alignment, body proportions, and final output quality through refinement workflows.",
-      "Reduced image creation time and unlocked more scalable branded visual production.",
-      "Enabled stronger storytelling and engagement through faster visual experimentation.",
+      "Built a generative AI fashion platform that automated product-to-model image generation.",
+      "Improved realism at scale through data preprocessing, model optimization, and advanced image-generation workflows.",
+      "Improved facial alignment, body proportions, and final image quality for premium brand presentation.",
+      "Enabled the client to generate thousands of visuals faster for stronger storytelling and customer engagement.",
+    ],
+    modalSections: [
+      {
+        title: "Context",
+        body: "KittyKat was positioned around AI-generated fashion visuals, but the real product challenge was not novelty alone. The platform had to turn ordinary product photos into realistic model imagery that a fashion brand could actually use across campaigns and commerce touchpoints.",
+      },
+      {
+        title: "Challenge",
+        body: "Generating fashion imagery with AI becomes difficult when realism breaks down. Facial alignment, body proportions, and consistency all needed to hold up well enough for premium presentation, while the workflow still had to move faster than traditional production.",
+      },
+      {
+        title: "What we changed",
+        body: "Yuvabe built the product-to-model generation workflow, then improved output quality through data preprocessing, model optimization, and hierarchical image refinement. The system was tuned to make the image pipeline feel more reliable, scalable, and aligned to actual fashion-use cases instead of generic AI art output.",
+      },
+      {
+        title: "Outcome",
+        body: "The result was a generative AI fashion platform that reduced production delay, improved final image quality, and made it easier for the client to create large volumes of branded visuals for stronger storytelling and customer engagement.",
+      },
     ],
     modalProofPoints: [
       {
-        title: "Automated visual production",
-        description: "Replaced slower production cycles with a faster AI-generated image pipeline.",
+        title: "Automated product-to-model generation",
+        description: "Turned product photos into model visuals through a faster AI-led production workflow.",
         icon: Sparkles,
       },
       {
-        title: "Refined output quality",
-        description: "Used preprocessing and hierarchical refinement to improve realism and premium presentation.",
+        title: "Improved realism and quality",
+        description: "Used data preprocessing and hierarchical refinement to improve proportion accuracy and premium visual output.",
         icon: LayoutGrid,
       },
       {
-        title: "Scaled branded visuals",
-        description: "Made it easier for the brand to produce larger volumes of usable creative assets.",
+        title: "Scaled on brand visual production",
+        description: "Reduced image creation time and made it easier to produce larger volumes of usable campaign assets.",
         icon: ScanSearch,
       },
     ],
+    modalTestimonial: {
+      quote:
+        "The value of the work was not just faster image generation. It was building an AI visual pipeline that improved realism, reduced production delay, and made large-scale branded output far more usable.",
+      attribution: "KittyKat engagement",
+      ctaLabel: "See more work",
+      ctaHref: "#work",
+    },
   },
   {
     id: "ageshift",
@@ -97,8 +130,9 @@ const additionalCaseStudies: StudioCaseStudySummary[] = [
     summary: "Delivered an AI-enabled wellness platform spanning mobile app, backend APIs, admin tools, and cloud infrastructure.",
     services: ["Mobile app", "Backend API", "AI integration"],
     media: <ProofIcon icon={BarChart3} />,
-    mockImageSrc: "/assets/illustration3.png",
-    mockImageAlt: "AgeShift wellness platform illustration",
+    mockImageSrc: "/assets/ageShift_logo.svg",
+    mockImageAlt: "AgeShift logo",
+    mockViewport: "landscape",
     mockVariant: "prism",
     mockLayout: "compact",
     modalIntro:
@@ -126,54 +160,24 @@ const additionalCaseStudies: StudioCaseStudySummary[] = [
         icon: Sparkles,
       },
     ],
-  },
-  {
-    id: "general-aeronautics-ops",
-    sector: "Aviation operations UX",
-    title: "General Aeronautics Ops",
-    summary: "Extended the General Aeronautics system into clearer interface and proof layers that made operational workflows feel more tangible and easier to trust.",
-    services: ["Product UX", "Interface direction", "Campaign assets"],
-    media: <ProofIcon icon={LayoutGrid} />,
-    mockImageSrc: "/assets/GA_bg.png",
-    mockImageAlt: "General Aeronautics operations interface proof",
-    mockVariant: "prism",
-    mockLayout: "wide",
-    modalIntro:
-      "Beyond the main brand and website work, the General Aeronautics engagement also pushed into interface direction and proof assets that helped operational workflows feel clearer, more intuitive, and easier to communicate.",
-    modalOutcomes: [
-      "Carried the broader case-study system into more product-facing operational views.",
-      "Made proof artifacts more tangible for product, campaign, and stakeholder communication.",
-      "Improved clarity around how the drone experience works in real applied contexts.",
-      "Created stronger continuity between brand story, product UX, and supporting assets.",
-    ],
-    modalProofPoints: [
-      {
-        title: "Made operations easier to read",
-        description: "Turned more technical workflow views into clearer interface-led storytelling.",
-        icon: LayoutGrid,
-      },
-      {
-        title: "Connected proof and product",
-        description: "Used visual proof layers to strengthen how the operational product story is understood.",
-        icon: ScanSearch,
-      },
-      {
-        title: "Expanded the system",
-        description: "Extended the same design logic across interface, communication, and campaign touchpoints.",
-        icon: Sparkles,
-      },
-    ],
+    modalTestimonial: {
+      quote:
+        "The impact came from connecting the whole system. Mobile experience, backend APIs, admin tooling, AI recommendations, and cloud infrastructure were built to work together instead of behaving like separate layers.",
+      attribution: "AgeShift engagement",
+      ctaLabel: "See more work",
+      ctaHref: "#work",
+    },
   },
 ];
 
-const homepageCaseStudies = [...studioCaseStudies, ...additionalCaseStudies];
+const homepageCaseStudies = [studioCaseStudies[0], studioCaseStudies[1], additionalCaseStudies[0], additionalCaseStudies[2], additionalCaseStudies[1]];
 
 // The case-studies section turns named proof into a scannable homepage evidence block.
 export function StudioCaseStudies() {
   const [activeCaseStudy, setActiveCaseStudy] = useState<StudioCaseStudySummary | null>(null);
   const featuredCaseStudies = homepageCaseStudies.slice(0, 2);
-  const secondaryCaseStudies = homepageCaseStudies.slice(2, 5);
-  const spotlightCaseStudy = homepageCaseStudies[5];
+  const secondaryCaseStudies = homepageCaseStudies.slice(2, 4);
+  const spotlightCaseStudy = homepageCaseStudies[4];
 
   return (
     <>
@@ -200,7 +204,7 @@ export function StudioCaseStudies() {
             </p>
           </div>
 
-          {/* The work grid now follows a 2 / 3 / 1 rhythm so featured proof and supporting projects each get the right visual weight. */}
+          {/* The work grid now follows a 2 / 2 / 1 rhythm so the final spotlight card gets its own row. */}
           <div className="space-y-6 lg:px-10 xl:px-14">
             <div className="grid gap-6 xl:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
               {featuredCaseStudies.map((caseStudy) => (
@@ -213,6 +217,7 @@ export function StudioCaseStudies() {
                   imageSrc={caseStudy.mockImageSrc ?? "/assets/GA_cover.png"}
                   imageAlt={caseStudy.mockImageAlt ?? `${caseStudy.title} case study mock`}
                   imageClassName={caseStudy.mockImageClassName}
+                  mockViewport={caseStudy.mockViewport}
                   variant={caseStudy.mockVariant}
                   layout={caseStudy.mockLayout}
                   onOpenDetails={() => setActiveCaseStudy(caseStudy)}
@@ -220,7 +225,7 @@ export function StudioCaseStudies() {
               ))}
             </div>
 
-            <div className="grid gap-6 xl:grid-cols-3">
+            <div className="grid gap-6 xl:grid-cols-2">
               {secondaryCaseStudies.map((caseStudy) => (
                 <StudioCaseStudyMockCard
                   key={caseStudy.id}
@@ -231,6 +236,7 @@ export function StudioCaseStudies() {
                   imageSrc={caseStudy.mockImageSrc ?? "/assets/GA_cover.png"}
                   imageAlt={caseStudy.mockImageAlt ?? `${caseStudy.title} case study mock`}
                   imageClassName={caseStudy.mockImageClassName}
+                  mockViewport={caseStudy.mockViewport}
                   variant={caseStudy.mockVariant}
                   layout={caseStudy.mockLayout}
                   onOpenDetails={() => setActiveCaseStudy(caseStudy)}
@@ -248,6 +254,7 @@ export function StudioCaseStudies() {
                   imageSrc={spotlightCaseStudy.mockImageSrc ?? "/assets/GA_cover.png"}
                   imageAlt={spotlightCaseStudy.mockImageAlt ?? `${spotlightCaseStudy.title} case study mock`}
                   imageClassName={spotlightCaseStudy.mockImageClassName}
+                  mockViewport={spotlightCaseStudy.mockViewport}
                   variant={spotlightCaseStudy.mockVariant}
                   layout={spotlightCaseStudy.mockLayout}
                   onOpenDetails={() => setActiveCaseStudy(spotlightCaseStudy)}
@@ -270,5 +277,8 @@ export function StudioCaseStudies() {
     </>
   );
 }
+
+
+
 
 
