@@ -2,10 +2,20 @@
 
 import { useRef, type PointerEvent } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight, Maximize2 } from "lucide-react";
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
 
-import { PremiumSurface, type PremiumSurfaceProps } from "@/components/ui/premium-surface";
+import {
+  PremiumSurface,
+  type PremiumSurfaceProps,
+} from "@/components/ui/premium-surface";
 import { cn } from "@/lib/utils";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
@@ -31,14 +41,16 @@ const mockCardVariantStyles: Record<
     tone: "billing",
   },
   sunrise: {
-    iconAccentClassName: "bg-[rgba(255,248,234,0.92)] text-[color:color-mix(in_srgb,var(--orange-500)_72%,var(--purple-500))]",
+    iconAccentClassName:
+      "bg-[rgba(255,248,234,0.92)] text-[color:color-mix(in_srgb,var(--orange-500)_72%,var(--purple-500))]",
     mockFrameClassName:
       "w-fit max-w-full rounded-[2.2rem] border border-white/72 bg-[rgba(255,255,255,0.62)] p-3 shadow-[0_30px_86px_rgba(240,78,40,0.18)] backdrop-blur-sm",
     mockImageClassName: "rounded-[1.55rem]",
     tone: "billingSunrise",
   },
   prism: {
-    iconAccentClassName: "bg-[rgba(237,249,251,0.92)] text-[color:color-mix(in_srgb,var(--cyan-500)_72%,var(--purple-500))]",
+    iconAccentClassName:
+      "bg-[rgba(237,249,251,0.92)] text-[color:color-mix(in_srgb,var(--cyan-500)_72%,var(--purple-500))]",
     mockFrameClassName:
       "w-fit max-w-full rounded-[2.1rem] border border-white/72 bg-[rgba(255,255,255,0.64)] p-3 shadow-[0_28px_82px_rgba(43,183,199,0.16)] backdrop-blur-sm",
     mockImageClassName: "rounded-[1.5rem] saturate-[1.03]",
@@ -63,7 +75,7 @@ const mockCardLayoutStyles: Record<
     footerClassName: "max-w-[30rem]",
     imageClassName: "h-[20rem] sm:h-[22rem] lg:h-[24rem]",
     imageStageClassName: "min-h-[460px] px-4 pb-2 pt-8 sm:px-6",
-    shellClassName: "min-h-[760px] p-5 sm:p-6 md:p-7",
+    shellClassName: "h-[760px] p-5 sm:p-6 md:p-7",
     summaryClassName: "max-w-[34ch] text-body-sm text-[var(--color-text-secondary)]",
     titleClassName: "text-heading-md text-foreground",
   },
@@ -72,8 +84,9 @@ const mockCardLayoutStyles: Record<
     footerClassName: "max-w-none",
     imageClassName: "h-[11rem] sm:h-[12rem]",
     imageStageClassName: "min-h-[250px] px-2 pb-1 pt-4 sm:px-3",
-    shellClassName: "min-h-[520px] p-4 sm:p-5",
-    summaryClassName: "max-w-[30ch] text-body-sm leading-6 text-[var(--color-text-secondary)]",
+    shellClassName: "h-[520px] p-4 sm:p-5",
+    summaryClassName:
+      "max-w-[30ch] text-body-sm leading-6 text-[var(--color-text-secondary)]",
     titleClassName: "text-heading-sm text-foreground",
   },
   wide: {
@@ -81,22 +94,29 @@ const mockCardLayoutStyles: Record<
     footerClassName: "max-w-[34rem]",
     imageClassName: "h-[14rem] sm:h-[15rem] lg:h-[16rem]",
     imageStageClassName: "min-h-[320px] px-3 pb-1 pt-5 sm:px-5",
-    shellClassName: "min-h-[560px] p-5 sm:p-6 md:p-7",
-    summaryClassName: "max-w-[56ch] text-body-sm leading-6 text-[var(--color-text-secondary)]",
+    shellClassName: "h-[560px] p-5 sm:p-6 md:p-7",
+    summaryClassName:
+      "max-w-[56ch] text-body-sm leading-6 text-[var(--color-text-secondary)]",
     titleClassName: "text-heading-md text-foreground",
   },
 };
 
-const mockViewportStyles: Record<StudioCaseStudyMockViewport, { frameClassName: string; imageClassName: string }> = {
+const mockViewportStyles: Record<
+  StudioCaseStudyMockViewport,
+  { frameClassName: string; imageClassName: string }
+> = {
   portrait: {
-    frameClassName: "h-[320px] w-[200px] sm:h-[360px] sm:w-[220px] lg:h-[390px] lg:w-[240px]",
+    frameClassName:
+      "h-[320px] w-[200px] sm:h-[360px] sm:w-[220px] lg:h-[390px] lg:w-[240px]",
     imageClassName: "object-cover object-center",
   },
   landscape: {
-    frameClassName: "h-[180px] w-[260px] sm:h-[210px] sm:w-[320px] lg:h-[240px] lg:w-[380px]",
+    frameClassName:
+      "h-[210px] w-[300px] sm:h-[240px] sm:w-[360px] lg:h-[280px] lg:w-[440px]",
     imageClassName: "object-cover object-center",
   },
 };
+
 export type StudioCaseStudyMockCardProps = {
   sector: string;
   title: string;
@@ -108,13 +128,15 @@ export type StudioCaseStudyMockCardProps = {
   mockViewport?: StudioCaseStudyMockViewport;
   variant?: StudioCaseStudyMockVariant;
   layout?: StudioCaseStudyMockCardLayout;
+  detailHref?: string;
   onOpenDetails?: () => void;
   className?: string;
 };
 
-// This card adapts the premium gradient mock treatment into a reusable homepage and design-system proof pattern.
+// This card adapts the premium gradient mock treatment into a reusable homepage and proof pattern.
 export function StudioCaseStudyMockCard({
   className,
+  detailHref,
   imageAlt,
   imageClassName,
   imageSrc,
@@ -131,19 +153,28 @@ export function StudioCaseStudyMockCard({
   const mockRef = useRef<HTMLDivElement>(null);
   const rotateX = useMotionValue(0);
   const rotateY = useMotionValue(0);
-  const springRotateX = useSpring(rotateX, { stiffness: 180, damping: 18, mass: 0.6 });
-  const springRotateY = useSpring(rotateY, { stiffness: 180, damping: 18, mass: 0.6 });
+  const springRotateX = useSpring(rotateX, {
+    stiffness: 180,
+    damping: 18,
+    mass: 0.6,
+  });
+  const springRotateY = useSpring(rotateY, {
+    stiffness: 180,
+    damping: 18,
+    mass: 0.6,
+  });
   const transform = useMotionTemplate`perspective(1200px) rotateX(${springRotateX}deg) rotateY(${springRotateY}deg) translateY(-4px)`;
   const variantStyles = mockCardVariantStyles[variant];
   const layoutStyles = mockCardLayoutStyles[layout];
   const viewportStyles = mockViewportStyles[mockViewport];
-  const serviceLabel = services.join(" • ");
+  const serviceLabel = services.join(" / ");
   const canOpenDetails = Boolean(onOpenDetails);
 
   function handleOpenDetails() {
     onOpenDetails?.();
   }
 
+  // The image stage tilts subtly with the cursor so the mock keeps a tactile feel without changing layout.
   function handleMockPointerMove(event: PointerEvent<HTMLDivElement>) {
     if (shouldReduceMotion || !mockRef.current) {
       return;
@@ -163,7 +194,11 @@ export function StudioCaseStudyMockCard({
 
   return (
     <motion.div
-      className={cn("group h-full", canOpenDetails ? "cursor-pointer" : undefined, className)}
+      className={cn(
+        "group h-full",
+        canOpenDetails ? "cursor-pointer" : undefined,
+        className,
+      )}
       onClick={canOpenDetails ? handleOpenDetails : undefined}
       onKeyDown={
         canOpenDetails
@@ -202,7 +237,9 @@ export function StudioCaseStudyMockCard({
           <div className="space-y-2">
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2">
-                <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">{sector}</p>
+                <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
+                  {sector}
+                </p>
                 <h3 className={layoutStyles.titleClassName}>{title}</h3>
                 <p className={layoutStyles.summaryClassName}>{summary}</p>
               </div>
@@ -220,7 +257,11 @@ export function StudioCaseStudyMockCard({
                     handleOpenDetails();
                   }}
                   className="flex size-full cursor-pointer items-center justify-center rounded-[inherit] bg-transparent"
-                  aria-label={canOpenDetails ? `Open ${title} case study details` : `Preview ${title} case study`}
+                  aria-label={
+                    canOpenDetails
+                      ? `Open ${title} case study details`
+                      : `Preview ${title} case study`
+                  }
                 >
                   <Maximize2 className="size-4" />
                 </button>
@@ -229,24 +270,46 @@ export function StudioCaseStudyMockCard({
           </div>
 
           <div className="mt-auto space-y-5">
-            <div className={cn("flex items-end justify-center [perspective:1400px]", layoutStyles.imageStageClassName)}>
+            <div
+              className={cn(
+                "flex items-end justify-center [perspective:1400px]",
+                layoutStyles.imageStageClassName,
+              )}
+            >
               <motion.div
                 ref={mockRef}
                 onPointerMove={handleMockPointerMove}
                 onPointerLeave={handleMockPointerLeave}
-                style={shouldReduceMotion ? undefined : { transformStyle: "preserve-3d", transform }}
+                style={
+                  shouldReduceMotion
+                    ? undefined
+                    : { transformStyle: "preserve-3d", transform }
+                }
                 className={cn(
                   variantStyles.mockFrameClassName,
-                  "relative max-w-[500px] transition-[box-shadow] duration-300 ease-out group-hover:shadow-[0_34px_110px_rgba(11,15,25,0.22)]",
+                  "relative max-w-[560px] transition-[box-shadow] duration-300 ease-out group-hover:shadow-[0_34px_110px_rgba(11,15,25,0.22)]",
                 )}
               >
-                <div className={cn("relative overflow-hidden rounded-[1.6rem] bg-[rgba(17,24,39,0.05)]", viewportStyles.frameClassName)}>
+                <div
+                  className={cn(
+                    "relative overflow-hidden rounded-[1.6rem] bg-[rgba(17,24,39,0.05)]",
+                    viewportStyles.frameClassName,
+                  )}
+                >
                   <Image
                     src={imageSrc}
                     alt={imageAlt}
                     fill
-                    sizes={mockViewport === "portrait" ? "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px" : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"}
-                    className={cn(viewportStyles.imageClassName, variantStyles.mockImageClassName, imageClassName)}
+                    sizes={
+                      mockViewport === "portrait"
+                        ? "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px"
+                        : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"
+                    }
+                    className={cn(
+                      viewportStyles.imageClassName,
+                      variantStyles.mockImageClassName,
+                      imageClassName,
+                    )}
                     priority={false}
                   />
                 </div>
@@ -263,10 +326,33 @@ export function StudioCaseStudyMockCard({
                 layoutStyles.footerClassName,
               )}
             >
-              <p className="text-body-sm text-[var(--color-text-secondary)]">{serviceLabel}</p>
-              <span className={cn("flex size-8 shrink-0 items-center justify-center rounded-full", variantStyles.iconAccentClassName)}>
-                <ArrowUpRight className="size-4" />
-              </span>
+              <p className="text-body-sm text-[var(--color-text-secondary)]">
+                {serviceLabel}
+              </p>
+              {detailHref ? (
+                <Link
+                  href={detailHref}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                  className={cn(
+                    "flex size-8 shrink-0 items-center justify-center rounded-full",
+                    variantStyles.iconAccentClassName,
+                  )}
+                  aria-label={`Read ${title} case study page`}
+                >
+                  <ArrowUpRight className="size-4" />
+                </Link>
+              ) : (
+                <span
+                  className={cn(
+                    "flex size-8 shrink-0 items-center justify-center rounded-full",
+                    variantStyles.iconAccentClassName,
+                  )}
+                >
+                  <ArrowUpRight className="size-4" />
+                </span>
+              )}
             </PremiumSurface>
           </div>
         </div>
@@ -274,5 +360,3 @@ export function StudioCaseStudyMockCard({
     </motion.div>
   );
 }
-
-

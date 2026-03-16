@@ -1,9 +1,13 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import "./globals.css";
 
+import { siteMetadataBase } from "@/lib/site";
+
 export const metadata: Metadata = {
+  metadataBase: siteMetadataBase,
   title: "Yuvabe Studios",
-  description: "AI-first product design, development, and engineering studio for startups.",
+  description:
+    "AI-first product design, development, and engineering studio for startups.",
 };
 
 export default function RootLayout({

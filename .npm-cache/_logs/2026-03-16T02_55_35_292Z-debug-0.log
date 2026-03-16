@@ -1,0 +1,62 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.2
+2 info using node@v22.13.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:C:\Users\cyril varghese\code\yuvae-new-light\.npmrc
+5 silly config load:file:C:\Users\cyril varghese\.npmrc
+6 silly config load:file:C:\Users\cyril varghese\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--package-lock-only"
+9 verbose logfile logs-max:10 dir:C:\Users\cyril varghese\code\yuvae-new-light\.npm-cache\_logs\2026-03-16T02_55_35_292Z-
+10 verbose logfile C:\Users\cyril varghese\code\yuvae-new-light\.npm-cache\_logs\2026-03-16T02_55_35_292Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4345298944 maxSize:1086324736 maxEntrySize:543162368
+13 silly idealTree buildDeps
+14 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+15 http cache https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz 0ms (cache hit)
+16 silly tarball no local data for https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz. Extracting by manifest.
+17 http fetch GET https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz attempt 1 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+19 http fetch GET https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz attempt 2 failed with EACCES
+20 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with EACCES
+21 http fetch GET https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz attempt 3 failed with EACCES
+22 verbose type system
+23 verbose stack FetchError: request to https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz failed, reason: 
+23 verbose stack     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+23 verbose stack     at ClientRequest.emit (node:events:524:28)
+23 verbose stack     at emitErrorEvent (node:_http_client:104:11)
+23 verbose stack     at _destroy (node:_http_client:898:9)
+23 verbose stack     at onSocketNT (node:_http_client:918:5)
+23 verbose stack     at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+24 error code EACCES
+25 error errno EACCES
+26 error FetchError: request to https://registry.npmjs.org/@tailwindcss/oxide-wasm32-wasi/-/oxide-wasm32-wasi-4.2.1.tgz failed, reason: 
+26 error     at ClientRequest.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\minipass-fetch\lib\index.js:130:14)
+26 error     at ClientRequest.emit (node:events:524:28)
+26 error     at emitErrorEvent (node:_http_client:104:11)
+26 error     at _destroy (node:_http_client:898:9)
+26 error     at onSocketNT (node:_http_client:918:5)
+26 error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+26 error   code: 'EACCES',
+26 error   errno: 'EACCES',
+26 error   type: 'system'
+26 error }
+27 error
+27 error The operation was rejected by your operating system.
+27 error It's possible that the file was already in use (by a text editor or antivirus),
+27 error or that you lack permissions to access it.
+27 error
+27 error If you believe this might be a permissions issue, please double-check the
+27 error permissions of the file and its containing directories, or try running
+27 error the command again as root/Administrator.
+28 silly unfinished npm timer reify 1773629735761
+29 silly unfinished npm timer reify:loadTrees 1773629735761
+30 silly unfinished npm timer idealTree:buildDeps 1773629735890
+31 silly unfinished npm timer idealTree:node_modules/@tailwindcss/oxide-wasm32-wasi 1773629735891
+32 verbose cwd C:\Users\cyril varghese\code\yuvae-new-light
+33 verbose os Windows_NT 10.0.26200
+34 verbose node v22.13.0
+35 verbose npm  v10.9.2
+36 verbose exit 1
+37 verbose code 1
+38 error A complete log of this run can be found in: C:\Users\cyril varghese\code\yuvae-new-light\.npm-cache\_logs\2026-03-16T02_55_35_292Z-debug-0.log

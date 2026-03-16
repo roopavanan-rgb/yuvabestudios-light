@@ -8,9 +8,18 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 
-import type { StudioCaseStudyMockCardLayout, StudioCaseStudyMockVariant, StudioCaseStudyMockViewport } from "@/components/studio/studio-case-study-mock-card";
+import type {
+  StudioCaseStudyMockCardLayout,
+  StudioCaseStudyMockVariant,
+  StudioCaseStudyMockViewport,
+} from "@/components/studio/studio-case-study-mock-card";
 
-export type StudioCaseStudyId = "general-aeronautics" | "bevolve" | "tvam" | "kittykat" | "ageshift" | "general-aeronautics-ops";
+export type StudioCaseStudyId =
+  | "general-aeronautics"
+  | "bevolve"
+  | "tvam"
+  | "kittykat"
+  | "ageshift";
 
 export type StudioCaseStudySection = {
   title: string;
@@ -45,6 +54,7 @@ export type StudioCaseStudySummary = {
   sector: string;
   title: string;
   summary: string;
+  heroMockHeadline?: string;
   services: string[];
   media: ReactNode;
   mockImageSrc?: string;
@@ -60,23 +70,41 @@ export type StudioCaseStudySummary = {
   modalProofPoints?: StudioCaseStudyProofPoint[];
   modalGalleryRows?: StudioCaseStudyGalleryRow[];
   modalTestimonial?: StudioCaseStudyTestimonial;
+  seoTitle?: string;
+  seoDescription?: string;
+};
+
+export type ResolvedStudioCaseStudyDetail = {
+  href: string;
+  intro: string;
+  outcomes: string[];
+  sections: StudioCaseStudySection[];
+  proofPoints: StudioCaseStudyProofPoint[];
+  galleryRows: StudioCaseStudyGalleryRow[];
+  testimonial: StudioCaseStudyTestimonial;
+  seoTitle: string;
+  seoDescription: string;
 };
 
 function CaseStudyIcon({ icon: Icon }: { icon: LucideIcon }) {
-  return <Icon className="size-24 stroke-[1.4] text-[color:color-mix(in_srgb,var(--neutral-700)_82%,var(--lavender-500)_18%)]" />;
+  return (
+    <Icon className="size-24 stroke-[1.4] text-[color:color-mix(in_srgb,var(--neutral-700)_82%,var(--lavender-500)_18%)]" />
+  );
 }
 
-// This shared content keeps the cards and the expanded light modal synchronized around the same named proof.
+// This shared content keeps the homepage cards, modal summaries, and route pages synchronized around the same proof.
 export const studioCaseStudies: StudioCaseStudySummary[] = [
   {
     id: "general-aeronautics",
     sector: "Aviation technology",
     title: "General Aeronautics",
-    summary: "Turned a complex drone portfolio into a clearer digital story buyers, partners, and operators could trust faster.",
+    summary:
+      "Turned a complex drone portfolio into a clearer digital story buyers, partners, and operators could trust faster.",
+    heroMockHeadline: "Portfolio clarity across drone systems",
     services: ["Positioning", "UX/UI", "Brand system"],
     mockImageSrc: "/assets/GA_cover.png",
     mockImageAlt: "General Aeronautics mobile product mock",
-    mockViewport: "portrait",
+    mockViewport: "landscape",
     mockVariant: "aurora",
     modalIntro:
       "General Aeronautics builds drone systems across agriculture, defense, humanitarian response, and warehouse automation. As the business expanded, its digital presence needed to explain that breadth with more clarity, confidence, and usability.",
@@ -153,9 +181,10 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
       quote:
         "The work made a technically complex drone business easier to understand and easier to trust. Website, product UX, and supporting assets finally reinforced the same story instead of fragmenting it.",
       attribution: "General Aeronautics engagement",
-      ctaLabel: "See more work",
-      ctaHref: "#work",
     },
+    seoTitle: "General Aeronautics Case Study",
+    seoDescription:
+      "See how Yuvabe helped General Aeronautics turn a broad drone portfolio into a clearer digital story across website, product UX, and brand systems.",
     media: <CaseStudyIcon icon={LayoutGrid} />,
     size: "feature",
   },
@@ -165,6 +194,7 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
     title: "Bevolve.ai",
     summary:
       "Turned fragmented sustainability reporting into an AI-guided system teams could trust for faster, evidence-based decisions.",
+    heroMockHeadline: "AI-guided ESG reporting workflow",
     services: ["AI integration", "ML", "ESG reporting"],
     mockImageSrc: "/assets/Bevolve_cover.png",
     mockImageAlt: "Bevolve.ai product experience mock",
@@ -245,13 +275,275 @@ export const studioCaseStudies: StudioCaseStudySummary[] = [
       quote:
         "The strongest shift was not just automation, but coherence. Reporting, benchmarking, and AI-guided analysis started feeling like one usable system, which made complex ESG work easier to navigate and easier to act on.",
       attribution: "Bevolve.ai engagement",
-      ctaLabel: "See more work",
-      ctaHref: "#work",
     },
+    seoTitle: "Bevolve.ai Case Study",
+    seoDescription:
+      "Learn how Yuvabe helped Bevolve.ai turn fragmented ESG reporting into an AI-guided product system for faster, evidence-based decisions.",
     media: <CaseStudyIcon icon={Bot} />,
+  },
+  {
+    id: "tvam",
+    sector: "Health insurance AI",
+    title: "TVAM",
+    summary:
+      "Built advisor-style AI tools that simplified health, policy, and exam-prep workflows through one clearer product system.",
+    heroMockHeadline: "Advisor-style AI tools in one system",
+    services: ["AI integration", "Website design", "Cloud deployment"],
+    media: <CaseStudyIcon icon={Bot} />,
+    mockImageSrc: "/assets/tvam_cover.jpeg",
+    mockImageAlt: "TVAM case study cover",
+    mockViewport: "portrait",
+    mockVariant: "aurora",
+    mockLayout: "feature",
+    modalIntro:
+      "TVAM focused on simplifying health, policy, and exam-prep workflows through advisor-style AI tools. The opportunity was to turn multiple AI capabilities into one product experience that felt useful, reliable, and easy to navigate.",
+    modalOutcomes: [
+      "Built AI-powered Health and Policy Advisors plus a USMLE preparation tool.",
+      "Integrated chat-based AI, secure conversation storage, TTS/STT support, vector search, and file uploads.",
+      "Used Retrieval-Augmented Generation patterns and cloud deployment workflows for scale.",
+      "Made complex health and policy workflows easier to use through clearer product orchestration.",
+    ],
+    modalProofPoints: [
+      {
+        title: "Delivered AI product execution",
+        description: "Turned multiple advisor-style workflows into one more coherent AI product experience.",
+        icon: Bot,
+      },
+      {
+        title: "Integrated a real RAG stack",
+        description: "Combined retrieval, secure storage, and AI workflow orchestration into a scalable system.",
+        icon: ScanSearch,
+      },
+      {
+        title: "Shipped cloud-ready infrastructure",
+        description: "Paired product work with deployment patterns built for secure growth and iteration.",
+        icon: Sparkles,
+      },
+    ],
+    modalTestimonial: {
+      quote:
+        "What mattered most here was orchestration. Multiple AI tools, retrieval workflows, and cloud systems were brought into one product experience that felt useful, reliable, and much easier to navigate.",
+      attribution: "TVAM engagement",
+    },
+    seoTitle: "TVAM Case Study",
+    seoDescription:
+      "Explore how Yuvabe built advisor-style AI workflows for TVAM across health, policy, and exam-prep use cases using a cloud-ready RAG stack.",
+  },
+  {
+    id: "kittykat",
+    sector: "Fashion AI visuals",
+    title: "KittyKat",
+    summary:
+      "Built a generative AI fashion platform that turned product photos into realistic model visuals at scale with faster turnaround and less production overhead.",
+    heroMockHeadline: "Product-to-model image generation",
+    services: ["Generative AI", "Data preprocessing", "Image refinement"],
+    media: <CaseStudyIcon icon={Sparkles} />,
+    mockImageSrc: "/assets/KK-cover.png",
+    mockImageAlt: "KittyKat AI fashion workflow cover",
+    mockViewport: "portrait",
+    mockVariant: "sunrise",
+    mockLayout: "feature",
+    modalIntro:
+      "KittyKat needed a way to generate realistic fashion imagery at scale without the delay and cost of repeated production shoots. The work focused on turning product-to-model image generation into a more reliable AI workflow with the quality required for premium brand presentation.",
+    modalOutcomes: [
+      "Built a generative AI fashion platform that automated product-to-model image generation.",
+      "Improved realism at scale through data preprocessing, model optimization, and advanced image-generation workflows.",
+      "Improved facial alignment, body proportions, and final image quality for premium brand presentation.",
+      "Enabled the client to generate thousands of visuals faster for stronger storytelling and customer engagement.",
+    ],
+    modalSections: [
+      {
+        title: "Context",
+        body: "KittyKat was positioned around AI-generated fashion visuals, but the real product challenge was not novelty alone. The platform had to turn ordinary product photos into realistic model imagery that a fashion brand could actually use across campaigns and commerce touchpoints.",
+      },
+      {
+        title: "Challenge",
+        body: "Generating fashion imagery with AI becomes difficult when realism breaks down. Facial alignment, body proportions, and consistency all needed to hold up well enough for premium presentation, while the workflow still had to move faster than traditional production.",
+      },
+      {
+        title: "What we changed",
+        body: "Yuvabe built the product-to-model generation workflow, then improved output quality through data preprocessing, model optimization, and hierarchical image refinement. The system was tuned to make the image pipeline feel more reliable, scalable, and aligned to actual fashion-use cases instead of generic AI art output.",
+      },
+      {
+        title: "Outcome",
+        body: "The result was a generative AI fashion platform that reduced production delay, improved final image quality, and made it easier for the client to create large volumes of branded visuals for stronger storytelling and customer engagement.",
+      },
+    ],
+    modalProofPoints: [
+      {
+        title: "Automated product-to-model generation",
+        description: "Turned product photos into model visuals through a faster AI-led production workflow.",
+        icon: Sparkles,
+      },
+      {
+        title: "Improved realism and quality",
+        description: "Used data preprocessing and hierarchical refinement to improve proportion accuracy and premium visual output.",
+        icon: LayoutGrid,
+      },
+      {
+        title: "Scaled on brand visual production",
+        description: "Reduced image creation time and made it easier to produce larger volumes of usable campaign assets.",
+        icon: ScanSearch,
+      },
+    ],
+    modalTestimonial: {
+      quote:
+        "The value of the work was not just faster image generation. It was building an AI visual pipeline that improved realism, reduced production delay, and made large-scale branded output far more usable.",
+      attribution: "KittyKat engagement",
+    },
+    seoTitle: "KittyKat Case Study",
+    seoDescription:
+      "See how Yuvabe built a generative AI fashion workflow for KittyKat that improved realism, reduced production delays, and scaled branded visual output.",
+  },
+  {
+    id: "ageshift",
+    sector: "AI wellness platform",
+    title: "AgeShift",
+    summary:
+      "Delivered an AI-enabled wellness platform spanning mobile app, backend APIs, admin tools, and cloud infrastructure.",
+    heroMockHeadline: "Connected wellness product ecosystem",
+    services: ["Mobile app", "Backend API", "AI integration"],
+    media: <CaseStudyIcon icon={BarChart3} />,
+    mockImageSrc: "/assets/ageShift_logo.svg",
+    mockImageAlt: "AgeShift logo",
+    mockViewport: "landscape",
+    mockVariant: "prism",
+    mockLayout: "feature",
+    modalIntro:
+      "AgeShift needed a connected wellness product ecosystem that could guide users through routines, protocol tracking, and AI-powered recommendations while also giving administrators stronger operational visibility.",
+    modalOutcomes: [
+      "Built a Flutter mobile app, FastAPI backend, and Next.js admin panel on Google Cloud Platform.",
+      "Added AI-driven recommendations, structured protocol tracking, and unified user/admin workflows.",
+      "Implemented CI/CD pipelines for more reliable builds, testing, and deployment.",
+      "Created a secure, scalable product base for ongoing growth and behavior-driven insights.",
+    ],
+    modalProofPoints: [
+      {
+        title: "Shipped cross-platform product systems",
+        description: "Connected mobile, backend, and admin experiences into one operational platform.",
+        icon: LayoutGrid,
+      },
+      {
+        title: "Integrated AI recommendations",
+        description: "Used AI to make routine guidance and wellness insights more personalized and actionable.",
+        icon: Bot,
+      },
+      {
+        title: "Built for secure scaling",
+        description: "Paired product execution with cloud infrastructure and CI/CD for long-term reliability.",
+        icon: Sparkles,
+      },
+    ],
+    modalTestimonial: {
+      quote:
+        "The impact came from connecting the whole system. Mobile experience, backend APIs, admin tooling, AI recommendations, and cloud infrastructure were built to work together instead of behaving like separate layers.",
+      attribution: "AgeShift engagement",
+    },
+    seoTitle: "AgeShift Case Study",
+    seoDescription:
+      "Read how Yuvabe delivered AgeShift's AI-enabled wellness platform across mobile, backend APIs, admin tooling, and secure cloud infrastructure.",
   },
 ];
 
+export const homepageCaseStudyIds: StudioCaseStudyId[] = [
+  "general-aeronautics",
+  "bevolve",
+  "tvam",
+  "ageshift",
+  "kittykat",
+];
 
+export const homepageCaseStudies = homepageCaseStudyIds
+  .map((id) => studioCaseStudies.find((caseStudy) => caseStudy.id === id))
+  .filter((caseStudy): caseStudy is StudioCaseStudySummary => Boolean(caseStudy));
 
+export function getStudioCaseStudyHref(id: StudioCaseStudyId) {
+  return `/case-studies/${id}`;
+}
 
+export function getStudioCaseStudyById(id: string) {
+  return studioCaseStudies.find((caseStudy) => caseStudy.id === id);
+}
+
+// Resolve fallback copy once so modal and page variants stay aligned around the same narrative.
+export function resolveStudioCaseStudyDetail(
+  caseStudy: StudioCaseStudySummary,
+): ResolvedStudioCaseStudyDetail {
+  return {
+    href: getStudioCaseStudyHref(caseStudy.id),
+    intro: caseStudy.modalIntro ?? caseStudy.summary,
+    outcomes: caseStudy.modalOutcomes ?? [
+      "Created a clearer story around the product, team, and strategic value.",
+      `Focused the experience around ${caseStudy.services.join(", ").toLowerCase()} to reduce friction and improve comprehension.`,
+      "Built a stronger foundation for future launches, iteration, and growth.",
+    ],
+    sections: caseStudy.modalSections ?? [
+      {
+        title: "Context",
+        body: `${caseStudy.title} needed a more coherent narrative across product, experience, and communication as the scope of the work expanded.`,
+      },
+      {
+        title: "Challenge",
+        body: "The opportunity was not just to ship assets, but to help the business communicate value faster and with more confidence.",
+      },
+      {
+        title: "What we changed",
+        body: "We aligned the experience, supporting systems, and communication touchpoints around what users and stakeholders needed to understand next.",
+      },
+      {
+        title: "Outcome",
+        body: "The result was a sharper story, a more usable experience, and a stronger platform for future growth decisions.",
+      },
+    ],
+    proofPoints: caseStudy.modalProofPoints ?? [
+      {
+        title: "Sharpened the narrative",
+        description: "Brought the product story, interaction model, and supporting experience into one clearer point of view.",
+      },
+      {
+        title: "Reduced decision friction",
+        description: "Turned scattered workflows into a more understandable path for users, operators, or internal teams.",
+      },
+      {
+        title: "Built for what comes next",
+        description: "Created a stronger base for future iteration instead of treating the engagement like a one-off delivery.",
+      },
+    ],
+    galleryRows: caseStudy.modalGalleryRows ?? [
+      {
+        title: "Selected screens",
+        items: [
+          {
+            title: "Hero view placeholder",
+            description: "Reserved for the main case-study visual or landing screen.",
+          },
+          {
+            title: "Workflow placeholder",
+            description: "Reserved for a supporting product or process screenshot.",
+          },
+        ],
+      },
+      {
+        title: "Product views",
+        items: [
+          {
+            title: "Dashboard placeholder",
+            description: "Reserved for a key interface or data view.",
+          },
+          {
+            title: "Detail placeholder",
+            description: "Reserved for a secondary screen, flow, or artifact.",
+          },
+        ],
+      },
+    ],
+    testimonial: caseStudy.modalTestimonial ?? {
+      quote:
+        "The work brought the story, product direction, and user experience into tighter alignment, making the next stage of growth easier to communicate and easier to build toward.",
+      attribution: `${caseStudy.title} engagement`,
+    },
+    seoTitle: caseStudy.seoTitle ?? `${caseStudy.title} Case Study`,
+    seoDescription:
+      caseStudy.seoDescription ?? caseStudy.modalIntro ?? caseStudy.summary,
+  };
+}

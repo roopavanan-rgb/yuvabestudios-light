@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
@@ -34,15 +34,14 @@ const menuItemVariants = {
   open: { opacity: 1, y: 0, transition: overlayTransition },
 };
 
+function subscribe() {
+  return () => {};
+}
+
 // The header keeps desktop navigation calm while letting mobile users open a full-screen overlay menu.
 export function StudioHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
-
-  // Wait for mount so the overlay can be rendered into the document body without SSR mismatch.
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
 
   // Lock page scroll and flag the shell while the overlay menu is open so the background can blur and scale.
   useEffect(() => {
@@ -191,6 +190,5 @@ export function StudioHeader() {
     </>
   );
 }
-
 
 

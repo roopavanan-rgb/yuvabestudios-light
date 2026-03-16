@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
 
@@ -42,12 +42,6 @@ export function ModalShell({
   const shouldReduceMotion = useReducedMotion();
   const panelEase: [number, number, number, number] = [0.22, 1, 0.36, 1];
   const [activeCloseVariant, setActiveCloseVariant] = useState<"default" | "case-study">("default");
-
-  useEffect(() => {
-    if (open) {
-      setActiveCloseVariant("default");
-    }
-  }, [open]);
 
   const shellMotion = shouldReduceMotion
     ? undefined
