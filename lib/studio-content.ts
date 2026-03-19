@@ -22,10 +22,12 @@ import type {
   StudioHomepageNavItem,
   StudioHomepageWorkContent,
 } from "@/components/studio/studio-homepage-content";
+import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const dataDirectory = path.join(process.cwd(), "components", "studio", "data");
 const caseStudiesFilePath = path.join(dataDirectory, "studio-case-studies.json");
 const homepageFilePath = path.join(dataDirectory, "studio-homepage-content.json");
+const contentDocumentsTable = "content_documents";
 
 function assertRecord(
   value: unknown,
@@ -483,27 +485,70 @@ export function parseStudioEditableCaseStudyInput(
 }
 
 async function readJsonFile<T>(filePath: string): Promise<T> {
-  noStore();
-
   const rawFile = await fs.readFile(filePath, "utf8");
   return JSON.parse(rawFile) as T;
 }
 
-async function writeJsonFile(filePath: string, value: unknown) {
-  await fs.writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+async function readContentDocument(key: "homepage" | "case_studies") {
+  noStore();
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from(contentDocumentsTable)
+    .select("payload")
+    .eq("key", key)
+    .maybeSingle<{ payload: unknown }>();
+
+  if (error) {
+    throw new Error(`Failed to load content document "${key}": ${error.message}`);
+  }
+
+  return data?.payload;
+}
+
+async function writeContentDocument(
+  key: "homepage" | "case_studies",
+  payload: unknown,
+) {
+  const supabase = getSupabaseAdminClient();
+  const { error } = await supabase
+    .from(contentDocumentsTable)
+    .upsert({ key, payload }, { onConflict: "key" });
+
+  if (error) {
+    throw new Error(`Failed to save content document "${key}": ${error.message}`);
+  }
+}
+
+async function getOrBootstrapDocument<T>(
+  key: "homepage" | "case_studies",
+  fallbackFilePath: string,
+) {
+  const existingPayload = await readContentDocument(key);
+
+  if (existingPayload !== undefined) {
+    return existingPayload as T;
+  }
+
+  const fallbackPayload = await readJsonFile<T>(fallbackFilePath);
+  await writeContentDocument(key, fallbackPayload);
+  return fallbackPayload;
 }
 
 export async function getStudioHomepageContent() {
-  const rawContent = await readJsonFile<unknown>(homepageFilePath);
+  const rawContent = await getOrBootstrapDocument<unknown>("homepage", homepageFilePath);
   return parseHomepageContent(rawContent);
 }
 
 export async function saveStudioHomepageContent(content: StudioHomepageContent) {
-  await writeJsonFile(homepageFilePath, content);
+  await writeContentDocument("homepage", content);
 }
 
 export async function getStudioCaseStudies() {
-  const rawCaseStudies = await readJsonFile<unknown>(caseStudiesFilePath);
+  const rawCaseStudies = await getOrBootstrapDocument<unknown[]>(
+    "case_studies",
+    caseStudiesFilePath,
+  );
   const caseStudies = expectArray(rawCaseStudies, "studio case studies");
 
   return caseStudies.map((caseStudy, index) =>
@@ -534,6 +579,6 @@ export async function saveStudioCaseStudy(
     ...updates,
   };
 
-  await writeJsonFile(caseStudiesFilePath, nextCaseStudies);
+  await writeContentDocument("case_studies", nextCaseStudies);
   return nextCaseStudies[caseStudyIndex];
 }
