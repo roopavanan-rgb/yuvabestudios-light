@@ -5,6 +5,7 @@ import {
   resolveStudioCaseStudyDetail,
   type StudioCaseStudySummary,
 } from "@/components/studio/studio-case-study-content";
+import { StudioPageContainer } from "@/components/studio/studio-page-shell";
 
 type StudioCaseStudyOutcomesStripProps = {
   caseStudy: StudioCaseStudySummary;
@@ -19,7 +20,7 @@ export function StudioCaseStudyOutcomesStrip({
 
   return (
     <section className="relative border-b border-[var(--color-border-default)]/80 bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-8 md:px-10 md:py-10">
+      <StudioPageContainer className="py-8 md:py-10">
         {/* The services row becomes a quiet separator band once it leaves the hero. */}
         {serviceTags.length ? (
           <div className="border-b border-[var(--color-border-default)]/80 pb-6">
@@ -69,7 +70,7 @@ export function StudioCaseStudyOutcomesStrip({
             );
           })}
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }

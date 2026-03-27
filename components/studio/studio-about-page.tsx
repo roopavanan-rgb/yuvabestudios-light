@@ -19,6 +19,10 @@ import {
   type StudioAboutWorkflowContent,
 } from "@/components/studio/studio-about-content";
 import { StudioHeader } from "@/components/studio/studio-header";
+import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
 import { Button } from "@/components/ui/button";
 import { PremiumSurface } from "@/components/ui/premium-surface";
 
@@ -97,7 +101,7 @@ function AboutHero() {
   const descriptionParts = hero.description.split(descriptionHighlight);
 
   return (
-    <section className="relative overflow-hidden border-b border-slate-200/80 bg-white px-6 pb-14 pt-14 md:px-10 md:pb-20 md:pt-16">
+    <section className="relative overflow-hidden border-b border-slate-200/80 bg-white pb-14 pt-14 md:pb-20 md:pt-16">
       <div aria-hidden="true" className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.021)_1px,transparent_1px)] bg-[size:100%_120px]" />
@@ -105,7 +109,7 @@ function AboutHero() {
         <div className="absolute right-[-10rem] top-[-10rem] h-[24rem] w-[24rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.18)_0%,rgba(255,202,45,0)_72%)] blur-3xl" />
       </div>
 
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)] lg:items-start lg:gap-10">
+      <StudioPageContainer className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,1.12fr)_minmax(320px,0.88fr)] lg:items-start lg:gap-10">
         {/* The left hero column carries the founder-facing page narrative and CTA pair. */}
         <div className="space-y-6 lg:pl-4 xl:pl-6">
           <p className="text-label-sm uppercase tracking-[0.24em] text-[var(--color-text-tertiary)]">
@@ -191,7 +195,7 @@ function AboutHero() {
             ))}
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -199,8 +203,8 @@ function AboutHero() {
 // This section pairs the studio origin story with the practical differentiators founders should remember.
 function AboutStorySection({ content }: { content: StudioAboutStoryContent }) {
   return (
-    <section className="border-b border-slate-200/80 bg-white px-6 py-14 md:px-10 md:py-20">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-12">
+    <section className="border-b border-slate-200/80 bg-white py-14 md:py-20">
+      <StudioPageContainer className="grid gap-10 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-12">
         {/* The left column becomes the narrative anchor with one strong headline and one tight origin paragraph. */}
         <div className="max-w-4xl space-y-5 lg:pl-4 xl:pl-6">
           <div className="space-y-3">
@@ -292,7 +296,7 @@ function AboutStorySection({ content }: { content: StudioAboutStoryContent }) {
             })}
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -304,8 +308,11 @@ function AboutWorkflowSection({
   content: StudioAboutWorkflowContent;
 }) {
   return (
-    <section id="process" className="border-b border-slate-200/80 bg-[var(--color-background-canvas)] px-6 py-14 md:px-10 md:py-20">
-      <div className="mx-auto max-w-7xl space-y-10">
+    <section
+      id="process"
+      className="border-b border-slate-200/80 bg-[var(--color-background-canvas)] py-14 md:py-20"
+    >
+      <StudioPageContainer className="space-y-10">
         <SectionIntro
           eyebrow={content.eyebrow}
           title={content.title}
@@ -364,7 +371,7 @@ function AboutWorkflowSection({
             );
           })}
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -372,8 +379,8 @@ function AboutWorkflowSection({
 // The proof grid keeps named-project evidence tight and narrative-led instead of turning into a case-study wall.
 function AboutProofSection({ content }: { content: StudioAboutProofContent }) {
   return (
-    <section className="border-b border-slate-200/80 bg-white px-6 py-14 md:px-10 md:py-20">
-      <div className="mx-auto max-w-7xl space-y-10">
+    <section className="border-b border-slate-200/80 bg-white py-14 md:py-20">
+      <StudioPageContainer className="space-y-10">
         <SectionIntro
           eyebrow={content.eyebrow}
           title={content.title}
@@ -420,7 +427,7 @@ function AboutProofSection({ content }: { content: StudioAboutProofContent }) {
             })}
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -434,8 +441,8 @@ function AboutValuesAndTeamSection({
   const { teamTeaser } = studioAboutPageContent;
 
   return (
-    <section className="border-b border-slate-200/80 bg-[var(--color-background-canvas)] px-6 py-14 md:px-10 md:py-20">
-      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12">
+    <section className="border-b border-slate-200/80 bg-[var(--color-background-canvas)] py-14 md:py-20">
+      <StudioPageContainer className="grid gap-10 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12">
         <div className="space-y-8 lg:pl-4 xl:pl-6">
           <SectionIntro
             eyebrow={values.eyebrow}
@@ -525,7 +532,7 @@ function AboutValuesAndTeamSection({
             </div>
           </div>
         </PremiumSurface>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -535,8 +542,8 @@ function AboutFinalCta() {
   const { cta } = studioAboutPageContent;
 
   return (
-    <section className="bg-white px-6 py-16 md:px-10 md:py-20">
-      <div className="mx-auto max-w-7xl lg:px-10 xl:px-14">
+    <section className="bg-white py-16 md:py-20">
+      <StudioPageContainer className="lg:px-10 xl:px-14">
         <PremiumSurface
           tone="glass"
           elevation="lg"
@@ -572,7 +579,7 @@ function AboutFinalCta() {
             </div>
           </div>
         </PremiumSurface>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }
@@ -587,10 +594,7 @@ export function StudioAboutPage({ navigationItems }: StudioAboutPageProps) {
     >
       {/* The page-level rails keep the dedicated route visually tied to the homepage shell. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-          <div className="absolute inset-y-0 left-0 w-px bg-slate-200/80" />
-          <div className="absolute inset-y-0 right-0 w-px bg-slate-200/80" />
-        </div>
+        <StudioPageRails />
         <div className="absolute inset-x-0 top-0 h-[22rem] bg-[radial-gradient(circle_at_16%_4%,rgba(88,41,199,0.08),rgba(255,255,255,0)_32%),radial-gradient(circle_at_88%_0%,rgba(255,202,45,0.1),rgba(255,255,255,0)_30%)]" />
       </div>
 

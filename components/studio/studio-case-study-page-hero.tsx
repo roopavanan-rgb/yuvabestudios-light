@@ -8,6 +8,10 @@ import {
   type StudioCaseStudySummary,
 } from "@/components/studio/studio-case-study-content";
 import { resolveStudioCaseStudyHeroMedia } from "@/components/studio/studio-case-study-detail";
+import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -34,15 +38,15 @@ export function StudioCaseStudyPageHero({
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-0 inset-y-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(252,252,253,0.93)_34%,rgba(248,248,250,0.92)_70%,rgba(248,248,250,0.95))]" />
         <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_18%_22%,rgba(88,41,199,0.11),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,rgba(255,202,45,0.11),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,rgba(150,136,192,0.08),rgba(255,255,255,0)_34%)]" />
-        <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-          <div className="absolute inset-y-0 left-0 w-px bg-[linear-gradient(180deg,rgba(203,195,223,0.36),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.34))]" />
-          <div className="absolute inset-y-0 right-0 w-px bg-[linear-gradient(180deg,rgba(250,223,144,0.34),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.28))]" />
-        </div>
+        <StudioPageRails
+          leftRailClassName="bg-[linear-gradient(180deg,rgba(203,195,223,0.36),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.34))]"
+          rightRailClassName="bg-[linear-gradient(180deg,rgba(250,223,144,0.34),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.28))]"
+        />
         <div className="absolute inset-x-[-16%] bottom-[-10rem] h-[13rem] -rotate-[8deg] bg-[linear-gradient(90deg,rgba(88,41,199,0.78),rgba(129,103,255,0.72),rgba(43,183,199,0.62),rgba(148,233,228,0.5))] md:bottom-[-12rem] md:h-[15rem] xl:bottom-[-14rem] xl:h-[18rem]" />
       </div>
 
       <div className="relative z-10">
-        <div className="mx-auto max-w-7xl px-6 pb-14 pt-10 md:px-10 md:pb-18 md:pt-14">
+        <StudioPageContainer className="pb-14 pt-10 md:pb-18 md:pt-14">
           {/* The hero keeps the text-led story on the left and restores the right slot as a quieter brand mark panel. */}
           <div className="grid gap-12 xl:grid-cols-[minmax(0,0.92fr)_minmax(26rem,0.84fr)] xl:items-center">
             {/* The left column keeps one dominant message, one support paragraph, and one CTA cluster. */}
@@ -126,7 +130,7 @@ export function StudioCaseStudyPageHero({
               )}
             </div>
           </div>
-        </div>
+        </StudioPageContainer>
       </div>
     </section>
   );

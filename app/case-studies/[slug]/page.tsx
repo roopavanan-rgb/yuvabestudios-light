@@ -7,6 +7,10 @@ import { StudioCaseStudyOutcomesStrip } from "@/components/studio/studio-case-st
 import { StudioCaseStudyPageHero } from "@/components/studio/studio-case-study-page-hero";
 import { StudioHeader } from "@/components/studio/studio-header";
 import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
+import {
   applyStudioCaseStudyDisplayOverrides,
   getStudioCaseStudyHref,
   resolveStudioCaseStudyDetail,
@@ -109,7 +113,10 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden overflow-y-visible bg-white text-foreground">
+    <main
+      data-studio-shell
+      className="relative min-h-screen overflow-x-hidden overflow-y-visible bg-white text-foreground"
+    >
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
@@ -117,10 +124,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
       {/* The page rails keep the case-study route visually connected to the homepage shell. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-          <div className="absolute inset-y-0 left-0 w-px bg-slate-200/80" />
-          <div className="absolute inset-y-0 right-0 w-px bg-slate-200/80" />
-        </div>
+        <StudioPageRails />
         <div className="absolute inset-x-0 top-0 h-[24rem] bg-[radial-gradient(circle_at_18%_10%,rgba(88,41,199,0.07),rgba(255,255,255,0)_34%),radial-gradient(circle_at_82%_0%,rgba(255,202,45,0.08),rgba(255,255,255,0)_32%)]" />
       </div>
 
@@ -128,29 +132,33 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
       <StudioHeader navigationItems={homepageContent.navigationItems} />
 
       <article className="relative z-10">
-        <nav
-          aria-label="Breadcrumb"
-          className="mx-auto flex max-w-7xl flex-wrap items-center gap-2 px-6 py-5 text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)] md:px-10"
-        >
-          <Link href="/">Home</Link>
-          <span>/</span>
-          <Link href="/#work">Case studies</Link>
-          <span>/</span>
-          <span className="text-[var(--color-text-brand)]">{caseStudy.title}</span>
-        </nav>
+        <StudioPageContainer className="py-5">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex flex-wrap items-center gap-2 text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]"
+          >
+            <Link href="/">Home</Link>
+            <span>/</span>
+            <Link href="/#work">Case studies</Link>
+            <span>/</span>
+            <span className="text-[var(--color-text-brand)]">{caseStudy.title}</span>
+          </nav>
+        </StudioPageContainer>
 
         <StudioCaseStudyPageHero caseStudy={displayCaseStudy} />
         <StudioCaseStudyOutcomesStrip caseStudy={displayCaseStudy} />
 
         {/* The rest of the page keeps the deeper proof content, but it now starts below a dedicated landing-style hero. */}
-        <section className="px-6 py-10 md:px-10 md:py-12">
-          <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-6">
+        <section className="py-10 md:py-12">
+          <StudioPageContainer>
+            <div className="px-2 sm:px-4 lg:px-6">
             <StudioCaseStudyDetail
               caseStudy={displayCaseStudy}
               variant="page"
               showHero={false}
             />
-          </div>
+            </div>
+          </StudioPageContainer>
         </section>
       </article>
     </main>

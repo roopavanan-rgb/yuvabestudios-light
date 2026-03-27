@@ -1,3 +1,8 @@
+import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
+
 const companyLogos = [
   { name: "Ageshift", src: "/logos/ageshift.svg" },
   { name: "AV Marathon", src: "/logos/av-marathon.svg" },
@@ -23,12 +28,7 @@ const companyLogos = [
 
 // The frame guides keep the hero background and strip edges aligned to the same centered rail.
 export function StudioTrustStripGuides() {
-  return (
-    <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-      <TrustStripDivider side="left" />
-      <TrustStripDivider side="right" />
-    </div>
-  );
+  return <StudioPageRails />;
 }
 
 type TrustStripLogoProps = {
@@ -108,7 +108,7 @@ function TrustStripDivider({ side }: TrustStripDividerProps) {
 export function StudioTrustStrip() {
   return (
     <div className="relative z-10 mt-10 border-y border-slate-200/70 bg-white/80 backdrop-blur-sm">
-      <div className="relative mx-auto max-w-7xl px-6 md:px-0">
+      <StudioPageContainer className="relative md:px-0">
         {/* The viewport owns the clipping so the dividers and masks stay locked to the same edge. */}
         <div className="relative overflow-hidden">
           <TrustStripMask side="left" />
@@ -124,7 +124,7 @@ export function StudioTrustStrip() {
             </div>
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
     </div>
   );
 }

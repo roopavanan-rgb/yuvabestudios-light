@@ -2,6 +2,7 @@ import { getHomepageCaseStudies } from "@/components/studio/studio-case-study-co
 import { StudioCaseStudies } from "@/components/studio/studio-case-studies";
 import { StudioHeader } from "@/components/studio/studio-header";
 import { StudioHero } from "@/components/studio/studio-hero";
+import { StudioPageRails } from "@/components/studio/studio-page-shell";
 import { StudioServices } from "@/components/studio/studio-services";
 import {
   getStudioCaseStudies,
@@ -24,10 +25,7 @@ export default async function Home() {
     >
       {/* The page-level rails keep the outer frame continuous across every homepage section. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-          <div className="absolute inset-y-0 left-0 w-px bg-slate-200/80" />
-          <div className="absolute inset-y-0 right-0 w-px bg-slate-200/80" />
-        </div>
+        <StudioPageRails />
       </div>
 
       {/* The homepage starts with the Stripe-inspired hero and flows into proof. */}

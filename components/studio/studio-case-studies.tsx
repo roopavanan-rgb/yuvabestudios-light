@@ -8,6 +8,10 @@ import {
   getStudioCaseStudyHref,
   type StudioCaseStudySummary,
 } from "@/components/studio/studio-case-study-content";
+import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
 import { StudioCaseStudySummaryDialog } from "@/components/studio/studio-case-study-summary-dialog";
 
 type StudioCaseStudiesProps = {
@@ -66,19 +70,16 @@ export function StudioCaseStudies({
     <>
       <section
         id="work"
-        className="relative overflow-hidden bg-white px-6 py-10 md:px-10 md:py-2"
+        className="relative overflow-hidden bg-white py-10 md:py-2"
       >
         {/* The section background extends the hero's light grid so the frame line continues below the fold. */}
         <div aria-hidden="true" className="absolute inset-0">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.021)_1px,transparent_1px)] bg-[size:100%_120px]" />
-          <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-            <div className="absolute inset-y-0 left-0 w-px bg-slate-200/80" />
-            <div className="absolute inset-y-0 right-0 w-px bg-slate-200/80" />
-          </div>
+          <StudioPageRails />
         </div>
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-10">
+        <StudioPageContainer className="relative z-10 flex flex-col gap-10">
           {/* The section heading uses editorial contrast with one dominant line and one quieter display block. */}
           <div className="max-w-6xl space-y-5 lg:pl-10 xl:pl-14">
             <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
@@ -216,7 +217,7 @@ export function StudioCaseStudies({
               </div>
             ) : null}
           </div>
-        </div>
+        </StudioPageContainer>
       </section>
 
       <StudioCaseStudySummaryDialog

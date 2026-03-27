@@ -9,6 +9,10 @@ import type {
   StudioHomepageServiceItem,
   StudioHomepageServicesContent,
 } from "@/components/studio/studio-homepage-content";
+import {
+  StudioPageContainer,
+  StudioPageRails,
+} from "@/components/studio/studio-page-shell";
 import { PremiumSurface } from "@/components/ui/premium-surface";
 
 type StudioServiceItem = StudioHomepageServiceItem & {
@@ -51,7 +55,7 @@ export function StudioServices({ content }: StudioServicesProps) {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-white px-6 py-14 md:px-10 md:py-20"
+      className="relative overflow-hidden bg-white py-14 md:py-20"
     >
       <div id="process" aria-hidden="true" className="absolute top-0" />
 
@@ -60,13 +64,10 @@ export function StudioServices({ content }: StudioServicesProps) {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.021)_1px,transparent_1px)] bg-[size:100%_120px]" />
         <div className="absolute bottom-[-8rem] left-1/2 h-[24rem] w-[40rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(88,41,199,0.16)_0%,rgba(203,195,223,0.16)_34%,rgba(255,202,45,0.12)_56%,rgba(255,255,255,0)_78%)] blur-3xl" />
-        <div className="absolute inset-y-0 left-1/2 hidden w-full max-w-7xl -translate-x-1/2 px-6 md:block md:px-10">
-          <div className="absolute inset-y-0 left-0 w-px bg-slate-200/80" />
-          <div className="absolute inset-y-0 right-0 w-px bg-slate-200/80" />
-        </div>
+        <StudioPageRails />
       </div>
 
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col gap-10">
+      <StudioPageContainer className="relative z-10 flex flex-col gap-10">
         {/* The intro now mirrors the work section's editorial hierarchy so both homepage sections feel cut from the same system. */}
         <div className="max-w-6xl space-y-5 lg:pl-10 xl:pl-14">
           <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
@@ -140,7 +141,7 @@ export function StudioServices({ content }: StudioServicesProps) {
             </div>
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
     </section>
   );
 }

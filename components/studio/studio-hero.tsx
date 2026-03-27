@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 import type { StudioHomepageHeroContent } from "@/components/studio/studio-homepage-content";
 import { StudioHandDrawnUnderline } from "@/components/studio/studio-hand-drawn-underline";
+import { StudioPageContainer } from "@/components/studio/studio-page-shell";
 import {
   StudioTrustStrip,
   StudioTrustStripGuides,
@@ -36,7 +37,7 @@ export function StudioHero({ content }: StudioHeroProps) {
       <HeroBackground />
 
       {/* The editorial content occupies the remaining viewport height after the rail is accounted for. */}
-      <div className="relative z-10 mx-auto flex w-full max-w-7xl items-start px-6 pb-6 pt-14 md:px-10 md:pb-12 md:pt-16">
+      <StudioPageContainer className="relative z-10 flex items-start pb-6 pt-14 md:pb-12 md:pt-16">
         <div className="grid w-full items-center gap-5 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:gap-7">
           {/* The left column follows Stripe's strong editorial layout with a compact badge, oversized headline, and one CTA. */}
           <div className="max-w-4xl space-y-4 lg:pl-4 xl:pl-4">
@@ -114,7 +115,7 @@ export function StudioHero({ content }: StudioHeroProps) {
             </div>
           </div>
         </div>
-      </div>
+      </StudioPageContainer>
 
       <StudioTrustStrip />
     </section>
