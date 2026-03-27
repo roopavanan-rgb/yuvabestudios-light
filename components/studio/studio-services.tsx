@@ -53,6 +53,8 @@ export function StudioServices({ content }: StudioServicesProps) {
       id="services"
       className="relative overflow-hidden bg-white px-6 py-14 md:px-10 md:py-20"
     >
+      <div id="process" aria-hidden="true" className="absolute top-0" />
+
       {/* The background keeps the same homepage rails while adding a softer aurora concentration near the lower edge. */}
       <div aria-hidden="true" className="absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />

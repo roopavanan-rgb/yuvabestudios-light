@@ -14,6 +14,7 @@ const badgeVariants = cva(
         secondary: "border-transparent bg-secondary text-secondary-foreground",
         outline: "border-border text-foreground",
         service: "px-3 py-1.5 text-label-sm text-[var(--color-text-glass-pill)]",
+        brandTag: "px-5 py-2.5 text-label-md text-[var(--color-text-inverse)]",
       },
     },
     defaultVariants: {
@@ -28,6 +29,7 @@ export interface BadgeProps
 
 function Badge({ className, variant, ...props }: BadgeProps) {
   const isService = variant === "service";
+  const isBrandTag = variant === "brandTag";
 
   return (
     <div
@@ -39,6 +41,13 @@ function Badge({ className, variant, ...props }: BadgeProps) {
               blur: "md",
               radius: "full",
             })
+          : isBrandTag
+            ? premiumSurfaceVariants({
+                tone: "brandPillViolet",
+                elevation: "sm",
+                blur: "sm",
+                radius: "full",
+              })
           : badgeVariants({ variant }),
         badgeVariants({ variant }),
         className,

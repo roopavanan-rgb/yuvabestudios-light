@@ -4,14 +4,14 @@ import { ArrowUpRight } from "lucide-react";
 
 const footerLinks = {
   Services: [
-    { label: "Product Engineering", href: "#services" },
-    { label: "AI-Native Apps", href: "#services" },
-    { label: "Digital Marketing", href: "#services" },
+    { label: "Product Engineering", href: "/#services" },
+    { label: "AI-Native Apps", href: "/#services" },
+    { label: "Digital Marketing", href: "/#services" },
   ],
   Company: [
-    { label: "Work", href: "#work" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#contact" },
+    { label: "Work", href: "/#work" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/#process" },
   ],
 };
 
@@ -43,7 +43,7 @@ export function StudioFooter() {
               AI-first strategy, design, engineering, and growth marketing for startups that want to move fast and build right.
             </p>
             <Link
-              href="#contact"
+              href="/#process"
               className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--purple-500)] px-5 py-2.5 text-label-md text-white transition-colors hover:bg-[var(--color-action-primary-hover)]"
             >
               Get in touch

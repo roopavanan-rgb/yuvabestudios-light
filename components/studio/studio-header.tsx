@@ -4,6 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 
@@ -42,6 +43,7 @@ type StudioHeaderProps = {
 export function StudioHeader({ navigationItems }: StudioHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMounted = useSyncExternalStore(subscribe, () => true, () => false);
+  const pathname = usePathname();
 
   // Lock page scroll and flag the shell while the overlay menu is open so the background can blur and scale.
   useEffect(() => {
@@ -57,6 +59,15 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
   // Close the mobile panel after navigation so the page content regains focus immediately.
   function handleNavClick() {
     setIsMenuOpen(false);
+  }
+
+  // Hash links should target homepage sections when the user is browsing a non-home route.
+  function resolveHref(href: string) {
+    if (!href.startsWith("#")) {
+      return href;
+    }
+
+    return pathname === "/" ? href : `/${href}`;
   }
 
   const overlay = (
@@ -117,8 +128,9 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
                   {navigationItems.map((item) => (
                     <motion.div key={item.label} variants={menuItemVariants}>
                       <Link
-                        href={item.href}
+                        href={resolveHref(item.href)}
                         onClick={handleNavClick}
+                        prefetch={item.href.startsWith("/") ? undefined : false}
                         className="flex min-h-[5.5rem] items-center justify-between rounded-[1.25rem] px-5 py-6 text-left text-[2.25rem] leading-[0.96] tracking-[-0.04em] text-slate-900 transition-colors hover:bg-white/55 hover:text-[var(--purple-500)] touch-manipulation sm:min-h-[6rem] sm:px-6 sm:py-6 sm:text-[2.5rem]"
                       >
                         <span>{item.label}</span>
@@ -160,7 +172,8 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
               {navigationItems.map((item) => (
                 <Link
                   key={item.label}
-                  href={item.href}
+                  href={resolveHref(item.href)}
+                  prefetch={item.href.startsWith("/") ? undefined : false}
                   className="text-label-lg text-slate-800 transition-colors hover:text-[var(--purple-500)]"
                 >
                   {item.label}
