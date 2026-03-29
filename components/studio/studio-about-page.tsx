@@ -19,6 +19,7 @@ import {
   type StudioAboutValuesContent,
   type StudioAboutWorkflowContent,
 } from "@/components/studio/studio-about-content";
+import { StudioCtaCard } from "@/components/studio/studio-cta-card";
 import { StudioHeader } from "@/components/studio/studio-header";
 import {
   StudioPageContainer,
@@ -651,48 +652,14 @@ function AboutValuesAndTeamSection({
 
 // The final CTA closes the page on one clear next step while preserving a lower-friction proof path.
 function AboutFinalCta({ content }: { content: StudioAboutPageContent["cta"] }) {
-  const cta = content;
-
   return (
-    <section className="bg-white py-16 md:py-20">
-      <StudioPageContainer className="lg:px-10 xl:px-14">
-        <PremiumSurface
-          tone="glass"
-          elevation="lg"
-          blur="lg"
-          radius="xl"
-          className="overflow-hidden p-8 transition-transform duration-300 ease-out hover:[transform:perspective(1600px)_rotateX(0.8deg)_rotateY(-1.8deg)] md:p-10"
-        >
-          <div aria-hidden="true" className="absolute inset-0">
-            <div className="absolute right-[-8rem] top-[-8rem] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.18)_0%,rgba(255,202,45,0)_72%)] blur-3xl" />
-            <div className="absolute left-[-8rem] bottom-[-8rem] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(circle,rgba(88,41,199,0.16)_0%,rgba(88,41,199,0)_72%)] blur-3xl" />
-          </div>
-
-          {/* The CTA panel reuses the established shell but simplifies the message to one clear invitation. */}
-          <div className="relative z-10 grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <div className="space-y-4">
-              <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
-                {cta.eyebrow}
-              </p>
-              <h2 className="max-w-4xl text-section-display text-[var(--neutral-950)]">
-                {cta.title}
-              </h2>
-              <p className="max-w-3xl text-body-lg text-[var(--color-text-secondary)]">
-                {cta.description}
-              </p>
-            </div>
-            <div className="flex items-start">
-              <Button asChild size="lg" className="min-w-[220px]">
-                <Link href={cta.primaryCtaHref}>
-                  {cta.primaryCtaLabel}
-                  <ArrowRight className="size-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </PremiumSurface>
-      </StudioPageContainer>
-    </section>
+    <StudioCtaCard
+      eyebrow={content.eyebrow}
+      title={content.title}
+      description={content.description}
+      primaryCtaLabel={content.primaryCtaLabel}
+      primaryCtaHref={content.primaryCtaHref}
+    />
   );
 }
 

@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+
 const footerLinks = {
   Services: [
     { label: "Product Engineering", href: "/#services" },
@@ -45,13 +47,12 @@ export function StudioFooter() {
               AI-first strategy, design, engineering, and growth marketing for startups that
               want to move fast and build right.
             </p>
-            <Link
-              href="/#process"
-              className="inline-flex w-fit items-center gap-2 rounded-full bg-[var(--purple-500)] px-5 py-2.5 text-label-md text-white transition-colors hover:bg-[var(--color-action-primary-hover)]"
-            >
-              Get in touch
-              <ArrowUpRight className="size-4" />
-            </Link>
+            <Button asChild className="w-fit">
+              <Link href="/#process">
+                Get in touch
+                <ArrowUpRight className="size-4" />
+              </Link>
+            </Button>
           </div>
 
           {/* Nav columns */}

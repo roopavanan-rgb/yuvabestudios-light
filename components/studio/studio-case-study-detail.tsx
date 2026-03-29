@@ -232,7 +232,7 @@ export function StudioCaseStudyDetail({
               {/* The top action turns the summary into a crawlable route while keeping the founder CTA close by on the full page. */}
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 {isModal ? (
-                  <Button asChild size="lg" className="rounded-full px-6">
+                  <Button asChild size="lg" className="px-6">
                     <Link href={detail.href}>
                       Read full case study
                       <ArrowUpRight className="size-4" />
@@ -240,7 +240,7 @@ export function StudioCaseStudyDetail({
                   </Button>
                 ) : (
                   <>
-                    <Button asChild size="lg" className="rounded-full px-6">
+                    <Button asChild size="lg" className="px-6">
                       <Link href={contactHref}>
                         Start a project
                         <ArrowUpRight className="size-4" />
@@ -250,7 +250,7 @@ export function StudioCaseStudyDetail({
                       asChild
                       variant="secondary"
                       size="lg"
-                      className="rounded-full px-6"
+                      className="px-6"
                     >
                       <Link href={returnHref}>Back to work</Link>
                     </Button>
@@ -561,14 +561,14 @@ export function StudioCaseStudyDetail({
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             {isModal ? (
-              <Button asChild size="lg" className="rounded-full px-6">
+              <Button asChild size="lg" className="px-6">
                 <Link href={detail.href}>
                   Read full case study
                   <ArrowUpRight className="size-4" />
                 </Link>
               </Button>
             ) : (
-              <Button asChild size="lg" className="rounded-full px-6">
+              <Button asChild size="lg" className="px-6">
                 <Link href={contactHref}>
                   Start a project
                   <ArrowUpRight className="size-4" />
@@ -579,7 +579,7 @@ export function StudioCaseStudyDetail({
               asChild
               variant="secondary"
               size="lg"
-              className="rounded-full px-6"
+              className="px-6"
             >
               <Link href={isModal ? contactHref : returnHref}>
                 {isModal ? "Get in touch" : "Back to work"}
