@@ -34,6 +34,7 @@ Use these proof signals to support the page without turning it into a case-study
 - TVAM: AI-powered advisor tools, RAG workflows, secure chat storage, TTS/STT, vector search, and cloud deployment.
 - Bevolve: ESG intelligence platform with AI, machine learning, NLP, compliance workflows, automated reporting, and benchmarking.
 - KittyKat: generative AI fashion workflow for product-to-model image generation with refinement and output quality improvements.
+- Quilt.AI: AI-assisted market research and data-analysis work framed around turning human insight into clearer decision support.
 - AgeShift: cross-platform wellness product spanning mobile app, backend, admin panel, cloud infrastructure, and AI recommendations.
 - General Aeronautics: product UI/UX, website revamp, branding, content, and marketing support for an agricultural and defence drone company.
 
@@ -123,12 +124,13 @@ Headline:
 Built across AI, product, and growth.
 
 Intro:
-Our work spans founder problems that require more than one discipline. From AI advisors and RAG-based products to cross-platform wellness platforms, ecommerce image workflows, and digital systems for deep-tech companies, we build where strategy and execution need to stay tightly connected.
+Our work spans founder problems that require more than one discipline. From AI advisors and RAG-based products to cross-platform wellness platforms, ecommerce image workflows, market-intelligence systems, and digital platforms for deep-tech companies, we build where strategy and execution need to stay tightly connected.
 
 Proof bullets:
 - TVAM: AI-powered advisory tools with RAG workflows, cloud deployment, and secure multi-tool coordination.
 - General Aeronautics: digital experience, product UI/UX, branding, and marketing support for a drone technology company.
 - AgeShift: a wellness platform spanning mobile, backend, admin, cloud, and AI recommendations.
+- Quilt.AI: lighter-proof reference for AI-powered market research and data-analysis support.
 - Bevolve: lighter-proof reference unless re-verified before heavier public-facing use.
 - KittyKat: lighter-proof reference unless re-verified before heavier public-facing use.
 
@@ -170,5 +172,6 @@ See Our Work
 - Avoid a big services dump; the About page should explain who Yuvabe is and how it works.
 - If we want a team section, confirm the current roster before publishing because the public About page team list may be stale.
 - Treat `TVAM` and `General Aeronautics` as the strongest public proof anchors, with `AgeShift` close behind.
+- Use `Quilt.AI` for lighter market-intelligence and insight-synthesis proof until the direct project page is fully re-verified.
 - Use `Bevolve` and `KittyKat` more lightly until their public project pages are re-verified for heavier claims.
 - The story illustration should express selection, direction, or discernment rather than generic growth or sustainability symbolism.

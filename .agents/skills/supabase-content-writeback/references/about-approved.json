@@ -76,7 +76,7 @@
   "proof": {
     "eyebrow": "Selected work",
     "title": "A few places we've done this.",
-    "description": "We've worked on AI products, wellness platforms, ecommerce image systems, ESG tools, and deep-tech websites. Different domains, same job: help teams move from idea to traction with clear thinking and strong execution.",
+    "description": "We've worked on AI products, wellness platforms, ecommerce image systems, market-intelligence tools, ESG platforms, and deep-tech websites. Different domains, same job: help teams move from idea to traction with clear thinking and strong execution.",
     "entries": [
       {
         "client": "TVAM",
@@ -92,6 +92,11 @@
         "client": "KittyKat",
         "sector": "Fashion ecommerce and generative AI",
         "summary": "Built a product-to-model image workflow to help generate fashion visuals faster and at scale."
+      },
+      {
+        "client": "Quilt AI",
+        "sector": "AI-powered market research and data analysis",
+        "summary": "Supported insight-focused AI and research workflows that help teams turn messy human signals into clearer decision support."
       },
       {
         "client": "AgeShift",
