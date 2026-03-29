@@ -57,7 +57,7 @@ Use this reference when writing homepage or case-study content through the scrip
   },
   "workflow": {
     "eyebrow": "How we work",
-    "title": "One team, close to the work.",
+    "title": "One team across the full loop.",
     "description": "...",
     "stages": [
       { "label": "Strategy", "description": "..." }

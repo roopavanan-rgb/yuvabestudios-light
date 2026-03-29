@@ -33,7 +33,7 @@
     "paragraphs": [
       "We started in 2020 in Auroville with a human-centered way of working and a bias toward thoughtful decisions. That foundation still shapes how we work today: with care, curiosity, and long-term responsibility.",
       "The roots stayed the same. What changed was the problem. As building got easier, deciding what was actually worth building became harder.",
-      "That's the work we care about now. We help founders cut through noise, make clearer bets, and keep strategy, design, engineering, and growth connected."
+      "We help founders cut through noise, make clearer bets, and keep strategy, design, engineering, and growth connected."
     ],
     "operatingPrinciples": [
       {
@@ -52,8 +52,8 @@
   },
   "workflow": {
     "eyebrow": "How we work",
-    "title": "One team, close to the work.",
-    "description": "We don't like long handoffs or teams working in isolation. We stay close across strategy, design, engineering, and growth so decisions get made faster and the work stays coherent.",
+    "title": "One team across the full loop.",
+    "description": "Strategy, design, engineering, and growth stay connected here. Fewer handoffs, faster decisions, and a product that holds together from the first bet to what happens after launch.",
     "stages": [
       {
         "label": "Strategy",

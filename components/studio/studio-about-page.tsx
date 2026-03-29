@@ -389,7 +389,7 @@ function AboutTeamBandSection() {
             People behind the work
           </p>
           <h2 className="max-w-4xl text-section-display text-[var(--neutral-950)]">
-            A close team, built to stay involved.
+            Small team. Deep involvement. Start to finish.
           </h2>
         </div>
 
