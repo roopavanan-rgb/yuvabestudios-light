@@ -67,32 +67,28 @@ const aboutAssets = {
 } as const;
 const workflowCardStyles = [
   {
-    backgroundClassName:
-      "border-[color:color-mix(in_srgb,var(--lavender-200)_72%,white)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--purple-500)_10%,white)_0%,color-mix(in_srgb,var(--lavender-200)_34%,white)_100%)]",
+    tone: "tintLavender",
     numberClassName: "text-[var(--lavender-500)]",
     iconShellClassName:
-      "border-[color:color-mix(in_srgb,var(--lavender-200)_68%,white)] bg-[color:color-mix(in_srgb,var(--purple-500)_6%,white)] text-[var(--purple-500)]",
+      "border-white/80 bg-white/78 text-[var(--purple-500)]",
   },
   {
-    backgroundClassName:
-      "border-[color:color-mix(in_srgb,var(--orange-200)_92%,white)] bg-[color:color-mix(in_srgb,var(--yellow-500)_18%,white)]",
+    tone: "tintWarm",
     numberClassName: "text-[var(--orange-500)]",
     iconShellClassName:
-      "border-[color:color-mix(in_srgb,var(--orange-200)_86%,white)] bg-[color:color-mix(in_srgb,var(--yellow-500)_24%,white)] text-[var(--orange-500)]",
+      "border-white/80 bg-white/80 text-[var(--orange-500)]",
   },
   {
-    backgroundClassName:
-      "border-[color:color-mix(in_srgb,var(--cyan-200)_90%,white)] bg-[color:color-mix(in_srgb,var(--cyan-200)_42%,white)]",
+    tone: "tintCyan",
     numberClassName: "text-[var(--cyan-500)]",
     iconShellClassName:
-      "border-[color:color-mix(in_srgb,var(--cyan-200)_84%,white)] bg-[color:color-mix(in_srgb,var(--cyan-200)_28%,white)] text-[var(--cyan-500)]",
+      "border-white/80 bg-white/78 text-[var(--cyan-500)]",
   },
   {
-    backgroundClassName:
-      "border-[color:color-mix(in_srgb,var(--green-200)_92%,white)] bg-[color:color-mix(in_srgb,var(--green-200)_46%,white)]",
+    tone: "tintGreen",
     numberClassName: "text-[var(--green-500)]",
     iconShellClassName:
-      "border-[color:color-mix(in_srgb,var(--green-200)_86%,white)] bg-[color:color-mix(in_srgb,var(--green-200)_30%,white)] text-[var(--green-500)]",
+      "border-white/80 bg-white/78 text-[var(--green-500)]",
   },
 ] as const;
 
@@ -288,12 +284,13 @@ function AboutStorySection({ content }: { content: StudioAboutStoryContent }) {
             {content.paragraphs[0]}
           </p>
 
-          {/* The roots photo gives the strategic story a human anchor without taking over the section. */}
+          {/* The illustration gives the origin story a warmer metaphor instead of another team photo. */}
           <AboutMediaCard
-            asset={aboutAssets.roots}
+            asset={aboutAssets.illustration}
             altCaption="Where we started"
             sizes="(min-width: 1024px) 34vw, 100vw"
-            className="mt-6 max-w-[34rem]"
+            className="mt-6 max-w-[34rem] bg-[color:color-mix(in_srgb,var(--yellow-500)_18%,white)]"
+            imageClassName="object-contain p-6"
           />
         </div>
 
@@ -318,21 +315,17 @@ function AboutStorySection({ content }: { content: StudioAboutStoryContent }) {
 
           {/* The secondary block now uses the shared aurora surface so the strategic takeaway feels like a system callout, not a one-off panel. */}
           <PremiumSurface
-            tone="neutral"
+            tone="editorialSunrise"
             elevation="md"
             blur="lg"
             radius="xl"
             className="overflow-hidden p-5 md:p-6"
           >
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-[radial-gradient(88%_82%_at_15%_88%,rgba(255,202,45,0.69)_0%,rgba(249,169,31,0.36)_24%,rgba(240,78,40,0.21)_42%,rgba(150,136,192,0.15)_58%,rgba(255,255,255,0)_74%)] opacity-100 [mask-image:linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.05)_26%,rgba(0,0,0,0.9)_56%,rgba(0,0,0,1)_100%),linear-gradient(90deg,rgba(0,0,0,1)_0%,rgba(0,0,0,0.98)_30%,rgba(0,0,0,0.42)_50%,transparent_66%)]"
-            />
             <div className="max-w-4xl space-y-3">
-              <p className="text-label-sm uppercase tracking-[0.18em] text-[color:color-mix(in_srgb,var(--neutral-700)_88%,var(--lavender-500)_12%)]">
+              <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--neutral-700)]">
                 What we care about now
               </p>
-              <p className="max-w-3xl text-body-lg text-[var(--color-text-secondary)]">
+              <p className="max-w-3xl text-body-lg text-[var(--color-text-primary)]">
                 {content.paragraphs[2]}
               </p>
             </div>
@@ -430,14 +423,11 @@ function AboutWorkflowSection({
             return (
               <PremiumSurface
                 key={stage.label}
-                tone="neutral"
+                tone={workflowCardStyle.tone}
                 elevation="sm"
                 blur="sm"
                 radius="xl"
-                className={[
-                  "h-full p-5 md:p-6",
-                  workflowCardStyle.backgroundClassName,
-                ].join(" ")}
+                className="h-full p-5 md:p-6"
               >
                 <div className="flex h-full flex-col gap-6">
                   <div className="flex items-center justify-between gap-4">
@@ -597,59 +587,41 @@ function AboutValuesAndTeamSection({
           </div>
         </div>
 
-        {/* The right column now keeps the same team teaser but adds the new assets as supporting cultural proof. */}
-        <div className="space-y-5">
-          <PremiumSurface
-            tone="glass"
-            elevation="md"
-            blur="md"
-            radius="xl"
-            className="p-6 md:p-7 lg:mt-16"
-          >
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
-                  {teamTeaser.eyebrow}
-                </p>
-                <h3 className="text-display-muted-editorial text-[var(--neutral-950)]">
-                  {teamTeaser.title}
-                </h3>
-                <p className="text-body-lg text-[var(--color-text-secondary)]">
-                  {teamTeaser.description}
-                </p>
-              </div>
-              <div className="space-y-3">
-                {teamTeaser.points.map((point) => (
-                  <div
-                    key={point}
-                    className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-[1rem] border border-slate-200/80 bg-white/80 px-4 py-4"
-                  >
-                    <span className="flex size-2.5 shrink-0 rounded-full bg-[var(--purple-500)]" />
-                    <p className="text-body-md text-[var(--color-text-secondary)]">
-                      {point}
-                    </p>
-                  </div>
-                ))}
-              </div>
+        {/* The right column stays editorial-only so the values section remains focused on principles, not imagery. */}
+        <PremiumSurface
+          tone="glass"
+          elevation="md"
+          blur="md"
+          radius="xl"
+          className="self-start p-6 md:p-7 lg:mt-16"
+        >
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
+                {teamTeaser.eyebrow}
+              </p>
+              <h3 className="text-display-muted-editorial text-[var(--neutral-950)]">
+                {teamTeaser.title}
+              </h3>
+              <p className="text-body-lg text-[var(--color-text-secondary)]">
+                {teamTeaser.description}
+              </p>
             </div>
-          </PremiumSurface>
-
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)]">
-            <AboutMediaCard
-              asset={aboutAssets.shirtDetail}
-              altCaption="Brand detail"
-              sizes="(min-width: 1024px) 26vw, 100vw"
-              className="min-h-[13rem]"
-            />
-            <AboutMediaCard
-              asset={aboutAssets.illustration}
-              altCaption="Studio ethos"
-              sizes="(min-width: 1024px) 18vw, 50vw"
-              className="min-h-[13rem] bg-[color:color-mix(in_srgb,var(--yellow-500)_18%,white)]"
-              imageClassName="object-contain p-6"
-            />
+            <div className="space-y-3">
+              {teamTeaser.points.map((point) => (
+                <div
+                  key={point}
+                  className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-3 rounded-[1rem] border border-slate-200/80 bg-white/80 px-4 py-4"
+                >
+                  <span className="flex size-2.5 shrink-0 rounded-full bg-[var(--purple-500)]" />
+                  <p className="text-body-md text-[var(--color-text-secondary)]">
+                    {point}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </PremiumSurface>
       </StudioPageContainer>
     </section>
   );
