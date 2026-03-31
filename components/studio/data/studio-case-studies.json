@@ -49,12 +49,12 @@
       {
         "items": [
           {
-            "title": "Positioning-led homepage",
-            "description": "A clearer first impression that communicates the scope of the drone portfolio without overwhelming buyers."
+            "title": "Drone system visual",
+            "description": "Concept-led product framing used to make the drone portfolio feel clearer and more technically grounded at a glance."
           },
           {
-            "title": "Product communication system",
-            "description": "A clearer way to present agricultural, defense, and automation capabilities across web and supporting assets."
+            "title": "Flight dashboard view",
+            "description": "A more readable mission dashboard direction that turns operational metrics into a cleaner decision surface."
           }
         ],
         "title": "Work Gallery"
@@ -62,12 +62,12 @@
       {
         "items": [
           {
-            "title": "Application UX direction",
-            "description": "Interface decisions that made complex mission-planning workflows easier to understand and navigate."
+            "title": "Ops planner surface",
+            "description": "Planner and control views that make field work, payload flow, and task sequencing easier to follow."
           },
           {
-            "title": "Content and campaign assets",
-            "description": "Illustrations, video, blogs, and social creatives that kept the story consistent beyond the website."
+            "title": "Mission planning mock",
+            "description": "A workstation mockup showing how the product UI reads in a more grounded, product-in-context setting."
           }
         ],
         "title": "Work Gallery"

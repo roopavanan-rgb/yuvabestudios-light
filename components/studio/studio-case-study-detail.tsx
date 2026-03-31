@@ -171,6 +171,23 @@ function getGalleryRowTitle(title: string) {
   }
 }
 
+// GA gallery mocks need the image chip to repeat the mock title because the modal view hides the footer copy.
+function getGalleryBadgeLabel({
+  caseStudyId,
+  defaultBadgeLabel,
+  itemTitle,
+}: {
+  caseStudyId: string;
+  defaultBadgeLabel: string;
+  itemTitle: string;
+}) {
+  if (caseStudyId === "general-aeronautics") {
+    return itemTitle;
+  }
+
+  return defaultBadgeLabel;
+}
+
 // Some proof screens rely on the full chart or dashboard frame, so they should scale to fit instead of cropping.
 function getGalleryImageClass(caseStudyId: string) {
   if (caseStudyId === "bevolve") {
@@ -485,7 +502,11 @@ export function StudioCaseStudyDetail({
                     <div className="relative overflow-hidden border-b border-white/70 bg-[linear-gradient(180deg,rgba(255,255,255,0.985),rgba(248,248,250,0.95))] before:pointer-events-none before:absolute before:inset-0 before:rounded-[inherit] before:ring-1 before:ring-white/55 before:content-['']">
                       <div className="absolute left-5 top-5 z-10 inline-flex items-center gap-2 rounded-full border border-(--color-border-default) bg-white/96 px-3 py-2 text-[0.66rem] uppercase tracking-[0.16em] text-(--color-text-tertiary) shadow-[0_8px_18px_rgba(15,23,42,0.05)]">
                         <ImageIcon className="size-3.5" strokeWidth={1.9} />
-                        {galleryAssets.badgeLabel}
+                        {getGalleryBadgeLabel({
+                          caseStudyId: caseStudy.id,
+                          defaultBadgeLabel: galleryAssets.badgeLabel,
+                          itemTitle: item.title,
+                        })}
                       </div>
                       <div
                         className={cn(

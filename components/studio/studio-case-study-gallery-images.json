@@ -4,7 +4,7 @@
     "itemImages": {
       "Drone system visual": [
         {
-          "src": "/assets/general-aeronautics/details-mocks/mock5.png",
+          "src": "/assets/general-aeronautics/details-mocks/mock1.png",
           "alt": "General Aeronautics mission planning schedule mock."
         }
       ],
@@ -22,8 +22,8 @@
       ],
       "Mission planning mock": [
         {
-          "src": "/assets/general-aeronautics/details-mocks/mock1.png",
-          "alt": "General Aeronautics drone system concept visual."
+          "src": "/assets/general-aeronautics/details-mocks/mock5.png",
+          "alt": "General Aeronautics mission planning workstation mock."
         }
       ]
     },

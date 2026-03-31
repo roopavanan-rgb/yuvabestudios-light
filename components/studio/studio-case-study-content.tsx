@@ -119,41 +119,6 @@ export type ResolvedStudioCaseStudyDetail = {
   seoDescription: string;
 };
 
-const generalAeronauticsShowcaseGalleryRows: NonNullable<
-  StudioCaseStudySummary["modalGalleryRows"]
-> = [
-  {
-    title: "Work Gallery",
-    items: [
-      {
-        title: "Drone system visual",
-        description:
-          "Concept-led product framing used to make the drone portfolio feel clearer and more technically grounded at a glance.",
-      },
-      {
-        title: "Flight dashboard view",
-        description:
-          "A more readable mission dashboard direction that turns operational metrics into a cleaner decision surface.",
-      },
-    ],
-  },
-  {
-    title: "Work Gallery",
-    items: [
-      {
-        title: "Ops planner surface",
-        description:
-          "Planner and control views that make field work, payload flow, and task sequencing easier to follow.",
-      },
-      {
-        title: "Mission planning mock",
-        description:
-          "A workstation mockup showing how the product UI reads in a more grounded, product-in-context setting.",
-      },
-    ],
-  },
-];
-
 const caseStudyIcons: Record<StudioCaseStudyIconKey, LucideIcon> = {
   barChart3: BarChart3,
   bot: Bot,
@@ -193,13 +158,6 @@ export function getCaseStudyIcon(
 export function applyStudioCaseStudyDisplayOverrides(
   caseStudy: StudioCaseStudySummary,
 ): StudioCaseStudySummary {
-  if (caseStudy.id === "general-aeronautics") {
-    return {
-      ...caseStudy,
-      modalGalleryRows: generalAeronauticsShowcaseGalleryRows,
-    };
-  }
-
   return caseStudy;
 }
 
