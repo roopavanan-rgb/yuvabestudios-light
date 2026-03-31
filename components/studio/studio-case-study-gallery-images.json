@@ -191,18 +191,56 @@
   },
   "kittykat": {
     "badgeLabel": "Generative AI",
+    "itemImages": {
+      "Product-to-model pipeline": [
+        {
+          "src": "/assets/KK/mock1.png",
+          "alt": "KittyKat product-to-model pipeline mock."
+        }
+      ],
+      "Prompt and variation control": [
+        {
+          "src": "/assets/KK/mock2.png",
+          "alt": "KittyKat prompt and variation control mock."
+        }
+      ],
+      "Image quality tuning": [
+        {
+          "src": "/assets/KK/mock3.png",
+          "alt": "KittyKat image quality tuning mock."
+        }
+      ],
+      "Campaign-ready asset system": [
+        {
+          "src": "/assets/KK/mock4.png",
+          "alt": "KittyKat campaign-ready asset system mock."
+        }
+      ]
+    },
     "images": [
       {
-        "src": "/assets/kittykat.svg",
-        "alt": "KittyKat brand mark."
+        "src": "/assets/KK/Cover.png",
+        "alt": "KittyKat AI fashion workflow cover."
       },
       {
-        "src": "/assets/illustration2.png",
-        "alt": "KittyKat fashion image workflow illustration."
+        "src": "/assets/KK/mock1.png",
+        "alt": "KittyKat product-to-model pipeline mock."
       },
       {
-        "src": "/assets/illustration1.png",
-        "alt": "KittyKat generative visual production illustration."
+        "src": "/assets/KK/mock2.png",
+        "alt": "KittyKat prompt and variation control mock."
+      },
+      {
+        "src": "/assets/KK/mock3.png",
+        "alt": "KittyKat image quality tuning mock."
+      },
+      {
+        "src": "/assets/KK/mock4.png",
+        "alt": "KittyKat campaign-ready asset system mock."
+      },
+      {
+        "src": "/assets/KK/mock5.png",
+        "alt": "KittyKat AI fashion asset variation mock."
       }
     ]
   },

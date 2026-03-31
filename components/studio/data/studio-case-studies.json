@@ -205,7 +205,7 @@
       "Product design",
       "RAG workflows"
     ],
-    "mockLayout": "feature",
+    "mockLayout": "wide",
     "modalIntro": "tvam focused on simplifying health guidance, policy support, and exam-prep workflows through advisor-style AI tools. The challenge was turning multiple AI capabilities into one product experience that felt useful, reliable, and easy to navigate — without losing the depth that made each tool valuable.",
     "mockVariant": "aurora",
     "mediaIconKey": "bot",
@@ -213,7 +213,6 @@
     "mockImageSrc": "/assets/tvam/tvam_cover.png",
     "mockViewport": "landscape",
     "mockPresentation": "fullImage",
-    "mockImageAspectRatio": "16 / 9",
     "modalOutcomes": [
       "Built AI-powered Health and Policy Advisors plus a USMLE preparation tool.",
       "Integrated chat-based AI, secure conversation storage, TTS/STT support, vector search, and file uploads.",
@@ -301,12 +300,12 @@
       "Data preprocessing",
       "Image refinement"
     ],
-    "mockLayout": "feature",
+    "mockLayout": "wide",
     "modalIntro": "KittyKat needed a way to generate realistic fashion imagery at scale — without the delay and cost of repeated production shoots. The work focused on turning product-to-model image generation into a more reliable AI workflow with the output quality a premium fashion brand actually needs.",
     "mockVariant": "sunrise",
     "mediaIconKey": "sparkles",
     "mockImageAlt": "KittyKat AI fashion workflow cover",
-    "mockImageSrc": "/assets/KK-cover.png",
+    "mockImageSrc": "/assets/KK/Cover.png",
     "mockViewport": "landscape",
     "modalOutcomes": [
       "Built a generative AI fashion platform that automated product-to-model image generation.",

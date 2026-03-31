@@ -28,6 +28,7 @@ const caseStudyVideoOverrides: Partial<Record<string, string>> = {};
 const caseStudyImageOverrides: Partial<Record<string, string>> = {
   bevolve: "/assets/bevolve-ai.svg",
   "general-aeronautics": "/assets/general-aeronautics/cover-home.png",
+  kittykat: "/assets/KK/Cover-home.png",
   ageshift: "/assets/ageshift/ageshift_cover.png",
 };
 
