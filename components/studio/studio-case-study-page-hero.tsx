@@ -7,7 +7,6 @@ import {
   resolveStudioCaseStudyDetail,
   type StudioCaseStudySummary,
 } from "@/components/studio/studio-case-study-content";
-import { resolveStudioCaseStudyHeroMedia } from "@/components/studio/studio-case-study-detail";
 import {
   StudioPageContainer,
   StudioPageRails,
@@ -23,6 +22,8 @@ const shouldSkipImageOptimization = process.env.NODE_ENV === "development";
 const caseStudyHeroLogoOverrides: Partial<Record<string, string>> = {
   "general-aeronautics": "/logos/general-aeronautics.svg",
   bevolve: "/assets/bevolve/logo-no-text.png",
+  kittykat: "/logos/kittykat.svg",
+  tvam: "/logos/tvam.svg",
 };
 
 // Some case-study logos need a larger hero presence while keeping their intrinsic proportions intact.
@@ -31,21 +32,46 @@ function getCaseStudyHeroLogoStageClass(caseStudyId: string) {
     return "max-w-[18rem]";
   }
 
+  if (caseStudyId === "tvam") {
+    return "max-w-[9rem]";
+  }
+
+  if (caseStudyId === "kittykat") {
+    return "max-w-[13.5rem]";
+  }
+
   return "max-w-[34rem]";
 }
 
-// The Bevolve icon reads cleaner without the decorative underline used by wider wordmarks.
+// Compact logo rails read cleaner without the decorative underline used by wider wordmarks.
 function shouldShowCaseStudyHeroLogoLine(caseStudyId: string) {
-  return caseStudyId !== "bevolve";
+  return (
+    caseStudyId !== "bevolve" &&
+    caseStudyId !== "tvam" &&
+    caseStudyId !== "kittykat"
+  );
 }
 
-// Icon-led logos need a tighter stage so the mark scales visually instead of floating inside a wide banner box.
+// Icon-led or portrait logos need a tighter stage so the mark scales visually instead of floating inside a wide banner box.
 function getCaseStudyHeroLogoAspectClass(caseStudyId: string) {
   if (caseStudyId === "bevolve") {
     return "aspect-square";
   }
 
+  if (caseStudyId === "tvam") {
+    return "aspect-[177/248]";
+  }
+
+  if (caseStudyId === "kittykat") {
+    return "aspect-[118/40]";
+  }
+
   return "aspect-[17/4]";
+}
+
+// The hero keeps a branded right rail on every detail page, but TVAM now uses a compact logo treatment instead of a cover mock.
+function shouldShowCaseStudyHeroVisual(caseStudyId: string) {
+  return Boolean(caseStudyId);
 }
 
 // This page-only hero gives the SEO route a landing-style opening with one focused narrative instead of a hero mock card.
@@ -53,8 +79,8 @@ export function StudioCaseStudyPageHero({
   caseStudy,
 }: StudioCaseStudyPageHeroProps) {
   const detail = resolveStudioCaseStudyDetail(caseStudy);
-  const heroMedia = resolveStudioCaseStudyHeroMedia(caseStudy);
   const heroLogoSrc = caseStudyHeroLogoOverrides[caseStudy.id];
+  const shouldShowHeroVisual = shouldShowCaseStudyHeroVisual(caseStudy.id);
 
   return (
     <section className="relative isolate overflow-visible border-b border-[var(--color-border-default)]/80">
@@ -71,8 +97,15 @@ export function StudioCaseStudyPageHero({
 
       <div className="relative z-10">
         <StudioPageContainer className="pb-14 pt-10 md:pb-18 md:pt-14">
-          {/* The hero keeps the text-led story on the left and restores the right slot as a quieter brand mark panel. */}
-          <div className="grid gap-12 xl:grid-cols-[minmax(0,0.92fr)_minmax(26rem,0.84fr)] xl:items-center">
+          {/* The hero stays text-led; only cases that still need a branded right rail render one. */}
+          <div
+            className={cn(
+              "grid gap-12",
+              shouldShowHeroVisual
+                ? "xl:grid-cols-[minmax(0,0.92fr)_minmax(26rem,0.84fr)] xl:items-center"
+                : "max-w-5xl",
+            )}
+          >
             {/* The left column keeps one dominant message, one support paragraph, and one CTA cluster. */}
             <div className="xl:min-h-[27rem] xl:flex xl:flex-col xl:justify-center">
               <h1 className="max-w-[12ch] font-display text-[clamp(3.25rem,6vw,6rem)] leading-[0.92] tracking-[-0.065em] text-[var(--neutral-950)]">
@@ -92,7 +125,8 @@ export function StudioCaseStudyPageHero({
               </div>
             </div>
 
-            {/* The right panel now shows the actual case-study visual so the hero reads like work, not a placeholder lockup. */}
+            {/* Logo-led cases can still keep a quieter visual rail without bringing the cover mock back. */}
+            {shouldShowHeroVisual ? (
             <div className="relative flex items-center xl:min-h-[27rem] xl:self-center xl:justify-center">
               {heroLogoSrc ? (
                 <div className="relative flex min-h-[18rem] w-full items-center justify-center px-4 py-10 sm:min-h-[22rem] sm:px-8 sm:py-12 xl:min-h-[27rem] xl:py-0">
@@ -119,48 +153,15 @@ export function StudioCaseStudyPageHero({
                   </div>
                 </div>
               ) : (
-                <>
-                  {/* The visual now sits in a single frame so the right side feels cleaner and less over-designed. */}
-                  <div className="relative w-full rounded-[2rem] shadow-[0_28px_80px_rgba(15,23,42,0.07)]">
-                    <div className="relative aspect-[1.08/1] overflow-hidden rounded-[1.8rem] border-[6px] border-[var(--neutral-100)] bg-[var(--color-background-surface-subtle)]">
-                      {heroMedia.videoSrc ? (
-                        <video
-                          src={heroMedia.videoSrc}
-                          autoPlay
-                          muted
-                          loop
-                          playsInline
-                          className="absolute inset-0 h-full w-full object-cover"
-                        />
-                      ) : heroMedia.visualSrc ? (
-                        <Image
-                          src={heroMedia.visualSrc}
-                          alt={caseStudy.mockImageAlt ?? `${caseStudy.title} case study visual`}
-                          fill
-                          sizes="(min-width: 1280px) 34rem, (min-width: 768px) 42vw, 100vw"
-                          className={cn(
-                            "object-cover object-top",
-                            heroMedia.imageClassName,
-                          )}
-                          priority
-                          unoptimized={shouldSkipImageOptimization}
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-[var(--neutral-700)]">
-                          <CaseStudyIcon iconKey={caseStudy.mediaIconKey} />
-                        </div>
-                      )}
-                      <div className="pointer-events-none absolute inset-x-0 top-0 flex justify-between p-4 sm:p-5">
-                        <div className="rounded-full border border-white/80 bg-white/92 px-3 py-1.5 text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)] shadow-[0_8px_20px_rgba(15,23,42,0.06)]">
-                          Selected work
-                        </div>
-                      </div>
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(11,15,25,0),rgba(11,15,25,0.12))]" />
-                    </div>
+                <div className="relative flex min-h-[18rem] w-full items-center justify-center rounded-[2rem] border border-white/80 bg-white/55 px-6 py-10 shadow-[0_28px_80px_rgba(15,23,42,0.05)] backdrop-blur-[6px] sm:min-h-[22rem] sm:px-8 sm:py-12 xl:min-h-[27rem] xl:py-0">
+                  <div className="pointer-events-none absolute inset-x-[14%] top-1/2 h-28 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(88,41,199,0.12),rgba(129,103,255,0.1)_32%,rgba(43,183,199,0.08)_56%,rgba(255,255,255,0)_76%)] blur-3xl" />
+                  <div className="relative flex h-20 w-20 items-center justify-center rounded-[1.4rem] border border-white/85 bg-white/85 text-[var(--neutral-700)] shadow-[0_16px_36px_rgba(15,23,42,0.08)] sm:h-24 sm:w-24">
+                    <CaseStudyIcon iconKey={caseStudy.mediaIconKey} className="size-10 stroke-[1.55]" />
                   </div>
-                </>
+                </div>
               )}
             </div>
+            ) : null}
           </div>
         </StudioPageContainer>
       </div>
