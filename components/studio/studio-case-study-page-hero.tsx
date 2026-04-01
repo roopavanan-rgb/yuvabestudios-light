@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import {
   CaseStudyIcon,
   resolveStudioCaseStudyDetail,
+  resolveStudioCaseStudyHeroPalette,
   type StudioCaseStudySummary,
 } from "@/components/studio/studio-case-study-content";
 import {
@@ -79,6 +80,7 @@ export function StudioCaseStudyPageHero({
   caseStudy,
 }: StudioCaseStudyPageHeroProps) {
   const detail = resolveStudioCaseStudyDetail(caseStudy);
+  const heroPalette = resolveStudioCaseStudyHeroPalette(caseStudy.id);
   const heroLogoSrc = caseStudyHeroLogoOverrides[caseStudy.id];
   const shouldShowHeroVisual = shouldShowCaseStudyHeroVisual(caseStudy.id);
 
@@ -87,12 +89,18 @@ export function StudioCaseStudyPageHero({
       {/* The page hero keeps the band, but folds it into one calmer brand wash so the rails and color feel coordinated. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-x-0 inset-y-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(252,252,253,0.93)_34%,rgba(248,248,250,0.92)_70%,rgba(248,248,250,0.95))]" />
-        <div className="absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(circle_at_18%_22%,rgba(88,41,199,0.11),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,rgba(255,202,45,0.11),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,rgba(150,136,192,0.08),rgba(255,255,255,0)_34%)]" />
+        <div
+          className="absolute inset-x-0 top-0 h-[34rem]"
+          style={{ backgroundImage: heroPalette.topWash }}
+        />
         <StudioPageRails
           leftRailClassName="bg-[linear-gradient(180deg,rgba(203,195,223,0.36),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.34))]"
           rightRailClassName="bg-[linear-gradient(180deg,rgba(250,223,144,0.34),rgba(229,231,235,0.72)_20%,rgba(229,231,235,0.72)_78%,rgba(203,195,223,0.28))]"
         />
-        <div className="absolute inset-x-[-16%] bottom-[-10rem] h-[13rem] -rotate-[8deg] bg-[linear-gradient(90deg,rgba(88,41,199,0.78),rgba(129,103,255,0.72),rgba(43,183,199,0.62),rgba(148,233,228,0.5))] md:bottom-[-12rem] md:h-[15rem] xl:bottom-[-14rem] xl:h-[18rem]" />
+        <div
+          className="absolute inset-x-[-16%] bottom-[-10rem] h-[13rem] -rotate-[8deg] md:bottom-[-12rem] md:h-[15rem] xl:bottom-[-14rem] xl:h-[18rem]"
+          style={{ backgroundImage: heroPalette.strip }}
+        />
       </div>
 
       <div className="relative z-10">
@@ -130,9 +138,15 @@ export function StudioCaseStudyPageHero({
             <div className="relative flex items-center xl:min-h-[27rem] xl:self-center xl:justify-center">
               {heroLogoSrc ? (
                 <div className="relative flex min-h-[18rem] w-full items-center justify-center px-4 py-10 sm:min-h-[22rem] sm:px-8 sm:py-12 xl:min-h-[27rem] xl:py-0">
-                  <div className="pointer-events-none absolute inset-x-[10%] top-1/2 h-24 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(88,41,199,0.15),rgba(129,103,255,0.12)_34%,rgba(43,183,199,0.08)_56%,rgba(255,255,255,0)_74%)] blur-3xl" />
+                  <div
+                    className="pointer-events-none absolute inset-x-[10%] top-1/2 h-24 -translate-y-1/2 rounded-full blur-3xl"
+                    style={{ backgroundImage: heroPalette.logoGlow }}
+                  />
                   {shouldShowCaseStudyHeroLogoLine(caseStudy.id) ? (
-                    <div className="pointer-events-none absolute inset-x-[20%] top-1/2 h-px translate-y-[4.25rem] bg-[linear-gradient(90deg,rgba(203,195,223,0),rgba(203,195,223,0.72),rgba(148,219,228,0.62),rgba(203,195,223,0))]" />
+                    <div
+                      className="pointer-events-none absolute inset-x-[20%] top-1/2 h-px translate-y-[4.25rem]"
+                      style={{ backgroundImage: heroPalette.logoLine }}
+                    />
                   ) : null}
                   <div
                     className={cn(

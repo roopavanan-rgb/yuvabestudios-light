@@ -117,11 +117,11 @@
     "mediaIconKey": "bot",
     "mockImageAlt": "Bevolve.ai product experience mock",
     "coverImages": {
-      "card": "/assets/bevolve/mock- cover-home.png",
+      "card": "/assets/bevolve/cover-home.png",
       "summary": "/assets/bevolve/cover-summary.png",
       "detail": "/assets/bevolve/cover-detail.png"
     },
-    "mockImageSrc": "/assets/bevolve/mock- cover-home.png",
+    "mockImageSrc": "/assets/bevolve/cover-home.png",
     "mockViewport": "landscape",
     "modalOutcomes": [
       "Unified structured and unstructured ESG data into one clearer workflow.",

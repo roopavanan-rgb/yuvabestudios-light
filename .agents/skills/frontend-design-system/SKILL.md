@@ -28,6 +28,7 @@ Implement Yuvabe's design system in code with a design-system-first approach so 
 7. Check the original `https://ui.shadcn.com/` and `https://www.radix-ui.com/` docs before adding custom code; prefer documented built-in APIs, structure, and patterns before inventing wrappers or interaction logic.
 8. Add or update internal preview routes when introducing new foundation or component layers so the system remains inspectable.
 9. Add short intent-focused comments for non-trivial helpers and major JSX sections.
+10. For complex or sophisticated frontend work, document more than feels strictly necessary: explain shared contracts, tricky visual logic, state interactions, and why the abstraction exists so future edits are safer.
 
 ## Implementation Rules
 - Keep `app/globals.css` as the single source of truth for tokens and typography utility contracts.
@@ -49,6 +50,7 @@ Implement Yuvabe's design system in code with a design-system-first approach so 
 - Use premium surfaces only when a layer needs clear separation from the canvas or content beneath it, such as mobile nav overlays, hero callouts, proof cards, or modal-like states.
 - Use Framer Motion for implemented component and interaction animation work, and default to ease-out easing curves unless a specific alternative is justified.
 - Always check the original shadcn and Radix docs before adding custom interaction or primitive code; if the official APIs already cover the need, use or adapt those patterns first.
+- When the implementation is visually or behaviorally sophisticated, err on the side of over-documenting the code and the shared skill notes rather than leaving implicit design logic behind.
 
 ## Component Order
 Build or refine components in this order unless the task clearly asks otherwise:

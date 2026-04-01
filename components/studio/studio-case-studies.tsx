@@ -33,10 +33,15 @@ const caseStudyLogoMap: Partial<Record<string, string>> = {
 // the Supabase record predates the mockVideoSrc field being added.
 const caseStudyVideoOverrides: Partial<Record<string, string>> = {};
 
-// Hard-coded image overrides — take priority over whatever Supabase returns so real
-// assets are always shown even when the remote record still points to placeholders.
+// Hard-coded image overrides stay reserved for covers that still need manual art-direction fixes.
 const caseStudyImageClassOverrides: Partial<Record<string, string>> = {
-  bevolve: "scale-[1.9] -translate-y-[18%] object-[center_110%]",
+  bevolve: "object-contain object-center",
+};
+
+// Some contained covers need an inner shell so the rounded stage still reads clearly when the artwork no longer fills the full frame.
+const caseStudyMediaShellClassOverrides: Partial<Record<string, string>> = {
+  bevolve:
+    "rounded-[1.55rem] bg-white/72 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] sm:p-4 lg:p-5",
 };
 
 
@@ -53,7 +58,6 @@ const caseStudyViewportOverrides: Partial<
 const caseStudyPresentationOverrides: Partial<
   Record<string, "framed" | "fullImage">
 > = {
-  bevolve: "fullImage",
   "general-aeronautics": "fullImage",
 };
 
@@ -138,6 +142,9 @@ export function StudioCaseStudies({
                     caseStudyImageClassOverrides[caseStudy.id] ??
                     caseStudy.mockImageClassName
                   }
+                  mediaShellClassName={
+                    caseStudyMediaShellClassOverrides[caseStudy.id]
+                  }
                   mockViewport={
                     caseStudyViewportOverrides[caseStudy.id] ??
                     caseStudy.mockViewport
@@ -180,6 +187,9 @@ export function StudioCaseStudies({
                     caseStudyImageClassOverrides[caseStudy.id] ??
                     caseStudy.mockImageClassName
                   }
+                  mediaShellClassName={
+                    caseStudyMediaShellClassOverrides[caseStudy.id]
+                  }
                   mockViewport={
                     caseStudyViewportOverrides[caseStudy.id] ??
                     caseStudy.mockViewport
@@ -220,6 +230,9 @@ export function StudioCaseStudies({
                   imageClassName={
                     caseStudyImageClassOverrides[spotlightCaseStudy.id] ??
                     spotlightCaseStudy.mockImageClassName
+                  }
+                  mediaShellClassName={
+                    caseStudyMediaShellClassOverrides[spotlightCaseStudy.id]
                   }
                   mockViewport={
                     caseStudyViewportOverrides[spotlightCaseStudy.id] ??

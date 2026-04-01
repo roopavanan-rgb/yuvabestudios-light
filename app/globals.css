@@ -286,7 +286,7 @@
     linear-gradient(180deg, color-mix(in srgb, var(--yellow-500) 26%, white) 0%, color-mix(in srgb, var(--orange-200) 18%, white) 100%);
   --gradient-surface-tint-green:
     linear-gradient(180deg, color-mix(in srgb, var(--green-200) 34%, white) 0%, color-mix(in srgb, var(--green-200) 14%, white) 100%);
-  --color-border-premium-aurora: color-mix(in srgb, var(--lavender-200) 62%, white);
+  --color-border-premium-aurora: color-mix(in srgb, var(--lavender-500) 26%, white);
   --color-border-glass-pill-subtle: rgb(255 255 255 / 0.44);
   --color-border-glass-pill-strong: rgb(255 255 255 / 0.58);
   --color-border-brand-pill: rgb(255 255 255 / 0.26);
@@ -301,28 +301,28 @@
   --color-highlight-glass-panel-subtle: rgb(255 255 255 / 0.34);
   --color-highlight-surface-tint: rgb(255 255 255 / 0.72);
   --gradient-premium-billing-aurora:
-    radial-gradient(122% 78% at 50% 16%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.97) 26%, rgba(255, 255, 255, 0.84) 42%, rgba(255, 255, 255, 0.12) 62%, rgba(255, 255, 255, 0) 100%),
-    radial-gradient(84% 62% at 12% 78%, color-mix(in srgb, var(--yellow-500) 82%, white) 0%, color-mix(in srgb, var(--orange-500) 66%, white) 24%, rgba(249, 169, 31, 0.3) 48%, rgba(249, 169, 31, 0) 72%),
-    radial-gradient(80% 62% at 52% 94%, color-mix(in srgb, var(--lavender-500) 64%, white) 0%, color-mix(in srgb, var(--purple-500) 52%, white) 30%, rgba(88, 41, 199, 0.34) 56%, rgba(88, 41, 199, 0) 78%),
-    radial-gradient(76% 58% at 90% 92%, color-mix(in srgb, var(--purple-500) 46%, white) 0%, color-mix(in srgb, var(--cyan-200) 64%, var(--purple-500)) 30%, rgba(43, 183, 199, 0.24) 56%, rgba(43, 183, 199, 0) 78%),
-    linear-gradient(180deg, #fffdfa 0%, #ffffff 22%, #fff9ef 50%, #efe7ff 100%);
+    radial-gradient(122% 78% at 50% 16%, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.95) 24%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0.08) 62%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(88% 66% at 12% 82%, color-mix(in srgb, var(--yellow-500) 88%, white) 0%, color-mix(in srgb, var(--orange-500) 74%, white) 24%, rgba(249, 169, 31, 0.4) 50%, rgba(249, 169, 31, 0) 76%),
+    radial-gradient(84% 64% at 54% 96%, color-mix(in srgb, var(--lavender-500) 70%, white) 0%, color-mix(in srgb, var(--purple-500) 62%, white) 30%, rgba(88, 41, 199, 0.42) 58%, rgba(88, 41, 199, 0) 80%),
+    radial-gradient(78% 60% at 92% 92%, color-mix(in srgb, var(--purple-500) 54%, white) 0%, color-mix(in srgb, var(--cyan-200) 72%, var(--purple-500)) 28%, rgba(43, 183, 199, 0.3) 56%, rgba(43, 183, 199, 0) 80%),
+    linear-gradient(180deg, #fffaf3 0%, #fffdfa 22%, #fff5e5 50%, #ebdeff 100%);
   --gradient-premium-billing-sunrise:
-    radial-gradient(118% 76% at 50% 14%, rgba(255, 255, 255, 0.99) 0%, rgba(255, 255, 255, 0.97) 24%, rgba(255, 255, 255, 0.86) 42%, rgba(255, 255, 255, 0.1) 62%, rgba(255, 255, 255, 0) 100%),
-    radial-gradient(88% 64% at 12% 92%, color-mix(in srgb, var(--yellow-500) 44%, white) 0%, color-mix(in srgb, var(--orange-500) 39%, white) 24%, rgba(240, 78, 40, 0.17) 52%, rgba(240, 78, 40, 0) 76%),
-    radial-gradient(72% 56% at 40% 88%, color-mix(in srgb, var(--orange-200) 45%, white) 0%, color-mix(in srgb, var(--peach-200) 41%, white) 30%, rgba(247, 167, 147, 0.16) 56%, rgba(247, 167, 147, 0) 78%),
-    radial-gradient(76% 58% at 92% 34%, color-mix(in srgb, var(--lavender-500) 26%, white) 0%, color-mix(in srgb, var(--purple-500) 17%, white) 32%, rgba(88, 41, 199, 0.11) 58%, rgba(88, 41, 199, 0) 80%),
-    linear-gradient(135deg, #fffdf8 0%, #fffdf9 34%, #fff8ec 58%, #f6ebff 100%);
+    radial-gradient(118% 76% at 50% 14%, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.95) 22%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0.08) 62%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(90% 66% at 10% 92%, color-mix(in srgb, var(--yellow-500) 58%, white) 0%, color-mix(in srgb, var(--orange-500) 52%, white) 24%, rgba(240, 78, 40, 0.24) 54%, rgba(240, 78, 40, 0) 78%),
+    radial-gradient(78% 62% at 42% 90%, color-mix(in srgb, var(--orange-200) 56%, white) 0%, color-mix(in srgb, var(--peach-200) 52%, white) 30%, rgba(247, 167, 147, 0.24) 58%, rgba(247, 167, 147, 0) 80%),
+    radial-gradient(78% 60% at 92% 34%, color-mix(in srgb, var(--lavender-500) 36%, white) 0%, color-mix(in srgb, var(--purple-500) 24%, white) 32%, rgba(88, 41, 199, 0.18) 60%, rgba(88, 41, 199, 0) 82%),
+    linear-gradient(135deg, #fff9ef 0%, #fff8f1 30%, #ffefdc 58%, #efdefe 100%);
   --gradient-premium-editorial-sunrise:
     radial-gradient(112% 96% at 14% 90%, color-mix(in srgb, var(--yellow-500) 64%, white) 0%, color-mix(in srgb, var(--orange-500) 46%, white) 24%, rgba(240, 78, 40, 0.2) 52%, rgba(240, 78, 40, 0) 80%),
     radial-gradient(82% 72% at 52% 92%, color-mix(in srgb, var(--orange-200) 56%, white) 0%, color-mix(in srgb, var(--peach-200) 50%, white) 30%, rgba(247, 167, 147, 0.22) 58%, rgba(247, 167, 147, 0) 82%),
     radial-gradient(90% 76% at 92% 70%, color-mix(in srgb, var(--lavender-500) 44%, white) 0%, color-mix(in srgb, var(--purple-500) 28%, white) 34%, rgba(88, 41, 199, 0.2) 58%, rgba(88, 41, 199, 0) 84%),
     linear-gradient(135deg, #fff8ec 0%, #fff4e8 24%, #fef0e7 56%, #f1e7ff 100%);
   --gradient-premium-billing-prism:
-    radial-gradient(120% 80% at 50% 15%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.96) 24%, rgba(255, 255, 255, 0.82) 42%, rgba(255, 255, 255, 0.14) 62%, rgba(255, 255, 255, 0) 100%),
-    radial-gradient(82% 60% at 12% 82%, color-mix(in srgb, var(--cyan-200) 92%, white) 0%, color-mix(in srgb, var(--cyan-500) 52%, white) 28%, rgba(43, 183, 199, 0.32) 54%, rgba(43, 183, 199, 0) 78%),
-    radial-gradient(72% 58% at 52% 96%, color-mix(in srgb, var(--lavender-500) 68%, white) 0%, color-mix(in srgb, var(--purple-500) 58%, white) 30%, rgba(88, 41, 199, 0.34) 58%, rgba(88, 41, 199, 0) 80%),
-    radial-gradient(76% 54% at 92% 84%, color-mix(in srgb, var(--yellow-500) 72%, white) 0%, color-mix(in srgb, var(--orange-200) 80%, white) 26%, rgba(255, 202, 45, 0.24) 52%, rgba(255, 202, 45, 0) 76%),
-    linear-gradient(180deg, #fbfdff 0%, #ffffff 22%, #eef9ff 48%, #ede6ff 100%);
+    radial-gradient(120% 80% at 50% 15%, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.95) 22%, rgba(255, 255, 255, 0.78) 40%, rgba(255, 255, 255, 0.1) 62%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(84% 62% at 12% 84%, color-mix(in srgb, var(--cyan-200) 94%, white) 0%, color-mix(in srgb, var(--cyan-500) 60%, white) 28%, rgba(43, 183, 199, 0.38) 56%, rgba(43, 183, 199, 0) 80%),
+    radial-gradient(76% 60% at 52% 96%, color-mix(in srgb, var(--lavender-500) 72%, white) 0%, color-mix(in srgb, var(--purple-500) 62%, white) 30%, rgba(88, 41, 199, 0.42) 58%, rgba(88, 41, 199, 0) 80%),
+    radial-gradient(78% 56% at 92% 84%, color-mix(in srgb, var(--yellow-500) 78%, white) 0%, color-mix(in srgb, var(--orange-200) 84%, white) 26%, rgba(255, 202, 45, 0.28) 52%, rgba(255, 202, 45, 0) 78%),
+    linear-gradient(180deg, #f9fcff 0%, #ffffff 22%, #e9f7ff 48%, #e8ddff 100%);
   --gradient-brand-night-section:
     radial-gradient(54% 42% at 88% 10%, rgb(150 136 192 / 0.24) 0%, rgb(150 136 192 / 0) 100%),
     radial-gradient(40% 28% at 52% 100%, rgb(255 202 45 / 0.08) 0%, rgb(255 202 45 / 0) 100%),

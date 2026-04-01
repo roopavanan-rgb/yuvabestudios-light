@@ -66,6 +66,13 @@ export type StudioCaseStudyCoverImages = {
   detail?: string;
 };
 
+export type StudioCaseStudyHeroPalette = {
+  topWash: string;
+  strip: string;
+  logoGlow: string;
+  logoLine: string;
+};
+
 export type StudioCaseStudySummary = {
   id: StudioCaseStudyId;
   sector: string;
@@ -135,6 +142,78 @@ const caseStudyIcons: Record<StudioCaseStudyIconKey, LucideIcon> = {
   sparkles: Sparkles,
 };
 
+// The hero palette contract breaks the branded opening into four reusable layers:
+// `topWash` colors the soft ambient background behind the hero,
+// `strip` drives the angled gradient band at the bottom edge,
+// `logoGlow` adds the blurred halo behind logo-led hero art,
+// and `logoLine` controls the thin accent rule used under wider wordmarks.
+const defaultStudioCaseStudyHeroPalette: StudioCaseStudyHeroPalette = {
+  topWash:
+    "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--purple-500) 11%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--yellow-500) 11%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--lavender-500) 8%,white),rgba(255,255,255,0)_34%)",
+  strip:
+    "linear-gradient(90deg,color-mix(in srgb,var(--purple-500) 78%,white) 0%,color-mix(in srgb,var(--lavender-500) 74%,var(--purple-500)) 36%,color-mix(in srgb,var(--cyan-500) 48%,white) 72%,color-mix(in srgb,var(--cyan-200) 88%,white) 100%)",
+  logoGlow:
+    "radial-gradient(circle,color-mix(in srgb,var(--purple-500) 16%,white),color-mix(in srgb,var(--lavender-500) 12%,white) 34%,color-mix(in srgb,var(--cyan-500) 8%,white) 56%,rgba(255,255,255,0) 74%)",
+  logoLine:
+    "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--lavender-500) 72%,white),color-mix(in srgb,var(--cyan-500) 52%,white),rgba(255,255,255,0))",
+};
+
+// Each case study can override the shared hero contract with logo-led colors while still using the same layout and markup.
+const studioCaseStudyHeroPalettes: Partial<
+  Record<StudioCaseStudyId, StudioCaseStudyHeroPalette>
+> = {
+  "general-aeronautics": {
+    topWash:
+      "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--cyan-500) 14%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--green-500) 12%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--cyan-200) 14%,white),rgba(255,255,255,0)_34%)",
+    strip:
+      "linear-gradient(90deg,color-mix(in srgb,var(--cyan-500) 74%,white) 0%,color-mix(in srgb,var(--cyan-500) 78%,var(--green-500)) 48%,color-mix(in srgb,var(--green-200) 86%,white) 100%)",
+    logoGlow:
+      "radial-gradient(circle,color-mix(in srgb,var(--cyan-500) 18%,white),color-mix(in srgb,var(--green-500) 14%,white) 38%,color-mix(in srgb,var(--cyan-200) 18%,white) 60%,rgba(255,255,255,0) 76%)",
+    logoLine:
+      "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--cyan-500) 54%,white),color-mix(in srgb,var(--green-500) 42%,white),rgba(255,255,255,0))",
+  },
+  bevolve: {
+    topWash:
+      "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--green-500) 16%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--cyan-500) 12%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--green-200) 16%,white),rgba(255,255,255,0)_34%)",
+    strip:
+      "linear-gradient(90deg,color-mix(in srgb,var(--green-500) 74%,white) 0%,color-mix(in srgb,var(--green-500) 76%,var(--cyan-500)) 44%,color-mix(in srgb,var(--cyan-200) 84%,white) 100%)",
+    logoGlow:
+      "radial-gradient(circle,color-mix(in srgb,var(--green-500) 20%,white),color-mix(in srgb,var(--cyan-500) 14%,white) 36%,color-mix(in srgb,var(--green-200) 18%,white) 58%,rgba(255,255,255,0) 76%)",
+    logoLine:
+      "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--green-500) 56%,white),color-mix(in srgb,var(--cyan-500) 48%,white),rgba(255,255,255,0))",
+  },
+  tvam: {
+    topWash:
+      "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--orange-500) 18%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--yellow-500) 12%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--orange-200) 18%,white),rgba(255,255,255,0)_34%)",
+    strip:
+      "linear-gradient(90deg,color-mix(in srgb,var(--orange-500) 82%,white) 0%,color-mix(in srgb,var(--orange-500) 84%,var(--yellow-500)) 46%,color-mix(in srgb,var(--orange-200) 72%,white) 78%,color-mix(in srgb,var(--neutral-0) 92%,var(--orange-200)) 100%)",
+    logoGlow:
+      "radial-gradient(circle,color-mix(in srgb,var(--orange-500) 20%,white),color-mix(in srgb,var(--yellow-500) 16%,white) 34%,color-mix(in srgb,var(--orange-200) 20%,white) 58%,rgba(255,255,255,0) 76%)",
+    logoLine:
+      "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--orange-500) 58%,white),color-mix(in srgb,var(--orange-200) 68%,white),rgba(255,255,255,0))",
+  },
+  kittykat: {
+    topWash:
+      "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--purple-500) 18%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--peach-200) 12%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--lavender-500) 16%,white),rgba(255,255,255,0)_34%)",
+    strip:
+      "linear-gradient(90deg,color-mix(in srgb,var(--purple-500) 84%,white) 0%,color-mix(in srgb,var(--lavender-500) 82%,var(--purple-500)) 44%,color-mix(in srgb,var(--peach-200) 80%,white) 84%,color-mix(in srgb,var(--neutral-0) 94%,var(--peach-200)) 100%)",
+    logoGlow:
+      "radial-gradient(circle,color-mix(in srgb,var(--purple-500) 20%,white),color-mix(in srgb,var(--lavender-500) 18%,white) 34%,color-mix(in srgb,var(--peach-200) 22%,white) 58%,rgba(255,255,255,0) 76%)",
+    logoLine:
+      "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--lavender-500) 68%,white),color-mix(in srgb,var(--peach-200) 74%,white),rgba(255,255,255,0))",
+  },
+  ageshift: {
+    topWash:
+      "radial-gradient(circle_at_18%_22%,color-mix(in srgb,var(--green-500) 14%,white),rgba(255,255,255,0)_30%),radial-gradient(circle_at_76%_18%,color-mix(in srgb,var(--cyan-500) 12%,white),rgba(255,255,255,0)_24%),radial-gradient(circle_at_62%_72%,color-mix(in srgb,var(--lavender-500) 10%,white),rgba(255,255,255,0)_34%)",
+    strip:
+      "linear-gradient(90deg,color-mix(in srgb,var(--green-500) 74%,white) 0%,color-mix(in srgb,var(--cyan-500) 68%,var(--green-500)) 42%,color-mix(in srgb,var(--lavender-500) 66%,white) 72%,color-mix(in srgb,var(--cyan-200) 86%,white) 100%)",
+    logoGlow:
+      "radial-gradient(circle,color-mix(in srgb,var(--green-500) 18%,white),color-mix(in srgb,var(--cyan-500) 14%,white) 36%,color-mix(in srgb,var(--lavender-500) 12%,white) 58%,rgba(255,255,255,0) 76%)",
+    logoLine:
+      "linear-gradient(90deg,rgba(255,255,255,0),color-mix(in srgb,var(--green-500) 56%,white),color-mix(in srgb,var(--cyan-500) 48%,white),rgba(255,255,255,0))",
+  },
+};
+
 export const homepageCaseStudyIds: StudioCaseStudyId[] = [
   "general-aeronautics",
   "bevolve",
@@ -160,6 +239,16 @@ export function getCaseStudyIcon(
   iconKey: StudioCaseStudyIconKey = "sparkles",
 ) {
   return caseStudyIcons[iconKey];
+}
+
+// The hero palette map keeps logo-led case-study accents centralized so page strips stay brand-specific without page-level drift.
+export function resolveStudioCaseStudyHeroPalette(
+  caseStudyId: StudioCaseStudyId,
+) {
+  return (
+    studioCaseStudyHeroPalettes[caseStudyId] ??
+    defaultStudioCaseStudyHeroPalette
+  );
 }
 
 export type StudioCaseStudyCoverSlot = keyof StudioCaseStudyCoverImages;

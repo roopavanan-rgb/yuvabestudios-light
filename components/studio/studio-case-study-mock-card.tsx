@@ -164,6 +164,7 @@ export type StudioCaseStudyMockCardProps = {
   videoSrc?: string;
   imageAspectRatio?: string;
   imageClassName?: string;
+  mediaShellClassName?: string;
   mockViewport?: StudioCaseStudyMockViewport;
   mockPresentation?: StudioCaseStudyMockPresentation;
   variant?: StudioCaseStudyMockVariant;
@@ -183,6 +184,7 @@ export function StudioCaseStudyMockCard({
   imageClassName,
   imageSrc,
   logoSrc,
+  mediaShellClassName,
   videoSrc,
   layout = "feature",
   mockPresentation = "framed",
@@ -360,57 +362,68 @@ export function StudioCaseStudyMockCard({
                           : "w-[300px] sm:w-[360px] lg:w-[440px]",
                         span === "full" &&
                         (mockViewport === "portrait"
-                          ? "md:w-[290px] lg:w-[320px]"
-                          : "md:w-[420px] lg:w-[540px]"),
+                            ? "md:w-[290px] lg:w-[320px]"
+                            : "md:w-[420px] lg:w-[540px]"),
+                        variantStyles.mockImageClassName,
                       ]
                       : [
                         "rounded-[1.6rem]",
+                        "border border-white/88 shadow-[0_14px_30px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.72)]",
                         viewportStyles.frameClassName,
                         span === "full" && fullSpanViewportOverrides[mockViewport],
                       ],
                   )}
                 >
-                  {videoSrc ? (
-                    <video
-                      src={videoSrc}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className={cn(
-                        "absolute inset-0 h-full w-full",
-                        isFullImagePresentation
-                          ? "object-contain object-center"
-                          : viewportStyles.imageClassName,
-                        !isFullImagePresentation && variantStyles.mockImageClassName,
-                        imageClassName,
-                      )}
-                    />
-                  ) : (
-                    <Image
-                      src={imageSrc}
-                      alt={imageAlt}
-                      fill
-                      sizes={
-                        mockViewport === "portrait"
-                          ? span === "full"
-                            ? "(max-width: 640px) 200px, (max-width: 1024px) 250px, 275px"
-                            : "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px"
-                          : span === "full"
-                            ? "(max-width: 640px) 260px, (max-width: 1024px) 420px, 540px"
-                            : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"
-                      }
-                      className={cn(
-                        isFullImagePresentation
-                          ? "object-contain object-center"
-                          : viewportStyles.imageClassName,
-                        !isFullImagePresentation && variantStyles.mockImageClassName,
-                        imageClassName,
-                      )}
-                      priority={false}
-                      unoptimized={shouldSkipImageOptimization}
-                    />
-                  )}
+                  {/* The media wrapper carries the visible mock perimeter so bright covers still read as framed objects over the premium gradient shell. */}
+                  {/* The optional inner media shell makes contained covers feel intentional without changing the outer card framing contract. */}
+                  <div
+                    className={cn(
+                      "relative h-full w-full",
+                      mediaShellClassName,
+                    )}
+                  >
+                    {videoSrc ? (
+                      <video
+                        src={videoSrc}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className={cn(
+                          "absolute inset-0 h-full w-full",
+                          isFullImagePresentation
+                            ? "object-contain object-center"
+                            : viewportStyles.imageClassName,
+                          !isFullImagePresentation && variantStyles.mockImageClassName,
+                          imageClassName,
+                        )}
+                      />
+                    ) : (
+                      <Image
+                        src={imageSrc}
+                        alt={imageAlt}
+                        fill
+                        sizes={
+                          mockViewport === "portrait"
+                            ? span === "full"
+                              ? "(max-width: 640px) 200px, (max-width: 1024px) 250px, 275px"
+                              : "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px"
+                            : span === "full"
+                              ? "(max-width: 640px) 260px, (max-width: 1024px) 420px, 540px"
+                              : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"
+                        }
+                        className={cn(
+                          isFullImagePresentation
+                            ? "object-contain object-center"
+                            : viewportStyles.imageClassName,
+                          !isFullImagePresentation && variantStyles.mockImageClassName,
+                          imageClassName,
+                        )}
+                        priority={false}
+                        unoptimized={shouldSkipImageOptimization}
+                      />
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </div>
