@@ -43,6 +43,7 @@ export type StudioCaseStudyProofPoint = {
 };
 
 export type StudioCaseStudyGalleryItem = {
+  imageKey?: string;
   title: string;
   description: string;
 };
@@ -234,7 +235,11 @@ export function createStudioEditableCaseStudy(
     modalProofPoints: detail.proofPoints.map((point) => ({ ...point })),
     modalGalleryRows: detail.galleryRows.map((row) => ({
       ...row,
-      items: row.items.map((item) => ({ ...item })),
+      // Preserve a stable image lookup key so admin copy edits do not remap gallery visuals.
+      items: row.items.map((item) => ({
+        ...item,
+        imageKey: item.imageKey ?? item.title,
+      })),
     })),
     modalTestimonial: { ...detail.testimonial },
     seoTitle: detail.seoTitle,

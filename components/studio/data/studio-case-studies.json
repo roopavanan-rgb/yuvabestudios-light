@@ -222,8 +222,8 @@
     "mockImageAlt": "TVAM case study cover",
     "coverImages": {
       "card": "/assets/tvam/cover-home.png",
-      "summary": "/assets/tvam/cover-summary.png",
-      "detail": "/assets/tvam/cover-detail.png"
+      "detail": "/assets/tvam/cover-detail.png",
+      "summary": "/assets/tvam/cover-summary.png"
     },
     "mockImageSrc": "/assets/tvam/cover-home.png",
     "mockViewport": "landscape",
@@ -256,30 +256,34 @@
     "heroMockHeadline": "Advisor-style AI tools in one system",
     "modalGalleryRows": [
       {
+        "title": "Multi-domain advisor experience",
         "items": [
+        {
+          "imageKey": "Health Advisor workspace",
+          "title": "Wealth advisor flow",
+          "description": "A structured investment experience that brings financial guidance — portfolio tracking, goal-setting, and investment prompts — into the same product space as health and insurance. One app, multiple advisory domains, no context-switching."
+        },
           {
-            "title": "Health Advisor workspace",
-            "description": "A portrait-led advisor flow that makes complex health guidance feel more approachable, structured, and actionable — so users arrive at answers without feeling lost in clinical language."
-          },
-          {
-            "title": "Policy Advisor journey",
-            "description": "A companion AI workflow for policy and coverage questions, designed to reduce friction in expert-led decision support and help users move from confusion to clarity faster."
+            "imageKey": "Policy Advisor journey",
+            "title": "Conversational health guidance",
+            "description": "A chat-first health advisor with voice input support, designed to make clinical and wellness guidance feel like a natural conversation rather than a form or a search. Users get structured responses without navigating complex medical language."
           }
-        ],
-        "title": "Advisor product flows"
+        ]
       },
       {
+        "title": "AI infrastructure and onboarding",
         "items": [
           {
-            "title": "Document-aware assistant",
-            "description": "A retrieval-driven experience that connects uploaded materials, reference content, and AI responses inside one usable system — so the right information surfaces at the right moment."
+            "imageKey": "Document-aware assistant",
+            "title": "AI assistant entry point",
+            "description": "The conversational scaffold that greets users and surfaces the right starting point, whether they need health guidance, financial support, or policy help. Built on a RAG stack with secure storage, so responses stay contextually accurate across domains."
           },
           {
-            "title": "Exam-prep support",
-            "description": "An AI-guided prep flow that brings question support, recall, and guided explanation into a clearer study rhythm — making preparation feel less like drilling and more like understanding."
+            "imageKey": "Exam-prep support",
+            "title": "Product onboarding and value narrative",
+            "description": "The onboarding flow that introduces tvam's full scope : health, wealth, and well-being as a connected offering rather than separate products. Designed to help users understand what the platform can do before they need to navigate it themselves."
           }
-        ],
-        "title": "Retrieval and orchestration"
+        ]
       }
     ],
     "modalProofPoints": [

@@ -976,6 +976,7 @@ function parseGalleryItem(
   assertRecord(value, label);
 
   return {
+    imageKey: optionalString(value.imageKey),
     title: expectString(value.title, `${label}.title`),
     description: expectString(value.description, `${label}.description`),
   };
@@ -986,6 +987,7 @@ function normalizeGalleryItem(
   label: string,
 ): StudioCaseStudyGalleryItem | null {
   const parsed = parseGalleryItem(value, label);
+  const imageKey = normalizeOptionalString(parsed.imageKey);
   const title = parsed.title.trim();
   const description = parsed.description.trim();
 
@@ -994,6 +996,7 @@ function normalizeGalleryItem(
   }
 
   return {
+    imageKey,
     title,
     description,
   };

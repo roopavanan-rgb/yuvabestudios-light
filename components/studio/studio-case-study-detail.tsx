@@ -496,8 +496,9 @@ export function StudioCaseStudyDetail({
                     .slice(0, rowIndex)
                     .reduce((count, currentRow) => count + currentRow.items.length, 0) +
                   itemIndex;
+                const galleryImageKey = item.imageKey ?? item.title;
                 const galleryImage =
-                  galleryAssets.itemImages?.[item.title]?.[0] ??
+                  galleryAssets.itemImages?.[galleryImageKey]?.[0] ??
                   galleryAssets.images[
                     fallbackImageIndex % galleryAssets.images.length
                   ];
