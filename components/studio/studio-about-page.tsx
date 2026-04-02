@@ -314,7 +314,7 @@ function AboutProofEntryCard({
   return (
     <article
       className={[
-        "group relative isolate min-h-[15rem] overflow-hidden px-6 py-7 transition-[cursor] duration-[800ms] ease-out hover:cursor-pointer md:px-8 md:py-8",
+        "group relative isolate min-h-[15rem] overflow-hidden px-6 py-7 transition-[cursor] duration-[1000ms] ease-out hover:cursor-pointer md:px-8 md:py-8",
         toneClassName,
         className,
       ]
@@ -322,7 +322,7 @@ function AboutProofEntryCard({
         .join(" ")}
     >
       {/* The text block stays in flow so the tile footprint does not shift before hover. */}
-      <div className="relative z-10 flex h-full flex-col gap-4 transition-opacity duration-[800ms] ease-out group-hover:opacity-0">
+      <div className="relative z-10 flex h-full flex-col gap-4 transition-opacity duration-[1000ms] ease-out group-hover:opacity-0">
         <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
           {entry.sector}
         </p>
@@ -336,7 +336,7 @@ function AboutProofEntryCard({
       {logoAsset ? (
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-[800ms] ease-out group-hover:opacity-100"
+          className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-[1000ms] ease-out group-hover:opacity-100"
         >
           <div className={["absolute inset-0", toneClassName].join(" ")} />
           <div className={["absolute inset-0", hoverWashClassName].join(" ")} />
@@ -345,7 +345,7 @@ function AboutProofEntryCard({
           <div className="relative flex h-full items-center justify-center px-6 py-7 md:px-8 md:py-8">
             <div
               className={[
-                "transform-gpu transition-transform duration-[800ms] ease-out group-hover:scale-100",
+                "transform-gpu transition-transform duration-[1000ms] ease-out group-hover:scale-100",
                 "scale-95",
                 logoAsset.stageClassName,
               ].join(" ")}

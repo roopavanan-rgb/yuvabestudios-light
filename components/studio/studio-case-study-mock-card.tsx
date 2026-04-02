@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 import Image from "next/image";
 import { Maximize2 } from "lucide-react";
 import {
@@ -107,10 +107,10 @@ const mockCardLayoutStyles: Record<
     titleClassName: "text-heading-sm text-foreground",
   },
   wide: {
-    bodyClassName: "gap-4 md:gap-5",
+    bodyClassName: "gap-0 md:gap-5",
     imageClassName: "h-[14rem] sm:h-[15rem] lg:h-[16rem]",
     imageStageClassName:
-      "min-h-[220px] px-1 sm:min-h-[260px] sm:px-3 md:min-h-[300px] lg:px-5",
+      "min-h-[220px] px-0 sm:min-h-[260px] sm:px-3 md:min-h-[300px] lg:px-5",
     introClassName: "md:min-h-[10rem] lg:min-h-[10.5rem]",
     mediaGroupClassName: "space-y-4 md:mt-auto md:space-y-5",
     shellClassName: "h-auto px-5 py-5 sm:p-5 md:h-[580px] md:p-6 lg:h-[596px] lg:p-7",
@@ -277,6 +277,7 @@ export function StudioCaseStudyMockCard({
   title,
   variant = "aurora",
 }: StudioCaseStudyMockCardProps) {
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const shouldReduceMotion = useReducedMotion();
   const mockRef = useRef<HTMLDivElement>(null);
   const rotateX = useMotionValue(0);
@@ -301,10 +302,28 @@ export function StudioCaseStudyMockCard({
   const shouldUseFramedStage = shouldUseLogoPanel || !isFullImagePresentation;
   const shouldUseWideLandscapeStage =
     shouldUseFramedStage && mockViewport === "landscape";
+  const shouldUseMobileWideLandscapeStage =
+    isMobileViewport && shouldUseWideLandscapeStage;
   const fullImageAspectRatio =
     imageAspectRatio ?? (mockViewport === "portrait" ? "1310 / 2708" : "16 / 9");
   const serviceTags = services.map(normalizeServiceLabel);
   const canOpenDetails = Boolean(onOpenDetails);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+
+    // Mobile cards keep the mock fully visible because there is no hover state to recover the desktop offset.
+    const syncViewportState = () => {
+      setIsMobileViewport(mediaQuery.matches);
+    };
+
+    syncViewportState();
+    mediaQuery.addEventListener("change", syncViewportState);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewportState);
+    };
+  }, []);
 
   function handleOpenDetails() {
     onOpenDetails?.();
@@ -459,15 +478,19 @@ export function StudioCaseStudyMockCard({
                   shouldReduceMotion
                     ? undefined
                     : {
-                        rest: { y: 50 },
+                        rest: { y: shouldUseMobileWideLandscapeStage ? 0 : 50 },
                         hover: { y: 0 },
                       }
                 }
                 transition={mockLiftSpring}
                 className={cn(
                   shouldUseWideLandscapeStage
-                    ? "relative my-1 w-full max-w-[42rem] sm:my-1.5 md:my-2"
+                    ? "relative w-full max-w-[42rem]"
                     : "relative max-w-[560px] scale-[0.8]",
+                  shouldUseWideLandscapeStage &&
+                    (shouldUseMobileWideLandscapeStage
+                      ? "my-0"
+                      : "my-1 sm:my-1.5 md:my-2"),
                   span === "full" &&
                     (shouldUseWideLandscapeStage
                       ? "max-w-[46rem]"
