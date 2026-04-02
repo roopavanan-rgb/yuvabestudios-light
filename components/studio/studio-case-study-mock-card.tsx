@@ -15,6 +15,7 @@ import {
   PremiumSurface,
   type PremiumSurfaceProps,
 } from "@/components/ui/premium-surface";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
@@ -25,6 +26,11 @@ export type StudioCaseStudyMockCardLayout = "feature" | "compact" | "wide";
 export type StudioCaseStudyMockViewport = "portrait" | "landscape";
 export type StudioCaseStudyMockCardSpan = "grid" | "full";
 export type StudioCaseStudyMockPresentation = "framed" | "fullImage";
+export type StudioCaseStudyGradientPlacement =
+  | "sunriseLeft"
+  | "sunriseRight"
+  | "violetDrift"
+  | "northArc";
 
 const mockCardVariantStyles: Record<
   StudioCaseStudyMockVariant,
@@ -98,10 +104,10 @@ const mockCardLayoutStyles: Record<
     bodyClassName: "gap-4 md:gap-5",
     imageClassName: "h-[14rem] sm:h-[15rem] lg:h-[16rem]",
     imageStageClassName:
-      "min-h-[220px] px-1 pb-1 pt-1 sm:min-h-[260px] sm:px-3 sm:pt-2 md:min-h-[320px] md:pb-1 md:pt-5 lg:px-5",
-    introClassName: "md:min-h-[11.25rem]",
+      "min-h-[220px] px-1 pb-1 pt-1 sm:min-h-[260px] sm:px-3 sm:pt-2 md:min-h-[300px] md:pb-1 md:pt-4 lg:px-5 lg:pt-5",
+    introClassName: "md:min-h-[10rem] lg:min-h-[10.5rem]",
     mediaGroupClassName: "space-y-4 md:mt-auto md:space-y-5",
-    shellClassName: "h-auto px-5 py-5 sm:p-5 md:h-[640px] md:p-6 lg:p-7",
+    shellClassName: "h-auto px-5 py-5 sm:p-5 md:h-[580px] md:p-6 lg:h-[596px] lg:p-7",
     summaryClassName:
       "max-w-[56ch] text-body-sm leading-6 text-[var(--color-text-secondary)]",
     titleClassName: "text-heading-md text-foreground",
@@ -142,6 +148,63 @@ const fullSpanViewportOverrides: Record<StudioCaseStudyMockViewport, string> = {
   landscape: "md:h-[260px] md:w-[420px] lg:h-[320px] lg:w-[540px]",
 };
 
+const mockCardGradientPlacements: Record<
+  StudioCaseStudyGradientPlacement,
+  {
+    canvasClassName: string;
+    coolGlowClassName: string;
+    topGlowClassName: string;
+    violetGlowClassName: string;
+    warmGlowClassName: string;
+  }
+> = {
+  // These presets keep the gradient motion art-directed and repeatable instead of random on every render.
+  sunriseLeft: {
+    canvasClassName: "rotate-0 scale-100",
+    coolGlowClassName:
+      "absolute -right-[10%] bottom-[8%] h-[34%] w-[36%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.34)_0%,rgba(43,183,199,0.18)_40%,transparent_74%)] blur-3xl",
+    topGlowClassName:
+      "absolute inset-x-[12%] top-[12%] h-[24%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.5)_42%,transparent_76%)] blur-3xl",
+    violetGlowClassName:
+      "absolute left-[20%] right-[18%] bottom-[-6%] h-[42%] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.48)_0%,rgba(139,92,246,0.26)_38%,transparent_76%)] blur-3xl",
+    warmGlowClassName:
+      "absolute -left-[14%] bottom-[14%] h-[38%] w-[42%] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.44)_0%,rgba(249,169,31,0.26)_40%,transparent_76%)] blur-3xl",
+  },
+  sunriseRight: {
+    canvasClassName: "rotate-[4deg] scale-[1.03]",
+    coolGlowClassName:
+      "absolute -left-[12%] bottom-[12%] h-[30%] w-[34%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.28)_0%,rgba(43,183,199,0.14)_42%,transparent_74%)] blur-3xl",
+    topGlowClassName:
+      "absolute inset-x-[16%] top-[9%] h-[22%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.52)_40%,transparent_74%)] blur-3xl",
+    violetGlowClassName:
+      "absolute left-[8%] right-[24%] bottom-[-10%] h-[44%] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.46)_0%,rgba(139,92,246,0.22)_36%,transparent_74%)] blur-3xl",
+    warmGlowClassName:
+      "absolute -right-[16%] bottom-[18%] h-[36%] w-[42%] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.42)_0%,rgba(249,169,31,0.24)_40%,transparent_74%)] blur-3xl",
+  },
+  violetDrift: {
+    canvasClassName: "rotate-[-3deg] scale-[1.02]",
+    coolGlowClassName:
+      "absolute right-[2%] top-[38%] h-[28%] w-[32%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.2)_0%,rgba(43,183,199,0.12)_40%,transparent_74%)] blur-3xl",
+    topGlowClassName:
+      "absolute inset-x-[10%] top-[10%] h-[22%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.48)_40%,transparent_74%)] blur-3xl",
+    violetGlowClassName:
+      "absolute left-[14%] right-[8%] bottom-[-8%] h-[48%] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.5)_0%,rgba(139,92,246,0.28)_38%,transparent_76%)] blur-3xl",
+    warmGlowClassName:
+      "absolute -left-[8%] bottom-[-4%] h-[40%] w-[38%] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.36)_0%,rgba(249,169,31,0.2)_38%,transparent_74%)] blur-3xl",
+  },
+  northArc: {
+    canvasClassName: "rotate-[2deg] scale-[1.04]",
+    coolGlowClassName:
+      "absolute -right-[4%] top-[26%] h-[26%] w-[30%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.26)_0%,rgba(43,183,199,0.16)_40%,transparent_74%)] blur-3xl",
+    topGlowClassName:
+      "absolute left-[18%] right-[14%] top-[4%] h-[24%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.98)_0%,rgba(255,255,255,0.54)_40%,transparent_74%)] blur-3xl",
+    violetGlowClassName:
+      "absolute left-[22%] right-[4%] bottom-[-12%] h-[42%] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.44)_0%,rgba(139,92,246,0.22)_36%,transparent_74%)] blur-3xl",
+    warmGlowClassName:
+      "absolute left-[2%] bottom-[2%] h-[36%] w-[44%] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.4)_0%,rgba(249,169,31,0.24)_40%,transparent_74%)] blur-3xl",
+  },
+};
+
 function normalizeServiceLabel(service: string) {
   if (service === "Brand system") {
     return "Branding";
@@ -178,6 +241,7 @@ export type StudioCaseStudyMockCardProps = {
   mockViewport?: StudioCaseStudyMockViewport;
   mockPresentation?: StudioCaseStudyMockPresentation;
   variant?: StudioCaseStudyMockVariant;
+  gradientPlacement?: StudioCaseStudyGradientPlacement;
   layout?: StudioCaseStudyMockCardLayout;
   span?: StudioCaseStudyMockCardSpan;
   detailHref?: string;
@@ -196,6 +260,7 @@ export function StudioCaseStudyMockCard({
   logoSrc,
   mediaShellClassName,
   videoSrc,
+  gradientPlacement = "sunriseLeft",
   layout = "feature",
   mockPresentation = "framed",
   mockViewport = "portrait",
@@ -225,6 +290,7 @@ export function StudioCaseStudyMockCard({
   const variantStyles = mockCardVariantStyles[variant];
   const layoutStyles = mockCardLayoutStyles[layout];
   const viewportStyles = mockViewportStyles[mockViewport];
+  const gradientPlacementStyles = mockCardGradientPlacements[gradientPlacement];
   const isFullImagePresentation = mockPresentation === "fullImage";
   const shouldUseLogoPanel = Boolean(logoSrc);
   const shouldUseFramedStage = shouldUseLogoPanel || !isFullImagePresentation;
@@ -291,10 +357,18 @@ export function StudioCaseStudyMockCard({
         )}
       >
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
-          <div className="absolute inset-x-[12%] top-[12%] h-[24%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.96)_0%,rgba(255,255,255,0.5)_42%,transparent_76%)] blur-3xl" />
-          <div className="absolute -left-[14%] bottom-[14%] h-[38%] w-[42%] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.44)_0%,rgba(249,169,31,0.26)_40%,transparent_76%)] blur-3xl" />
-          <div className="absolute left-[20%] right-[18%] bottom-[-6%] h-[42%] rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.48)_0%,rgba(139,92,246,0.26)_38%,transparent_76%)] blur-3xl" />
-          <div className="absolute -right-[10%] bottom-[8%] h-[34%] w-[36%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.34)_0%,rgba(43,183,199,0.18)_40%,transparent_74%)] blur-3xl" />
+          {/* The glow canvas uses stable presets so each card feels distinct without introducing visual randomness between reloads. */}
+          <div
+            className={cn(
+              "absolute inset-[-8%] transform-gpu transition-transform duration-500 ease-out group-hover:scale-[1.02]",
+              gradientPlacementStyles.canvasClassName,
+            )}
+          >
+            <div className={gradientPlacementStyles.topGlowClassName} />
+            <div className={gradientPlacementStyles.warmGlowClassName} />
+            <div className={gradientPlacementStyles.violetGlowClassName} />
+            <div className={gradientPlacementStyles.coolGlowClassName} />
+          </div>
         </div>
 
         <div className={cn("relative z-10 flex h-full flex-col", layoutStyles.bodyClassName)}>
@@ -306,9 +380,15 @@ export function StudioCaseStudyMockCard({
                 </p>
                 <h3 className={layoutStyles.titleClassName}>{title}</h3>
                 <p className={layoutStyles.summaryClassName}>{summary}</p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1.5 pt-1 text-body-sm font-medium tracking-[-0.01em] text-[var(--color-text-brand)]">
+                <div className="flex flex-wrap gap-2.5 pt-1.5">
                   {serviceTags.map((service) => (
-                    <span key={`${title}-${service}`}>{service}</span>
+                    <Badge
+                      key={`${title}-${service}`}
+                      variant="brandTagSubtle"
+                      className="px-3.5 py-1.5 text-body-sm font-semibold tracking-[-0.01em]"
+                    >
+                      {service}
+                    </Badge>
                   ))}
                 </div>
               </div>

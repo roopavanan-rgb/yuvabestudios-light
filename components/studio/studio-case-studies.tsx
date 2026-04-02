@@ -3,7 +3,10 @@
 import { useState } from "react";
 
 import type { StudioHomepageWorkContent } from "@/components/studio/studio-homepage-content";
-import { StudioCaseStudyMockCard } from "@/components/studio/studio-case-study-mock-card";
+import {
+  StudioCaseStudyMockCard,
+  type StudioCaseStudyGradientPlacement,
+} from "@/components/studio/studio-case-study-mock-card";
 import {
   getStudioCaseStudyHref,
   resolveStudioCaseStudyCoverSrc,
@@ -43,6 +46,13 @@ const caseStudyVideoOverrides: Partial<Record<string, string>> = {};
 // Hard-coded viewport overrides — switches portrait phone frames to landscape where the
 // cover image is a wide/landscape asset and needs a wider container for full visibility.
 const homepageCaseStudyViewport = "landscape" as const;
+
+const homepageCaseStudyGradientMap: Record<string, StudioCaseStudyGradientPlacement> = {
+  "general-aeronautics": "sunriseLeft",
+  bevolve: "sunriseRight",
+  kittykat: "violetDrift",
+  tvam: "northArc",
+};
 
 // Hard-coded presentation overrides — "fullImage" removes the phone frame and shows the
 // image directly at the correct aspect ratio so wide covers aren't cropped into a frame.
@@ -128,6 +138,7 @@ export function StudioCaseStudies({
                   mockViewport={homepageCaseStudyViewport}
                   mockPresentation={caseStudy.mockPresentation}
                   variant={caseStudy.mockVariant}
+                  gradientPlacement={homepageCaseStudyGradientMap[caseStudy.id]}
                   layout={caseStudy.mockLayout}
                   detailHref={getStudioCaseStudyHref(caseStudy.id)}
                   onOpenDetails={() => handleOpenCaseStudy(caseStudy)}
