@@ -15,7 +15,6 @@ import {
   PremiumSurface,
   type PremiumSurfaceProps,
 } from "@/components/ui/premium-surface";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
@@ -38,19 +37,19 @@ const mockCardVariantStyles: Record<
   aurora: {
     iconAccentClassName: "bg-[rgba(245,243,255,0.88)] text-[var(--purple-500)]",
     mockImageClassName: "rounded-[1.45rem]",
-    tone: "billing",
+    tone: "billingSunrise",
   },
   sunrise: {
     iconAccentClassName:
       "bg-[rgba(255,248,234,0.92)] text-[color:color-mix(in_srgb,var(--orange-500)_72%,var(--purple-500))]",
     mockImageClassName: "rounded-[1.55rem]",
-    tone: "billing",
+    tone: "billingSunrise",
   },
   prism: {
     iconAccentClassName:
       "bg-[rgba(237,249,251,0.92)] text-[color:color-mix(in_srgb,var(--cyan-500)_72%,var(--purple-500))]",
     mockImageClassName: "rounded-[1.5rem] saturate-[1.03]",
-    tone: "billing",
+    tone: "billingSunrise",
   },
 };
 
@@ -58,8 +57,6 @@ const mockCardLayoutStyles: Record<
   StudioCaseStudyMockCardLayout,
   {
     bodyClassName: string;
-    footerClassName: string;
-    footerWrapClassName: string;
     imageClassName: string;
     imageStageClassName: string;
     introClassName: string;
@@ -73,10 +70,6 @@ const mockCardLayoutStyles: Record<
   // Mobile stacks naturally for better density, while desktop restores the editorial equal-height composition.
   feature: {
     bodyClassName: "gap-4 md:gap-6",
-    // A shared desktop tag lane keeps three proof chips wrapping into two rows
-    // consistently across portrait and landscape homepage cards.
-    footerClassName: "max-w-none md:max-w-[28rem]",
-    footerWrapClassName: "md:min-h-[5.5rem]",
     imageClassName: "h-[20rem] sm:h-[22rem] lg:h-[24rem]",
     // The mock stage gets a smaller mobile min-height so the image sits closer to the copy.
     imageStageClassName:
@@ -91,8 +84,6 @@ const mockCardLayoutStyles: Record<
   },
   compact: {
     bodyClassName: "gap-3 md:gap-4",
-    footerClassName: "max-w-none md:max-w-[24rem]",
-    footerWrapClassName: "md:min-h-[4.5rem]",
     imageClassName: "h-[11rem] sm:h-[12rem]",
     imageStageClassName:
       "min-h-[180px] px-1 pb-1 pt-1 sm:min-h-[220px] sm:px-2 sm:pt-2 md:min-h-[250px] md:px-2 md:pt-4 lg:px-3",
@@ -105,8 +96,6 @@ const mockCardLayoutStyles: Record<
   },
   wide: {
     bodyClassName: "gap-4 md:gap-5",
-    footerClassName: "max-w-none md:max-w-[28rem]",
-    footerWrapClassName: "md:min-h-[5.5rem]",
     imageClassName: "h-[14rem] sm:h-[15rem] lg:h-[16rem]",
     imageStageClassName:
       "min-h-[220px] px-1 pb-1 pt-1 sm:min-h-[260px] sm:px-3 sm:pt-2 md:min-h-[320px] md:pb-1 md:pt-5 lg:px-5",
@@ -309,7 +298,7 @@ export function StudioCaseStudyMockCard({
         </div>
 
         <div className={cn("relative z-10 flex h-full flex-col", layoutStyles.bodyClassName)}>
-          <div className={cn("space-y-2", layoutStyles.introClassName)}>
+          <div className={cn("space-y-3", layoutStyles.introClassName)}>
             <div className="flex items-start justify-between gap-4">
               <div className="space-y-2">
                 <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
@@ -317,6 +306,11 @@ export function StudioCaseStudyMockCard({
                 </p>
                 <h3 className={layoutStyles.titleClassName}>{title}</h3>
                 <p className={layoutStyles.summaryClassName}>{summary}</p>
+                <div className="flex flex-wrap gap-x-3 gap-y-1.5 pt-1 text-body-sm font-medium tracking-[-0.01em] text-[var(--color-text-brand)]">
+                  {serviceTags.map((service) => (
+                    <span key={`${title}-${service}`}>{service}</span>
+                  ))}
+                </div>
               </div>
 
               <div
@@ -487,22 +481,6 @@ export function StudioCaseStudyMockCard({
               </motion.div>
             </div>
 
-            {/* The service footer turns each capability into centered proof tags without adding a second CTA. */}
-            <div
-              className={cn(
-                "mx-auto flex w-full items-start justify-center",
-                layoutStyles.footerWrapClassName,
-                layoutStyles.footerClassName,
-              )}
-            >
-              <div className="flex flex-wrap justify-center gap-2">
-                {serviceTags.map((service) => (
-                  <Badge key={`${title}-${service}`} variant="service">
-                    {service}
-                  </Badge>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </PremiumSurface>
