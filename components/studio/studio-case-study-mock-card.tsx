@@ -104,7 +104,7 @@ const mockCardLayoutStyles: Record<
     bodyClassName: "gap-4 md:gap-5",
     imageClassName: "h-[14rem] sm:h-[15rem] lg:h-[16rem]",
     imageStageClassName:
-      "min-h-[220px] px-1 pb-1 pt-1 sm:min-h-[260px] sm:px-3 sm:pt-2 md:min-h-[300px] md:pb-1 md:pt-4 lg:px-5 lg:pt-5",
+      "min-h-[220px] px-1 sm:min-h-[260px] sm:px-3 md:min-h-[300px] lg:px-5",
     introClassName: "md:min-h-[10rem] lg:min-h-[10.5rem]",
     mediaGroupClassName: "space-y-4 md:mt-auto md:space-y-5",
     shellClassName: "h-auto px-5 py-5 sm:p-5 md:h-[580px] md:p-6 lg:h-[596px] lg:p-7",
@@ -125,7 +125,7 @@ const mockViewportStyles: Record<
     imageClassName: "object-cover object-center",
   },
   landscape: {
-    frameClassName: "aspect-[16/9] w-[300px] sm:w-[360px] lg:w-[440px]",
+    frameClassName: "aspect-[16/9] w-full",
     imageClassName: "object-cover object-center",
   },
 };
@@ -144,7 +144,7 @@ const fullSpanImageStageOverrides: Record<StudioCaseStudyMockCardLayout, string>
 
 const fullSpanViewportOverrides: Record<StudioCaseStudyMockViewport, string> = {
   portrait: "md:h-[400px] md:w-[250px] lg:h-[440px] lg:w-[275px]",
-  landscape: "md:w-[420px] lg:w-[540px]",
+  landscape: "w-full",
 };
 
 const mockCardGradientPlacements: Record<
@@ -293,6 +293,8 @@ export function StudioCaseStudyMockCard({
   const isFullImagePresentation = mockPresentation === "fullImage";
   const shouldUseLogoPanel = Boolean(logoSrc);
   const shouldUseFramedStage = shouldUseLogoPanel || !isFullImagePresentation;
+  const shouldUseWideLandscapeStage =
+    shouldUseFramedStage && mockViewport === "landscape";
   const fullImageAspectRatio =
     imageAspectRatio ?? (mockViewport === "portrait" ? "1310 / 2708" : "16 / 9");
   const serviceTags = services.map(normalizeServiceLabel);
@@ -443,8 +445,13 @@ export function StudioCaseStudyMockCard({
                     : { transformStyle: "preserve-3d", transform }
                 }
                 className={cn(
-                  "relative max-w-[560px] scale-[0.8]",
-                  span === "full" && "max-w-[680px]",
+                  shouldUseWideLandscapeStage
+                    ? "relative my-1 w-full max-w-[42rem] sm:my-1.5 md:my-2"
+                    : "relative max-w-[560px] scale-[0.8]",
+                  span === "full" &&
+                  (shouldUseWideLandscapeStage
+                    ? "max-w-[46rem]"
+                    : "max-w-[680px]"),
                 )}
               >
                 <div
@@ -468,8 +475,8 @@ export function StudioCaseStudyMockCard({
                           : "w-[300px] sm:w-[360px] lg:w-[440px]",
                         span === "full" &&
                         (mockViewport === "portrait"
-                            ? "md:w-[290px] lg:w-[320px]"
-                            : "md:w-[420px] lg:w-[540px]"),
+                          ? "md:w-[290px] lg:w-[320px]"
+                          : "md:w-[420px] lg:w-[540px]"),
                         variantStyles.mockImageClassName,
                       ],
                   )}
@@ -506,54 +513,54 @@ export function StudioCaseStudyMockCard({
                     <>
                       {/* The media wrapper carries the visible mock perimeter so bright covers still read as framed objects over the premium gradient shell. */}
                       {/* The optional inner media shell makes contained covers feel intentional without changing the outer card framing contract. */}
-                      <div className="h-full w-full bg-white p-2 sm:p-2.5">
+                      <div className="h-full w-full bg-white ">
                         <div
                           className={cn(
                             "relative h-full w-full overflow-hidden",
                             mediaShellClassName,
                           )}
                         >
-                        {videoSrc ? (
-                          <video
-                            src={videoSrc}
-                            autoPlay
-                            muted
-                            loop
-                            playsInline
-                            className={cn(
-                              "absolute inset-0 h-full w-full",
-                              isFullImagePresentation
-                                ? "object-contain object-center"
-                                : viewportStyles.imageClassName,
-                              !isFullImagePresentation && variantStyles.mockImageClassName,
-                              imageClassName,
-                            )}
-                          />
-                        ) : (
-                          <Image
-                            src={imageSrc}
-                            alt={imageAlt}
-                            fill
-                            sizes={
-                              mockViewport === "portrait"
-                                ? span === "full"
-                                  ? "(max-width: 640px) 200px, (max-width: 1024px) 250px, 275px"
-                                  : "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px"
-                                : span === "full"
-                                  ? "(max-width: 640px) 260px, (max-width: 1024px) 420px, 540px"
-                                  : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"
-                            }
-                            className={cn(
-                              isFullImagePresentation
-                                ? "object-contain object-center"
-                                : viewportStyles.imageClassName,
-                              !isFullImagePresentation && variantStyles.mockImageClassName,
-                              imageClassName,
-                            )}
-                            priority={false}
-                            unoptimized={shouldSkipImageOptimization}
-                          />
-                        )}
+                          {videoSrc ? (
+                            <video
+                              src={videoSrc}
+                              autoPlay
+                              muted
+                              loop
+                              playsInline
+                              className={cn(
+                                "absolute inset-0 h-full w-full",
+                                isFullImagePresentation
+                                  ? "object-contain object-center"
+                                  : viewportStyles.imageClassName,
+                                !isFullImagePresentation && variantStyles.mockImageClassName,
+                                imageClassName,
+                              )}
+                            />
+                          ) : (
+                            <Image
+                              src={imageSrc}
+                              alt={imageAlt}
+                              fill
+                              sizes={
+                                mockViewport === "portrait"
+                                  ? span === "full"
+                                    ? "(max-width: 640px) 200px, (max-width: 1024px) 250px, 275px"
+                                    : "(max-width: 640px) 200px, (max-width: 1024px) 220px, 240px"
+                                  : span === "full"
+                                    ? "(max-width: 640px) 260px, (max-width: 1024px) 420px, 540px"
+                                    : "(max-width: 640px) 260px, (max-width: 1024px) 320px, 380px"
+                              }
+                              className={cn(
+                                isFullImagePresentation
+                                  ? "object-contain object-center"
+                                  : viewportStyles.imageClassName,
+                                !isFullImagePresentation && variantStyles.mockImageClassName,
+                                imageClassName,
+                              )}
+                              priority={false}
+                              unoptimized={shouldSkipImageOptimization}
+                            />
+                          )}
                         </div>
                       </div>
                     </>

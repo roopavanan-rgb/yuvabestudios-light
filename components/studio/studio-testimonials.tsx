@@ -5,7 +5,6 @@ import {
   StudioPageContainer,
   StudioPageRails,
 } from "@/components/studio/studio-page-shell";
-import { PremiumSurface } from "@/components/ui/premium-surface";
 
 function getLogoForAttribution(attribution: string): string | undefined {
   const s = attribution.toLowerCase();
@@ -148,7 +147,8 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
                     &ldquo;{entry.quote}&rdquo;
                   </p>
 
-                  <div className="flex items-end gap-6 pt-2">
+                  {/* The attribution block stacks on mobile so long names and badges never widen the card past the viewport. */}
+                  <div className="flex flex-col items-start gap-5 pt-2 sm:flex-row sm:items-end sm:gap-6">
                     <div className="flex shrink-0 justify-start">
                       {entry.attribution && getLogoForAttribution(entry.attribution) ? (
                         <Image
@@ -161,7 +161,7 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
                       ) : null}
                     </div>
 
-                    <div className="min-w-0 flex-1 space-y-2 self-center">
+                    <div className="min-w-0 flex-1 space-y-2 self-start sm:self-center">
                       <h3 className="text-heading-sm text-[var(--neutral-900)]">
                         {entry.name}
                       </h3>
@@ -171,7 +171,7 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
                           style={badgeStyle}
                         >
                           <p
-                            className="truncate text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]"
+                            className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] [overflow-wrap:anywhere]"
                             style={badgeStyle ? { color: badgeStyle.color } : undefined}
                           >
                             {entry.attribution}
