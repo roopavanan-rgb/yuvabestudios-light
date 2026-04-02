@@ -107,3 +107,4 @@ Use this reference when writing homepage, about, or case-study content through t
 ## Case Studies Document Shape
 - Value is an array of case-study objects.
 - Preserve each case study's `id` and existing structural fields.
+- For homepage studio card references in `case_studies`, keep `coverImages.card` and `mockImageSrc` on the `cover-mock` asset paths unless the user explicitly requests a homepage asset change first.

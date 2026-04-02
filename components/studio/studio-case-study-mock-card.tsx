@@ -20,6 +20,12 @@ import { cn } from "@/lib/utils";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 const shouldSkipImageOptimization = process.env.NODE_ENV === "development";
+const mockLiftSpring = {
+  type: "spring",
+  stiffness: 260,
+  damping: 18,
+  mass: 0.72,
+} as const;
 
 export type StudioCaseStudyMockVariant = "aurora" | "sunrise" | "prism";
 export type StudioCaseStudyMockCardLayout = "feature" | "compact" | "wide";
@@ -343,8 +349,21 @@ export function StudioCaseStudyMockCard({
       role={canOpenDetails ? "button" : undefined}
       tabIndex={canOpenDetails ? 0 : undefined}
       aria-label={canOpenDetails ? `Open ${title} case study details` : undefined}
-      whileHover={shouldReduceMotion ? undefined : { scale: 1.014, y: -6 }}
-      transition={{ duration: 0.36, ease: easeOut }}
+      variants={
+        shouldReduceMotion
+          ? undefined
+          : {
+              rest: { scale: 1, y: 0 },
+              hover: {
+                scale: 1.014,
+                y: -6,
+                transition: { duration: 0.36, ease: easeOut },
+              },
+            }
+      }
+      initial="rest"
+      animate="rest"
+      whileHover="hover"
     >
       <PremiumSurface
         tone={variantStyles.tone}
@@ -436,51 +455,62 @@ export function StudioCaseStudyMockCard({
               )}
             >
               <motion.div
-                ref={mockRef}
-                onPointerMove={handleMockPointerMove}
-                onPointerLeave={handleMockPointerLeave}
-                style={
+                variants={
                   shouldReduceMotion
                     ? undefined
-                    : { transformStyle: "preserve-3d", transform }
+                    : {
+                        rest: { y: 50 },
+                        hover: { y: 0 },
+                      }
                 }
+                transition={mockLiftSpring}
                 className={cn(
                   shouldUseWideLandscapeStage
                     ? "relative my-1 w-full max-w-[42rem] sm:my-1.5 md:my-2"
                     : "relative max-w-[560px] scale-[0.8]",
                   span === "full" &&
-                  (shouldUseWideLandscapeStage
-                    ? "max-w-[46rem]"
-                    : "max-w-[680px]"),
+                    (shouldUseWideLandscapeStage
+                      ? "max-w-[46rem]"
+                      : "max-w-[680px]"),
                 )}
               >
-                <div
+                <motion.div
+                  ref={mockRef}
+                  onPointerMove={handleMockPointerMove}
+                  onPointerLeave={handleMockPointerLeave}
                   style={
-                    shouldUseFramedStage
+                    shouldReduceMotion
                       ? undefined
-                      : { aspectRatio: fullImageAspectRatio }
+                      : { transformStyle: "preserve-3d", transform }
                   }
-                  className={cn(
-                    "relative overflow-hidden",
-                    shouldUseFramedStage
-                      ? [
-                        "rounded-[8px]",
-                        "border border-black/12 shadow-[0_1px_1px_rgba(15,23,42,0.12),0_10px_24px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.55)]",
-                        viewportStyles.frameClassName,
-                        span === "full" && fullSpanViewportOverrides[mockViewport],
-                      ]
-                      : [
-                        mockViewport === "portrait"
-                          ? "w-[220px] sm:w-[250px] lg:w-[280px]"
-                          : "w-[300px] sm:w-[360px] lg:w-[440px]",
-                        span === "full" &&
-                        (mockViewport === "portrait"
-                          ? "md:w-[290px] lg:w-[320px]"
-                          : "md:w-[420px] lg:w-[540px]"),
-                        variantStyles.mockImageClassName,
-                      ],
-                  )}
                 >
+                  <div
+                    style={
+                      shouldUseFramedStage
+                        ? undefined
+                        : { aspectRatio: fullImageAspectRatio }
+                    }
+                    className={cn(
+                      "relative overflow-hidden",
+                      shouldUseFramedStage
+                        ? [
+                          "rounded-[8px]",
+                          "border border-black/12 shadow-[0_1px_1px_rgba(15,23,42,0.12),0_10px_24px_rgba(15,23,42,0.1),inset_0_1px_0_rgba(255,255,255,0.55)]",
+                          viewportStyles.frameClassName,
+                          span === "full" && fullSpanViewportOverrides[mockViewport],
+                        ]
+                        : [
+                          mockViewport === "portrait"
+                            ? "w-[220px] sm:w-[250px] lg:w-[280px]"
+                            : "w-[300px] sm:w-[360px] lg:w-[440px]",
+                          span === "full" &&
+                          (mockViewport === "portrait"
+                              ? "md:w-[290px] lg:w-[320px]"
+                              : "md:w-[420px] lg:w-[540px]"),
+                          variantStyles.mockImageClassName,
+                        ],
+                    )}
+                  >
                   {/* Logo-led covers keep the glass frame as the shared homepage card contract once a brand mark exists. */}
                   {shouldUseLogoPanel ? (
                     <div className="relative flex h-full w-full items-center justify-center rounded-[inherit] bg-white/[0.035]">
@@ -565,7 +595,8 @@ export function StudioCaseStudyMockCard({
                       </div>
                     </>
                   )}
-                </div>
+                  </div>
+                </motion.div>
               </motion.div>
             </div>
 

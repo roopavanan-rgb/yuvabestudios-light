@@ -23,6 +23,7 @@ Use this file as the quick reference for frontend implementation work after load
 - Make responsiveness part of the shared system: default to mobile-first layouts, then scale up through component variants and section composition.
 - Use Framer Motion for implemented interaction animation, with ease-out curves as the default motion language.
 - Comment intent, not syntax.
+- Homepage studio case-study card image refs should keep using `cover-mock` assets for `coverImages.card` and `mockImageSrc`; do not swap those fields to `cover-home` unless the user explicitly changes the homepage asset contract.
 
 ## Current Repo Foundation Files
 - `app/globals.css`
