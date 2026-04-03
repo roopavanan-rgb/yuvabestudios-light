@@ -309,14 +309,15 @@ function AboutProofEntryCard({
 }: AboutProofEntryCardProps) {
   const logoAsset = getAboutProofLogoAsset(entry.client);
   const proofHref = resolveStudioCaseStudyHrefFromLabel(entry.client);
+  const canNavigate = Boolean(proofHref);
   const toneClassName = aboutProofToneClassNames[proofTone];
   const hoverWashClassName = aboutProofHoverWashClassNames[proofTone];
   const hoverGlowClassName = aboutProofHoverGlowClassNames[proofTone];
   const shellClassName = [
-    "group relative isolate block min-h-[15rem] overflow-hidden px-6 py-7 transition-[cursor,box-shadow] duration-[1000ms] ease-out md:px-8 md:py-8",
-    proofHref
-      ? "hover:cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-text-brand)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      : "",
+    "group relative isolate block min-h-[15rem] overflow-hidden px-6 py-7 transition-[box-shadow,transform] duration-[1000ms] ease-out md:px-8 md:py-8",
+    canNavigate
+      ? "hover:cursor-pointer hover:shadow-[0_24px_64px_rgba(88,41,199,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-text-brand)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      : "cursor-default",
     toneClassName,
     className,
   ]
@@ -325,7 +326,14 @@ function AboutProofEntryCard({
   const tileContent = (
     <>
       {/* The text block stays in flow so the tile footprint does not shift before hover. */}
-      <div className="relative z-10 flex h-full flex-col gap-4 transition-opacity duration-[1000ms] ease-out group-hover:opacity-0">
+      <div
+        className={[
+          "relative z-10 flex h-full flex-col gap-4 transition-opacity duration-[1000ms] ease-out",
+          canNavigate ? "group-hover:opacity-0" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
           {entry.sector}
         </p>
@@ -333,10 +341,17 @@ function AboutProofEntryCard({
         <p className="max-w-[32rem] text-body-md text-[var(--color-text-secondary)]">
           {entry.summary}
         </p>
+        {/* Mobile gets an explicit CTA because the desktop hover swap does not exist on touch devices. */}
+        {canNavigate ? (
+          <div className="mt-auto flex items-center gap-2 pt-2 text-label-sm font-semibold uppercase tracking-[0.16em] text-[var(--color-text-brand)] md:hidden">
+            <span>Read case study</span>
+            <ArrowRight className="size-4" />
+          </div>
+        ) : null}
       </div>
 
       {/* The hover cover reuses the same wash family, then adds a stronger veil so the logo reads cleanly above it. */}
-      {logoAsset ? (
+      {logoAsset && canNavigate ? (
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-[1000ms] ease-out group-hover:opacity-100"
