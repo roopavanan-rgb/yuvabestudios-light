@@ -499,7 +499,7 @@ export function StudioCaseStudyMockCard({
                 <Badge
                   key={`${title}-${service}`}
                   variant="outline"
-                  className="border border-[rgba(72,49,142,0.42)] bg-white/82 bg-[image:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)),var(--gradient-brand-pill-sunrise)] px-3 py-1.5 text-body-sm font-medium tracking-normal text-white/90 shadow-[0_1px_0_rgba(27,10,79,0.24),0_0_0_1px_rgba(72,49,142,0.16)] backdrop-blur-0"
+                  className="border-[1.5px] border-[rgba(63,42,125,0.24)] bg-[color:color-mix(in_srgb,var(--color-background-brand-subtle)_20%,white)] px-3 py-1.5 text-body-sm font-medium tracking-normal text-[var(--color-text-brand)] shadow-none backdrop-blur-0"
                 >
                   {service}
                 </Badge>
