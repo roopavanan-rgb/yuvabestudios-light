@@ -19,6 +19,7 @@ import {
   type StudioAboutWorkflowContent,
 } from "@/components/studio/studio-about-content";
 import {
+  resolveStudioCaseStudyHrefFromLabel,
   resolveStudioCaseStudyProofTone,
   type StudioCaseStudyProofTone,
 } from "@/components/studio/studio-case-study-content";
@@ -307,20 +308,22 @@ function AboutProofEntryCard({
   className,
 }: AboutProofEntryCardProps) {
   const logoAsset = getAboutProofLogoAsset(entry.client);
+  const proofHref = resolveStudioCaseStudyHrefFromLabel(entry.client);
   const toneClassName = aboutProofToneClassNames[proofTone];
   const hoverWashClassName = aboutProofHoverWashClassNames[proofTone];
   const hoverGlowClassName = aboutProofHoverGlowClassNames[proofTone];
-
-  return (
-    <article
-      className={[
-        "group relative isolate min-h-[15rem] overflow-hidden px-6 py-7 transition-[cursor] duration-[1000ms] ease-out hover:cursor-pointer md:px-8 md:py-8",
-        toneClassName,
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-    >
+  const shellClassName = [
+    "group relative isolate block min-h-[15rem] overflow-hidden px-6 py-7 transition-[cursor,box-shadow] duration-[1000ms] ease-out md:px-8 md:py-8",
+    proofHref
+      ? "hover:cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-text-brand)] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+      : "",
+    toneClassName,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const tileContent = (
+    <>
       {/* The text block stays in flow so the tile footprint does not shift before hover. */}
       <div className="relative z-10 flex h-full flex-col gap-4 transition-opacity duration-[1000ms] ease-out group-hover:opacity-0">
         <p className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)]">
@@ -362,8 +365,22 @@ function AboutProofEntryCard({
           </div>
         </div>
       ) : null}
-    </article>
+    </>
   );
+
+  if (proofHref) {
+    return (
+      <Link
+        href={proofHref}
+        aria-label={`Read ${entry.client} case study`}
+        className={shellClassName}
+      >
+        {tileContent}
+      </Link>
+    );
+  }
+
+  return <article className={shellClassName}>{tileContent}</article>;
 }
 
 // The operating principles list is shared between mobile and desktop placements so the copy stays in one place.

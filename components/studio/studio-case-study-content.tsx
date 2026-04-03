@@ -177,6 +177,13 @@ const studioCaseStudyProofToneMap: Record<string, StudioCaseStudyProofTone> = {
   generalaeronautics: "tintGreen",
 };
 
+const studioCaseStudyLabelToIdMap: Partial<Record<string, StudioCaseStudyId>> = {
+  tvam: "tvam",
+  bevolve: "bevolve",
+  kittykat: "kittykat",
+  generalaeronautics: "general-aeronautics",
+};
+
 // Each case study can override the shared hero contract with logo-led colors while still using the same layout and markup.
 const studioCaseStudyHeroPalettes: Partial<
   Record<StudioCaseStudyId, StudioCaseStudyHeroPalette>
@@ -246,6 +253,13 @@ export function isStudioCaseStudyId(value: string): value is StudioCaseStudyId {
 
 export function getStudioCaseStudyHref(id: string) {
   return `/case-studies/${id}`;
+}
+
+// This label resolver lets editorial content link to named case studies without repeating slug logic in page components.
+export function resolveStudioCaseStudyHrefFromLabel(label: string) {
+  const caseStudyId = studioCaseStudyLabelToIdMap[normalizeStudioCaseStudyLabel(label)];
+
+  return caseStudyId ? getStudioCaseStudyHref(caseStudyId) : undefined;
 }
 
 export function getHomepageCaseStudies(caseStudies: StudioCaseStudySummary[]) {
