@@ -85,7 +85,7 @@ const mockCardLayoutStyles: Record<
     imageClassName: "h-[20rem] sm:h-[22rem] lg:h-[24rem]",
     // The mock stage gets a smaller mobile min-height so the image sits closer to the copy.
     imageStageClassName:
-      "min-h-[250px] px-1 pb-1 pt-1 sm:min-h-[300px] sm:px-2 sm:pt-2 md:min-h-[430px] md:px-4 md:pb-2 md:pt-7 lg:px-6",
+      "min-h-[250px] px-0 pb-0 pt-0 sm:min-h-[300px] sm:px-2 sm:pt-2 md:min-h-[430px] md:px-4 md:pb-2 md:pt-7 lg:px-6",
     introClassName: "md:min-h-[11.25rem]",
     // Mobile keeps the media group in normal flow; desktop pushes it down to preserve the premium editorial rhythm.
     mediaGroupClassName: "space-y-4 md:mt-auto md:space-y-5",
@@ -98,7 +98,7 @@ const mockCardLayoutStyles: Record<
     bodyClassName: "gap-3 md:gap-4",
     imageClassName: "h-[11rem] sm:h-[12rem]",
     imageStageClassName:
-      "min-h-[180px] px-1 pb-1 pt-1 sm:min-h-[220px] sm:px-2 sm:pt-2 md:min-h-[250px] md:px-2 md:pt-4 lg:px-3",
+      "min-h-[180px] px-0 pb-0 pt-0 sm:min-h-[220px] sm:px-2 sm:pt-2 md:min-h-[250px] md:px-2 md:pt-4 lg:px-3",
     introClassName: "md:min-h-[9.5rem]",
     mediaGroupClassName: "space-y-3 md:mt-auto md:space-y-4",
     shellClassName: "h-auto px-5 py-5 sm:p-5 md:h-[520px]",
@@ -142,6 +142,15 @@ const fullSpanShellOverrides: Record<StudioCaseStudyMockCardLayout, string> = {
   wide: "md:h-auto md:min-h-[40rem] lg:min-h-[40rem]",
 };
 
+const backgroundAssetShellOverrides: Record<
+  StudioCaseStudyMockCardLayout,
+  string
+> = {
+  feature: "px-0 py-0 md:p-6 lg:p-7",
+  compact: "px-0 py-0 md:p-5",
+  wide: "px-0 py-0 md:p-6 lg:p-7",
+};
+
 const fullSpanImageStageOverrides: Record<StudioCaseStudyMockCardLayout, string> = {
   feature: "md:min-h-[300px] md:pt-4 lg:min-h-[340px] lg:pt-6",
   compact: "md:min-h-[220px] md:pt-3",
@@ -152,6 +161,9 @@ const fullSpanViewportOverrides: Record<StudioCaseStudyMockViewport, string> = {
   portrait: "md:h-[400px] md:w-[250px] lg:h-[440px] lg:w-[275px]",
   landscape: "w-full",
 };
+
+const mockCardTextWashClassName =
+  "pointer-events-none absolute inset-x-0 top-0 z-[1] h-[24rem] bg-[linear-gradient(180deg,rgba(255,255,255,1)_0%,rgba(255,255,255,0.95)_22%,rgba(255,255,255,0.7)_58%,rgba(255,255,255,0)_100%)] md:h-[26rem]";
 
 const mockCardGradientPlacements: Record<
   StudioCaseStudyGradientPlacement,
@@ -232,6 +244,8 @@ function getLogoPanelImageClass(logoSrc?: string) {
 }
 
 export type StudioCaseStudyMockCardProps = {
+  backgroundAlt?: string;
+  backgroundSrc?: string;
   sector: string;
   title: string;
   summary: string;
@@ -256,6 +270,8 @@ export type StudioCaseStudyMockCardProps = {
 
 // This card adapts the premium gradient mock treatment into a reusable homepage and proof pattern.
 export function StudioCaseStudyMockCard({
+  backgroundAlt,
+  backgroundSrc,
   className,
   detailHref,
   imageAlt,
@@ -297,6 +313,8 @@ export function StudioCaseStudyMockCard({
   const layoutStyles = mockCardLayoutStyles[layout];
   const viewportStyles = mockViewportStyles[mockViewport];
   const gradientPlacementStyles = mockCardGradientPlacements[gradientPlacement];
+  const hasBackgroundAsset = Boolean(backgroundSrc);
+  const surfaceTone = hasBackgroundAsset ? "neutral" : variantStyles.tone;
   const isFullImagePresentation = mockPresentation === "fullImage";
   const shouldUseLogoPanel = Boolean(logoSrc);
   const shouldUseFramedStage = shouldUseLogoPanel || !isFullImagePresentation;
@@ -385,51 +403,71 @@ export function StudioCaseStudyMockCard({
       whileHover="hover"
     >
       <PremiumSurface
-        tone={variantStyles.tone}
+        tone={surfaceTone}
         elevation="lg"
         blur="none"
         radius="xl"
         className={cn(
-          "w-full min-w-0 border-transparent transition-[box-shadow,transform] duration-300 ease-out group-hover:shadow-[0_34px_110px_rgba(88,41,199,0.18),0_24px_70px_rgba(11,15,25,0.14)]",
+          "w-full min-w-0 overflow-hidden border-transparent transition-[box-shadow,transform] duration-300 ease-out group-hover:shadow-[0_34px_110px_rgba(88,41,199,0.18),0_24px_70px_rgba(11,15,25,0.14)]",
+          hasBackgroundAsset &&
+            "border-[var(--color-border-premium-aurora)] bg-none",
           layoutStyles.shellClassName,
+          hasBackgroundAsset && backgroundAssetShellOverrides[layout],
           span === "full" && fullSpanShellOverrides[layout],
         )}
       >
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
-          {/* The glow canvas uses stable presets so each card feels distinct without introducing visual randomness between reloads. */}
-          <div
-            className={cn(
-              "absolute inset-[-8%] transform-gpu transition-transform duration-500 ease-out group-hover:scale-[1.02]",
-              gradientPlacementStyles.canvasClassName,
-            )}
-          >
-            <div className={gradientPlacementStyles.topGlowClassName} />
-            <div className={gradientPlacementStyles.warmGlowClassName} />
-            <div className={gradientPlacementStyles.violetGlowClassName} />
-            <div className={gradientPlacementStyles.coolGlowClassName} />
-          </div>
+          {hasBackgroundAsset ? (
+            <>
+              {/* Case-study-specific background art keeps each card visually tied to its own proof instead of sharing a generic gradient. */}
+              <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.02]">
+                <Image
+                  src={backgroundSrc!}
+                  alt={backgroundAlt ?? `${title} background artwork`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 700px"
+                  className="object-cover object-center opacity-[0.65]"
+                  priority={false}
+                  unoptimized={shouldSkipImageOptimization}
+                />
+              </div>
+              {/* A shared veil preserves copy legibility across the brighter custom backgrounds. */}
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.46)_0%,rgba(255,255,255,0.34)_34%,rgba(255,255,255,0.16)_68%,rgba(255,255,255,0.08)_100%)]" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18)_0%,transparent_46%)]" />
+              <div className={mockCardTextWashClassName} />
+            </>
+          ) : (
+            <>
+              {/* The glow canvas uses stable presets so each card feels distinct without introducing visual randomness between reloads. */}
+              <div
+                className={cn(
+                  "absolute inset-[-8%] transform-gpu transition-transform duration-500 ease-out group-hover:scale-[1.02]",
+                  gradientPlacementStyles.canvasClassName,
+                )}
+              >
+                <div className={gradientPlacementStyles.topGlowClassName} />
+                <div className={gradientPlacementStyles.warmGlowClassName} />
+                <div className={gradientPlacementStyles.violetGlowClassName} />
+                <div className={gradientPlacementStyles.coolGlowClassName} />
+              </div>
+            </>
+          )}
         </div>
 
         <div className={cn("relative z-10 flex h-full flex-col", layoutStyles.bodyClassName)}>
-          <div className={cn("space-y-3", layoutStyles.introClassName)}>
-            <div className="flex items-start justify-between gap-4">
-              <div className="space-y-2">
+          <div
+            className={cn(
+              "relative flex flex-col gap-4",
+              layoutStyles.introClassName,
+            )}
+          >
+            <div className="relative z-10 flex items-start justify-between gap-4">
+              <div className="min-w-0 space-y-2">
                 <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
                   {sector}
                 </p>
                 <h3 className={layoutStyles.titleClassName}>{title}</h3>
                 <p className={layoutStyles.summaryClassName}>{summary}</p>
-                <div className="flex flex-wrap gap-2.5 pt-1.5">
-                  {serviceTags.map((service) => (
-                    <Badge
-                      key={`${title}-${service}`}
-                      variant="brandTagSubtle"
-                      className="px-3.5 py-1.5 text-body-sm font-semibold tracking-[-0.01em]"
-                    >
-                      {service}
-                    </Badge>
-                  ))}
-                </div>
               </div>
 
               <div
@@ -454,6 +492,18 @@ export function StudioCaseStudyMockCard({
                   <Maximize2 className="size-4" />
                 </button>
               </div>
+            </div>
+
+            <div className="relative z-10 flex flex-wrap gap-2.5">
+              {serviceTags.map((service) => (
+                <Badge
+                  key={`${title}-${service}`}
+                  variant="outline"
+                  className="border border-[rgba(72,49,142,0.42)] bg-white/82 bg-[image:linear-gradient(rgba(255,255,255,0.5),rgba(255,255,255,0.5)),var(--gradient-brand-pill-sunrise)] px-3 py-1.5 text-body-sm font-medium tracking-normal text-white/90 shadow-[0_1px_0_rgba(27,10,79,0.24),0_0_0_1px_rgba(72,49,142,0.16)] backdrop-blur-0"
+                >
+                  {service}
+                </Badge>
+              ))}
             </div>
           </div>
 

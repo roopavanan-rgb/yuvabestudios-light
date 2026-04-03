@@ -47,6 +47,13 @@ const homepageCaseStudyGradientMap: Record<string, StudioCaseStudyGradientPlacem
   tvam: "northArc",
 };
 
+const homepageCaseStudyBackgroundMap: Record<string, string> = {
+  "general-aeronautics": "/assets/general-aeronautics/bg1.png",
+  bevolve: "/assets/bevolve/bg2.png",
+  kittykat: "/assets/KK/bg3.png",
+  tvam: "/assets/tvam/bg4.png",
+};
+
 // Hard-coded presentation overrides — "fullImage" removes the phone frame and shows the
 // image directly at the correct aspect ratio so wide covers aren't cropped into a frame.
 
@@ -109,6 +116,8 @@ export function StudioCaseStudies({
               {homepageCaseStudies.map((caseStudy) => (
                 <StudioCaseStudyMockCard
                   key={caseStudy.id}
+                  backgroundSrc={homepageCaseStudyBackgroundMap[caseStudy.id]}
+                  backgroundAlt={`${caseStudy.title} case study background artwork`}
                   sector={caseStudy.sector}
                   title={caseStudy.title}
                   summary={caseStudy.summary}
