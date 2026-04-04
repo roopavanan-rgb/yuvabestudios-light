@@ -204,11 +204,14 @@ export function StudioHeroNoiseBackdrop({
             className="relative h-[16rem] w-[34rem] max-w-[132vw] sm:h-[18rem] sm:w-[42rem] md:h-[22rem] md:w-[58rem] md:translate-x-[var(--hero-cloud-offset-x)] md:translate-y-[var(--hero-cloud-offset-y)]"
             style={desktopCloudStyle}
           >
-            <div className="absolute left-1/2 top-1/2 h-[16rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full ds-hero-signal-core opacity-72 blur-[42px] md:h-[22rem] md:w-[36rem]" />
-            <StudioHeroInfinityCloud
-              tuning={tuning}
-              className="opacity-98 [mask-image:radial-gradient(ellipse_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,0.96)_56%,rgba(0,0,0,0)_92%)]"
-            />
+            {/* The anchor box sets placement, while this larger internal stage prevents the loop from clipping against its own local bounds. */}
+            <div className="absolute left-1/2 top-1/2 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 sm:h-[154%] sm:w-[128%] md:h-[160%] md:w-[128%]">
+              <div className="absolute left-1/2 top-1/2 h-[16rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full ds-hero-signal-core opacity-72 blur-[42px] md:h-[24rem] md:w-[40rem]" />
+              <StudioHeroInfinityCloud
+                tuning={tuning}
+                className="opacity-98 [mask-image:radial-gradient(ellipse_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,0.98)_62%,rgba(0,0,0,0.88)_82%,rgba(0,0,0,0)_100%)]"
+              />
+            </div>
           </div>
         </div>
 

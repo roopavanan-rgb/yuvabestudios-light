@@ -15,7 +15,7 @@ export const defaultHeroInfinityCloudTuning: HeroInfinityCloudTuning = {
   scaleX: 1.85,
   scaleY: 2.4,
   zoom: 1.38,
-  particleCount: 16250,
+  particleCount: 24375,
   particleSpread: 0.23,
 };
 

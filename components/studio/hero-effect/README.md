@@ -24,7 +24,7 @@ The current baked values are:
 - `Path Width`: `1.85`
 - `Path Height`: `2.40`
 - `View Zoom`: `1.38`
-- `Density`: `16250`
+- `Density`: `24375`
 - `Point Spread`: `0.23`
 - `Desktop X`: `27%`
 - `Desktop Y`: `-50%`
