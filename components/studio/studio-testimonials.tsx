@@ -159,7 +159,7 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
         {/* The featured proof quote sits directly on the page so it reads like an editorial pull-quote instead of a card. */}
         <article className="lg:mx-10 xl:mx-14">
           <div className="space-y-6 px-6 py-2 md:px-8 lg:px-10">
-            <p className="max-w-[75ch] font-display text-[2rem] leading-[1.02] tracking-[-0.04em] text-[var(--neutral-950)] sm:text-[2.2rem] md:text-[2.45rem]">
+            <p className="max-w-[75ch] font-display text-[1.5rem] leading-[1.08] tracking-[-0.035em] text-[var(--neutral-950)] sm:text-[2rem] sm:leading-[1.04] md:text-[2.45rem] md:leading-[1.02]">
               <span className="mr-2 inline-block align-top text-[0.9em] leading-none text-[var(--neutral-900)]">
                 &ldquo;
               </span>
@@ -167,7 +167,7 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
             </p>
 
             {/* The attribution stays understated so the quote remains the first thing visitors read. */}
-            <div className="flex flex-col items-start gap-5 pt-1 sm:flex-row sm:items-end sm:gap-7">
+            <div className="flex flex-col items-start gap-3 pt-0 sm:flex-row sm:items-end sm:gap-5">
               <div className="flex shrink-0 justify-start">
                 {featuredTestimonial.attribution && featuredLogo ? (
                   <Image
@@ -180,21 +180,26 @@ export function StudioTestimonials({ content }: StudioTestimonialsProps) {
                 ) : null}
               </div>
 
-              <div className="min-w-0 flex-1 space-y-3 self-start sm:self-center">
+              <div className="min-w-0 flex-1 space-y-1.5 self-start sm:self-center">
                 <h3 className="text-heading-md text-[var(--neutral-950)]">
                   {featuredTestimonial.name}
                 </h3>
                 {featuredTestimonial.attribution ? (
-                  <p
-                    className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] [overflow-wrap:anywhere]"
-                    style={
-                      featuredBadgeStyle
-                        ? { color: featuredBadgeStyle.color }
-                        : undefined
-                    }
+                  <div
+                    className="inline-flex max-w-full rounded-full border border-white/80 bg-white/90 px-3 py-1.5 backdrop-blur-sm"
+                    style={featuredBadgeStyle}
                   >
-                    {featuredTestimonial.attribution}
-                  </p>
+                    <p
+                      className="text-label-sm uppercase tracking-[0.18em] text-[var(--color-text-tertiary)] [overflow-wrap:anywhere]"
+                      style={
+                        featuredBadgeStyle
+                          ? { color: featuredBadgeStyle.color }
+                          : undefined
+                      }
+                    >
+                      {featuredTestimonial.attribution}
+                    </p>
+                  </div>
                 ) : null}
               </div>
             </div>
