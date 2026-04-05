@@ -30,12 +30,15 @@ export function readCssToken(name: string, fallback: string) {
   return value || fallback;
 }
 
-// Canvas APIs expect RGBA strings, so this helper normalizes both token and hex values into that format.
-export function withAlpha(color: string, alpha: number) {
+function getColorChannels(color: string) {
   const rgb = color.match(/\d+/g);
 
   if (rgb && rgb.length >= 3) {
-    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+    return [
+      Number.parseInt(rgb[0], 10),
+      Number.parseInt(rgb[1], 10),
+      Number.parseInt(rgb[2], 10),
+    ] as const;
   }
 
   const hex = color.replace("#", "").trim();
@@ -45,7 +48,7 @@ export function withAlpha(color: string, alpha: number) {
     const green = Number.parseInt(hex[1] + hex[1], 16);
     const blue = Number.parseInt(hex[2] + hex[2], 16);
 
-    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    return [red, green, blue] as const;
   }
 
   if (hex.length === 6) {
@@ -53,9 +56,28 @@ export function withAlpha(color: string, alpha: number) {
     const green = Number.parseInt(hex.slice(2, 4), 16);
     const blue = Number.parseInt(hex.slice(4, 6), 16);
 
-    return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    return [red, green, blue] as const;
   }
 
-  return `rgba(88, 41, 199, ${alpha})`;
+  return [88, 41, 199] as const;
+}
+
+// Canvas APIs expect RGBA strings, so this helper normalizes both token and hex values into that format.
+export function withAlpha(color: string, alpha: number) {
+  const [red, green, blue] = getColorChannels(color);
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+// Band-aware effects need a clean way to interpolate within the shared palette instead of hard-switching colors.
+export function mixColors(colorA: string, colorB: string, amount: number) {
+  const [redA, greenA, blueA] = getColorChannels(colorA);
+  const [redB, greenB, blueB] = getColorChannels(colorB);
+  const progress = clamp(amount, 0, 1);
+  const red = Math.round(redA + (redB - redA) * progress);
+  const green = Math.round(greenA + (greenB - greenA) * progress);
+  const blue = Math.round(blueA + (blueB - blueA) * progress);
+
+  return `rgb(${red}, ${green}, ${blue})`;
 }
 

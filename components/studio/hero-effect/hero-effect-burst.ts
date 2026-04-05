@@ -10,9 +10,10 @@
 
 export type HeroSignalParticle = {
   angle: number;
-  distance: number;
+  bandOffset: number;
+  trail: number;
   size: number;
-  sway: number;
+  wobble: number;
   life: number;
   phase: number;
   colorMix: number;
@@ -41,7 +42,10 @@ export type HeroSignalSpeck = {
   y: number;
   radius: number;
   phase: number;
+  depth: number;
   drift: number;
+  bobAmplitude: number;
+  bobSpeed: number;
   colorMix: number;
 };
 
@@ -63,13 +67,18 @@ export function createAmbientSpecks(
 ): HeroSignalSpeck[] {
   return Array.from({ length: count }, (_, index) => {
     const seed = createSeededRandom(index + width + height);
+    const radius = 0.8 + seed() * 2.2;
+    const depth = clamp((radius - 0.8) / 2.2, 0, 1);
 
     return {
       x: seed() * width,
       y: seed() * height,
-      radius: 0.8 + seed() * 2.2,
+      radius,
       phase: seed() * TAU,
-      drift: 4 + seed() * 11,
+      depth,
+      drift: 2.5 + depth * 8.5 + seed() * 2.5,
+      bobAmplitude: 1.8 + depth * 8.2,
+      bobSpeed: 0.00045 + depth * 0.0004,
       colorMix: seed(),
     };
   });
@@ -86,22 +95,24 @@ export function createHeroSignalBurst(
   duration: number
 ): HeroSignalBurst {
   const random = createSeededRandom(seed);
-  const maxRadius = Math.max(width, height) * 0.43;
+  const minDimension = Math.min(width, height);
+  const maxRadius = minDimension * 0.34;
 
   return {
     x,
     y,
     start: performance.now(),
     duration,
-    baseRadius: Math.max(18, Math.min(width, height) * 0.07),
+    baseRadius: Math.max(16, minDimension * 0.04),
     maxRadius,
     seed,
     particles: Array.from({ length: particleCount }, () => ({
       angle: random() * TAU,
-      distance: maxRadius * (0.42 + random() * 0.52),
-      size: 1.1 + random() * 2.8,
-      sway: 0.12 + random() * 0.4,
-      life: 0.48 + random() * 0.46,
+      bandOffset: (random() - 0.5) * 12,
+      trail: 8 + random() * 10,
+      size: 0.9 + random() * 1.7,
+      wobble: 0.8 + random() * 2,
+      life: 0.56 + random() * 0.22,
       phase: random() * TAU,
       colorMix: random(),
     })),
@@ -125,7 +136,7 @@ function getPaletteColor(palette: HeroSignalPalette, colorMix: number) {
   return palette.orange;
 }
 
-// These drifting specks provide the low-level procedural grain that makes the canvas feel signal-driven rather than flat.
+// These drifting specks use size-based motion and opacity so the larger blobs feel optically closer than the tiny distant ones.
 export function drawAmbientSpecks(
   context: CanvasRenderingContext2D,
   specks: HeroSignalSpeck[],
@@ -136,50 +147,65 @@ export function drawAmbientSpecks(
   context.globalCompositeOperation = "lighter";
 
   for (const speck of specks) {
-    const wobble = Math.sin(time * 0.001 + speck.phase);
-    const shimmer = 0.12 + ((wobble + 1) / 2) * 0.16;
-    const x = speck.x + Math.cos(time * 0.0005 + speck.phase) * speck.drift;
-    const y = speck.y + Math.sin(time * 0.0007 + speck.phase) * speck.drift * 0.8;
+    const twinkle = (Math.sin(time * 0.0009 + speck.phase) + 1) / 2;
+    const x =
+      speck.x +
+      Math.cos(time * (0.00016 + speck.depth * 0.0002) + speck.phase) *
+        speck.drift *
+        (0.18 + speck.depth * 0.22);
+    const y =
+      speck.y +
+      Math.sin(time * speck.bobSpeed + speck.phase) * speck.bobAmplitude;
+    const alpha = 0.05 + speck.depth * 0.12 + twinkle * (0.05 + speck.depth * 0.06);
+    const renderRadius =
+      speck.radius * (0.92 + speck.depth * 0.18) +
+      twinkle * (0.24 + speck.depth * 0.52);
 
     context.beginPath();
-    context.fillStyle = withAlpha(getPaletteColor(palette, speck.colorMix), shimmer);
-    context.arc(x, y, speck.radius + shimmer * 0.8, 0, TAU);
+    context.fillStyle = withAlpha(getPaletteColor(palette, speck.colorMix), alpha);
+    context.arc(x, y, renderRadius, 0, TAU);
     context.fill();
   }
 
   context.restore();
 }
 
-// This noisy ring is the main Codrops-inspired burst: an expanding radial seam with jitter instead of a clean circle.
-export function drawBurstRing(
+function getRippleRadius(burst: HeroSignalBurst, progress: number) {
+  const eased = easeOutCubic(progress);
+
+  return burst.baseRadius + burst.maxRadius * eased;
+}
+
+function getRippleDistortion(
+  angle: number,
+  burst: HeroSignalBurst,
+  time: number,
+  amplitude: number,
+  phaseOffset = 0
+) {
+  const wave =
+    Math.sin(angle * 2 + burst.seed * 6 + time * 0.0016 + phaseOffset) * 0.62 +
+    Math.cos(angle * 3 - burst.seed * 4 - time * 0.0011 - phaseOffset) * 0.38;
+
+  return wave * amplitude;
+}
+
+function traceRipplePath(
   context: CanvasRenderingContext2D,
   burst: HeroSignalBurst,
-  palette: HeroSignalPalette,
   time: number,
-  progress: number
+  radius: number,
+  amplitude: number,
+  phaseOffset = 0
 ) {
-  const eased = easeOutCubic(progress);
-  const radius = burst.baseRadius + burst.maxRadius * eased;
-  const amplitude = 18 * (1 - progress) + 4;
-  const alpha = Math.pow(1 - progress, 1.35);
-  const pathPoints = 68;
-
-  context.save();
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.lineWidth = 18 * (1 - progress) + 2.5;
-  context.strokeStyle = withAlpha(palette.purple, 0.34 * alpha);
-  context.shadowBlur = 24;
-  context.shadowColor = withAlpha(palette.purple, 0.26 * alpha);
+  const pathPoints = 88;
 
   context.beginPath();
 
   for (let index = 0; index <= pathPoints; index += 1) {
     const angle = (index / pathPoints) * TAU;
-    const distortion =
-      Math.sin(angle * 5 + burst.seed * 9 + time * 0.005) * 0.58 +
-      Math.cos(angle * 9 - burst.seed * 11 - time * 0.0038) * 0.34;
-    const ringRadius = radius + distortion * amplitude;
+    const ringRadius =
+      radius + getRippleDistortion(angle, burst, time, amplitude, phaseOffset);
     const pointX = burst.x + Math.cos(angle) * ringRadius;
     const pointY = burst.y + Math.sin(angle) * ringRadius;
 
@@ -189,72 +215,87 @@ export function drawBurstRing(
       context.lineTo(pointX, pointY);
     }
   }
+}
 
+// The ripple ring keeps the click response controlled and circular, with only a faint echo behind the main wavefront.
+export function drawBurstRing(
+  context: CanvasRenderingContext2D,
+  burst: HeroSignalBurst,
+  palette: HeroSignalPalette,
+  time: number,
+  progress: number
+) {
+  const radius = getRippleRadius(burst, progress);
+  const primaryAmplitude = 0.8 + (1 - progress) * 1.6;
+  const echoRadius = Math.max(burst.baseRadius * 0.68, radius - (10 + (1 - progress) * 8));
+  const echoAmplitude = primaryAmplitude * 0.72;
+  const alpha = Math.pow(1 - progress, 1.45);
+
+  context.save();
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.shadowBlur = 14;
+  context.shadowColor = withAlpha(palette.purple, 0.12 * alpha);
+  context.lineWidth = 1.5 + (1 - progress) * 4.5;
+  context.strokeStyle = withAlpha(palette.purple, 0.26 * alpha);
+  traceRipplePath(context, burst, time, radius, primaryAmplitude);
   context.stroke();
+
   context.shadowBlur = 0;
-  context.lineWidth = 6 * (1 - progress) + 1.4;
-  context.strokeStyle = withAlpha(palette.cyan, 0.22 * alpha);
+  context.lineWidth = 0.8 + (1 - progress) * 2.2;
+  context.strokeStyle = withAlpha(palette.cyan, 0.14 * alpha);
+  traceRipplePath(context, burst, time, echoRadius, echoAmplitude, 0.9);
   context.stroke();
-
-  for (let index = 0; index < pathPoints; index += 1) {
-    const angle = (index / pathPoints) * TAU;
-    const distortion =
-      Math.sin(angle * 7 + burst.seed * 13 + time * 0.0048) * 0.52 +
-      Math.cos(angle * 11 - burst.seed * 7 - time * 0.0034) * 0.32;
-    const ringRadius = radius + distortion * (amplitude + 8);
-    const pointX = burst.x + Math.cos(angle) * ringRadius;
-    const pointY = burst.y + Math.sin(angle) * ringRadius;
-    const size = 1.2 + Math.abs(distortion) * 2.6 + (1 - progress) * 1.5;
-
-    context.beginPath();
-    context.fillStyle = withAlpha(
-      getPaletteColor(palette, (burst.seed + index * 0.07) % 1),
-      0.58 * alpha
-    );
-    context.arc(pointX, pointY, size, 0, TAU);
-    context.fill();
-  }
 
   context.restore();
 }
 
-// The soft bloom under each burst helps the noisy edge read as a dispersion wave instead of a simple particle explosion.
+// The ripple halo keeps the center clear and concentrates the glow around the wave band instead of filling the whole circle.
 export function drawBurstGlow(
   context: CanvasRenderingContext2D,
   burst: HeroSignalBurst,
   palette: HeroSignalPalette,
   progress: number
 ) {
-  const eased = easeOutCubic(progress);
-  const radius = burst.baseRadius + burst.maxRadius * eased;
-  const alpha = Math.pow(1 - progress, 1.2);
+  const radius = getRippleRadius(burst, progress);
+  const alpha = Math.pow(1 - progress, 1.35);
+  const haloOuterRadius = radius + 42;
+  const ringStop = clamp(radius / haloOuterRadius, 0.18, 0.92);
   const gradient = context.createRadialGradient(
     burst.x,
     burst.y,
     0,
     burst.x,
     burst.y,
-    radius * 1.25
+    haloOuterRadius
   );
 
-  gradient.addColorStop(0, withAlpha(palette.yellow, 0.24 * alpha));
-  gradient.addColorStop(0.34, withAlpha(palette.purple, 0.18 * alpha));
-  gradient.addColorStop(0.6, withAlpha(palette.cyan, 0.1 * alpha));
+  gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+  gradient.addColorStop(Math.max(0, ringStop - 0.18), "rgba(255, 255, 255, 0)");
+  gradient.addColorStop(
+    Math.max(0, ringStop - 0.06),
+    withAlpha(palette.cyan, 0.035 * alpha)
+  );
+  gradient.addColorStop(ringStop, withAlpha(palette.purple, 0.12 * alpha));
+  gradient.addColorStop(
+    Math.min(1, ringStop + 0.08),
+    withAlpha(palette.yellow, 0.06 * alpha)
+  );
   gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
   context.save();
   context.globalCompositeOperation = "lighter";
   context.fillStyle = gradient;
   context.fillRect(
-    burst.x - radius * 1.25,
-    burst.y - radius * 1.25,
-    radius * 2.5,
-    radius * 2.5
+    burst.x - haloOuterRadius,
+    burst.y - haloOuterRadius,
+    haloOuterRadius * 2,
+    haloOuterRadius * 2
   );
   context.restore();
 }
 
-// These particles break away from the ring so the effect finishes as a dispersion cloud instead of a single expanding outline.
+// These particles lightly trail the ring so the click reads as a ripple with particulate texture, not an outward blast.
 export function drawBurstParticles(
   context: CanvasRenderingContext2D,
   burst: HeroSignalBurst,
@@ -264,6 +305,7 @@ export function drawBurstParticles(
 ) {
   context.save();
   context.globalCompositeOperation = "lighter";
+  const wavefrontRadius = getRippleRadius(burst, progress);
 
   for (const particle of burst.particles) {
     const localProgress = clamp(progress / particle.life, 0, 1);
@@ -273,14 +315,27 @@ export function drawBurstParticles(
     }
 
     const eased = easeOutQuart(localProgress);
-    const distance = burst.baseRadius + particle.distance * eased;
-    const swirl =
-      Math.sin(time * 0.0035 + particle.phase) * particle.sway * (1 - localProgress);
-    const pointX = burst.x + Math.cos(particle.angle + swirl) * distance;
-    const pointY = burst.y + Math.sin(particle.angle + swirl) * distance;
-    const alpha = Math.pow(1 - localProgress, 1.6) * 0.72;
-    const width = particle.size * (1.8 - localProgress * 0.55);
-    const height = particle.size * (1.15 - localProgress * 0.28);
+    const trailOffset = particle.trail * (0.82 + (1 - eased) * 0.18);
+    const particleRadius = Math.max(
+      burst.baseRadius * 0.35,
+      Math.min(
+        wavefrontRadius - 1.5,
+        wavefrontRadius - trailOffset + particle.bandOffset * (1 - localProgress * 0.3)
+      )
+    );
+    const tangentialOffset =
+      Math.sin(time * 0.0024 + particle.phase) *
+      particle.wobble *
+      (1 - localProgress);
+    const radialX = Math.cos(particle.angle);
+    const radialY = Math.sin(particle.angle);
+    const tangentX = -radialY;
+    const tangentY = radialX;
+    const pointX = burst.x + radialX * particleRadius + tangentX * tangentialOffset;
+    const pointY = burst.y + radialY * particleRadius + tangentY * tangentialOffset;
+    const alpha = Math.pow(1 - localProgress, 1.9) * 0.4;
+    const width = particle.size * (1.22 - localProgress * 0.16);
+    const height = particle.size * (0.92 - localProgress * 0.12);
 
     context.beginPath();
     context.fillStyle = withAlpha(

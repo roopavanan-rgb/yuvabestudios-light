@@ -8,8 +8,9 @@ The effect is made of four parts:
 
 1. A shared light brand surface and grid texture from the design system.
 2. A centered Three.js infinity-shaped particle cloud.
-3. A click-triggered 2D dispersion burst that expands outward from the click point.
-4. The hero text and CTA rendered above the full backdrop.
+3. A floating ambient blob layer with depth-based bobbing.
+4. A click-triggered 2D ripple pulse with restrained trailing particles.
+5. The hero text and CTA rendered above the full backdrop.
 
 The current visual direction is:
 
@@ -18,7 +19,8 @@ The current visual direction is:
 - the cursor-following glow has been removed
 - the temporary tuning panel has been removed
 - offscreen animation work is paused automatically
-- the click burst still works across the full hero section
+- the click ripple still works across the full hero section
+- autonomous ripple pulses now fire at randomized positions while the hero is in view
 
 The current baked values are:
 
@@ -55,8 +57,9 @@ Owns the full-section backdrop shell:
 - wraps the entire hero section
 - pauses both animation systems when the hero leaves the viewport
 - handles click events across the hero
-- renders the 2D canvas burst overlay
-- keeps the canvas static until a burst is active
+- schedules autonomous ripple pulses on a randomized cadence
+- renders a dedicated ambient blob canvas
+- renders a separate burst canvas above the blob layer
 - places the shared surface, grid, bloom, and Three.js layer behind the content
 
 ### [`./hero-effect-burst.ts`](./hero-effect-burst.ts)
@@ -66,7 +69,8 @@ Owns the 2D burst system:
 - shared burst data types
 - ambient speck generation
 - burst creation
-- canvas drawing helpers for glow, noisy rings, and dispersing particles
+- canvas drawing helpers for the ambient depth-bobbing blobs
+- canvas drawing helpers for the ripple halo, circular rings, and ring-trailing particles
 
 ### [`./hero-effect-infinity-cloud.tsx`](./hero-effect-infinity-cloud.tsx)
 
@@ -138,26 +142,39 @@ The important choice is density:
 
 The cloud uses additive blending, small point sizes, and subtle group motion so it feels like a living signal instead of a rigid diagram.
 
-## 3. Click Dispersion Burst
+## 3. Ambient Blob Layer
+
+The small colored blobs are now rendered on their own canvas layer, separate from the ripple canvas.
+
+Each blob uses size as a depth cue:
+
+- larger blobs bob farther and drift a bit more
+- smaller blobs move less and stay fainter
+- all blobs keep a soft shimmer so the field feels atmospheric instead of static
+
+Because this layer is isolated from the ripple canvas, the background blobs no longer look like they are being pushed or brightened by each pulse.
+
+## 4. Click Ripple Pulse
 
 The click effect is a separate 2D canvas layer on top of the surface and beneath the text.
 
-When the user clicks anywhere in the hero:
+When the user clicks anywhere in the hero, or when the ambient scheduler fires:
 
 - the click position is converted into local hero coordinates
 - a burst is seeded at that location
-- the burst draws a noisy expanding ring
-- a soft bloom appears underneath the ring
-- particles detach from the ring and disperse outward
+- the pulse draws one restrained expanding circular ring
+- a faint trailing echo ring follows behind it
+- a transparent-center halo softly hugs the wave band
+- particles stay close to the ring and lightly trail the wavefront
 
 This is why the hero currently feels like a blend of:
 
 - a stable center-field identity shape
 - an interaction response that can happen anywhere in the section
 
-When no burst is active, the canvas falls back to a static ambient frame instead of running continuously.
+When no burst is active, the ripple canvas goes idle while the ambient blob canvas continues its gentle depth motion.
 
-## 4. Content Layering
+## 5. Content Layering
 
 The copy and CTA are intentionally untouched by the animation system.
 
@@ -165,9 +182,10 @@ The layering order is:
 
 1. CSS surface and grid
 2. centered Three.js infinity cloud
-3. canvas click burst overlay
-4. hero content container
-5. trust strip
+3. ambient blob canvas
+4. ripple burst canvas
+5. hero content container
+6. trust strip
 
 That keeps readability high and makes the effect feel atmospheric rather than intrusive.
 
@@ -178,13 +196,16 @@ The effect reads well because each layer has a different job:
 - the CSS surface gives brand atmosphere
 - the Three.js cloud gives one strong focal form
 - the burst gives interaction feedback
+- the ripple stays controlled instead of explosive
 - the text stays editorial and calm
 
 It also now behaves more responsibly at runtime:
 
 - the hero pauses when it scrolls away
-- the canvas only spins up during actual burst activity
+- the ripple canvas only spins up during actual burst activity
+- the ambient blob canvas keeps its bobbing motion only while the hero is in view
 - smaller screens automatically use lower particle budgets
+- autonomous pulses stop as soon as the hero leaves the viewport
 
 This is also why removing the cursor-following gradient improved it: the cloud already provides a strong center, so a second hover-led glow added too much competition.
 
@@ -235,9 +256,9 @@ In [`./hero-effect-burst.ts`](./hero-effect-burst.ts):
 
 - burst particle count
 - burst duration
-- ring amplitude
+- ripple distortion amplitude
 - ring line width
-- bloom opacity
+- halo opacity
 
 This controls how dramatic or restrained the click response feels.
 
@@ -259,9 +280,9 @@ As of now, the hero effect is:
 - centered
 - Three.js-based for the infinity cloud
 - dense enough that the loop path is hidden
-- interactive via click dispersion
+- interactive via subtle circular ripple pulses
 - configured through baked module defaults instead of an on-page tuning panel
 - brand-aligned through shared surface tokens
 
-If we extend it later, the cleanest next step would be to let the click burst temporarily disturb the Three.js particles too, so the burst and the cloud feel like one system instead of two stacked systems.
+If we extend it later, the cleanest next step would be to let the click ripple temporarily disturb the Three.js particles too, so the ripple and the cloud feel like one system instead of two stacked systems.
 

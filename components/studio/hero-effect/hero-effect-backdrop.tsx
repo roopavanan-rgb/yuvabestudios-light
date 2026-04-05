@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -37,6 +38,8 @@ type LocalPointerPoint = {
 type StudioHeroNoiseBackdropProps = HTMLAttributes<HTMLElement>;
 
 const heroSignalEase = [0.22, 1, 0.36, 1] as const;
+const minAutoPulseDelay = 10000;
+const maxAutoPulseDelay = 10000;
 
 function isBurstActive(burst: HeroSignalBurst, time: number) {
   return time - burst.start < burst.duration;
@@ -56,6 +59,50 @@ function getLocalPointerPoint(
   return { x, y };
 }
 
+function getRandomPulseDelay() {
+  return (
+    minAutoPulseDelay +
+    Math.random() * (maxAutoPulseDelay - minAutoPulseDelay)
+  );
+}
+
+function getRandomBurstPoint(width: number, height: number): LocalPointerPoint {
+  const horizontalPadding = Math.min(width * 0.14, 160);
+  const topPadding = Math.min(height * 0.12, 96);
+  const bottomPadding = Math.min(height * 0.24, 180);
+  const safeWidth = Math.max(1, width - horizontalPadding * 2);
+  const safeHeight = Math.max(1, height - topPadding - bottomPadding);
+
+  return {
+    x: horizontalPadding + Math.random() * safeWidth,
+    y: topPadding + Math.random() * safeHeight,
+  };
+}
+
+function getStageSize(stage: HTMLElement) {
+  const bounds = stage.getBoundingClientRect();
+
+  return {
+    width: Math.max(1, Math.round(bounds.width)),
+    height: Math.max(1, Math.round(bounds.height)),
+  };
+}
+
+function syncCanvasResolution(
+  canvas: HTMLCanvasElement,
+  context: CanvasRenderingContext2D,
+  width: number,
+  height: number
+) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
 export function StudioHeroNoiseBackdrop({
   children,
   className,
@@ -63,7 +110,8 @@ export function StudioHeroNoiseBackdrop({
 }: StudioHeroNoiseBackdropProps) {
   const shouldReduceMotion = useReducedMotion();
   const reduceMotion = shouldReduceMotion ?? false;
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const ambientCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const burstCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
   const burstsRef = useRef<HeroSignalBurst[]>([]);
   const specksRef = useRef<HeroSignalSpeck[]>([]);
@@ -81,28 +129,41 @@ export function StudioHeroNoiseBackdrop({
   } as CSSProperties;
 
   // Clicks only need a local seed and point; the rest of the burst visuals are delegated to the canvas helpers.
-  function spawnBurst(pointX: number, pointY: number) {
-    const { width, height } = sizeRef.current;
+  const spawnBurst = useCallback(
+    (pointX: number, pointY: number) => {
+      const { width, height } = sizeRef.current;
 
-    if (!width || !height) {
-      return;
-    }
+      if (!width || !height) {
+        return;
+      }
 
-    burstSeedRef.current += 1;
-    const seed = burstSeedRef.current * 0.173 + pointX * 0.0013 + pointY * 0.0017;
-    const particleCount = reduceMotion ? 8 : 32;
-    const duration = reduceMotion ? 480 : 920;
+      burstSeedRef.current += 1;
+      const seed =
+        burstSeedRef.current * 0.173 + pointX * 0.0013 + pointY * 0.0017;
+      // The ripple stays restrained, but a longer window lets the wave read across more of the hero before it settles.
+      const particleCount = reduceMotion ? 6 : 18;
+      const duration = 1280;
 
-    burstsRef.current.push(
-      createHeroSignalBurst(seed, width, height, pointX, pointY, particleCount, duration)
-    );
+      burstsRef.current.push(
+        createHeroSignalBurst(
+          seed,
+          width,
+          height,
+          pointX,
+          pointY,
+          particleCount,
+          duration
+        )
+      );
 
-    if (burstsRef.current.length > 5) {
-      burstsRef.current.shift();
-    }
+      if (burstsRef.current.length > 5) {
+        burstsRef.current.shift();
+      }
 
-    startCanvasLoopRef.current?.();
-  }
+      startCanvasLoopRef.current?.();
+    },
+    [reduceMotion]
+  );
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -131,14 +192,75 @@ export function StudioHeroNoiseBackdrop({
 
   useEffect(() => {
     const stage = stageRef.current;
-    const canvas = canvasRef.current;
-    startCanvasLoopRef.current = null;
+    const ambientCanvas = ambientCanvasRef.current;
 
-    if (!stage || !canvas || !isInViewport) {
+    if (!stage || !ambientCanvas || !isInViewport) {
       return;
     }
 
-    const context = canvas.getContext("2d");
+    const context = ambientCanvas.getContext("2d");
+
+    if (!context) {
+      return;
+    }
+
+    paletteRef.current = readHeroSignalPalette();
+    let frameId = 0;
+
+    const drawAmbientFrame = (time: number) => {
+      const palette = paletteRef.current;
+      const { width, height } = sizeRef.current;
+
+      if (!palette || !width || !height) {
+        return;
+      }
+
+      context.clearRect(0, 0, width, height);
+      drawAmbientSpecks(context, specksRef.current, palette, reduceMotion ? 0 : time);
+    };
+
+    const renderAmbient = (time: number) => {
+      drawAmbientFrame(time);
+      frameId = window.requestAnimationFrame(renderAmbient);
+    };
+
+    // The ambient layer owns the floating blobs, so it stays independent from the burst canvas above it.
+    const syncAmbientCanvas = () => {
+      const { width, height } = getStageSize(stage);
+      sizeRef.current = { width, height };
+      syncCanvasResolution(ambientCanvas, context, width, height);
+      specksRef.current = createAmbientSpecks(
+        width,
+        height,
+        reduceMotion ? 34 : 88
+      );
+      drawAmbientFrame(performance.now());
+    };
+
+    const resizeObserver = new ResizeObserver(syncAmbientCanvas);
+    resizeObserver.observe(stage);
+    syncAmbientCanvas();
+
+    if (!reduceMotion) {
+      frameId = window.requestAnimationFrame(renderAmbient);
+    }
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+    };
+  }, [isInViewport, reduceMotion]);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    const burstCanvas = burstCanvasRef.current;
+    startCanvasLoopRef.current = null;
+
+    if (!stage || !burstCanvas || !isInViewport) {
+      return;
+    }
+
+    const context = burstCanvas.getContext("2d");
 
     if (!context) {
       return;
@@ -148,7 +270,17 @@ export function StudioHeroNoiseBackdrop({
     let frameId = 0;
     let isLoopRunning = false;
 
-    const drawFrame = (time: number, animateAmbient: boolean) => {
+    const clearBurstCanvas = () => {
+      const { width, height } = sizeRef.current;
+
+      if (!width || !height) {
+        return;
+      }
+
+      context.clearRect(0, 0, width, height);
+    };
+
+    const drawBurstFrame = (time: number) => {
       const palette = paletteRef.current;
       const { width, height } = sizeRef.current;
 
@@ -157,13 +289,6 @@ export function StudioHeroNoiseBackdrop({
       }
 
       context.clearRect(0, 0, width, height);
-      drawAmbientSpecks(
-        context,
-        specksRef.current,
-        palette,
-        animateAmbient ? time : 0
-      );
-
       let hasActiveBursts = false;
 
       burstsRef.current = burstsRef.current.filter((burst) => {
@@ -184,49 +309,31 @@ export function StudioHeroNoiseBackdrop({
       return hasActiveBursts;
     };
 
-    const drawStaticFrame = (time = performance.now()) => {
-      drawFrame(time, false);
-    };
-
-    // The resize sync keeps the canvas sharp while matching the hero's responsive box.
-    const syncCanvas = () => {
-      const bounds = stage.getBoundingClientRect();
-      const width = Math.max(1, Math.round(bounds.width));
-      const height = Math.max(1, Math.round(bounds.height));
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
+    // The ripple canvas sits above the ambient blob layer and only wakes up while pulses are actively rendering.
+    const syncBurstCanvas = () => {
+      const { width, height } = getStageSize(stage);
       sizeRef.current = { width, height };
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      specksRef.current = createAmbientSpecks(
-        width,
-        height,
-        reduceMotion ? 34 : 88
-      );
+      syncCanvasResolution(burstCanvas, context, width, height);
 
       if (!isLoopRunning) {
-        drawStaticFrame();
+        clearBurstCanvas();
       }
     };
 
-    const resizeObserver = new ResizeObserver(syncCanvas);
+    const resizeObserver = new ResizeObserver(syncBurstCanvas);
     resizeObserver.observe(stage);
-    syncCanvas();
+    syncBurstCanvas();
 
-    // The canvas only animates while a burst is alive; otherwise it falls back to one static frame.
-    const render = (time: number) => {
-      const hasActiveBursts = drawFrame(time, !reduceMotion);
+    const renderBurst = (time: number) => {
+      const hasActiveBursts = drawBurstFrame(time);
 
       if (!hasActiveBursts) {
         isLoopRunning = false;
-        drawStaticFrame(time);
+        clearBurstCanvas();
         return;
       }
 
-      frameId = window.requestAnimationFrame(render);
+      frameId = window.requestAnimationFrame(renderBurst);
     };
 
     const startCanvasLoop = () => {
@@ -235,7 +342,7 @@ export function StudioHeroNoiseBackdrop({
       }
 
       isLoopRunning = true;
-      frameId = window.requestAnimationFrame(render);
+      frameId = window.requestAnimationFrame(renderBurst);
     };
 
     startCanvasLoopRef.current = startCanvasLoop;
@@ -243,7 +350,7 @@ export function StudioHeroNoiseBackdrop({
     if (burstsRef.current.some((burst) => isBurstActive(burst, performance.now()))) {
       startCanvasLoop();
     } else {
-      drawStaticFrame();
+      clearBurstCanvas();
     }
 
     return () => {
@@ -252,7 +359,41 @@ export function StudioHeroNoiseBackdrop({
       window.cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
     };
-  }, [isInViewport, reduceMotion]);
+  }, [isInViewport]);
+
+  useEffect(() => {
+    if (!isInViewport || reduceMotion) {
+      return;
+    }
+
+    let timeoutId = 0;
+    let isCancelled = false;
+
+    // A recursive timeout keeps the hero gently alive without making the pulses feel frequent or distracting.
+    const scheduleAutoPulse = () => {
+      timeoutId = window.setTimeout(() => {
+        if (isCancelled) {
+          return;
+        }
+
+        const { width, height } = sizeRef.current;
+
+        if (width && height) {
+          const point = getRandomBurstPoint(width, height);
+          spawnBurst(point.x, point.y);
+        }
+
+        scheduleAutoPulse();
+      }, getRandomPulseDelay());
+    };
+
+    scheduleAutoPulse();
+
+    return () => {
+      isCancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [isInViewport, reduceMotion, spawnBurst]);
 
   function handlePointerDown(event: PointerEvent<HTMLElement>) {
     const point = getLocalPointerPoint(event);
@@ -296,9 +437,16 @@ export function StudioHeroNoiseBackdrop({
           </div>
         </div>
 
-        {/* The canvas sits above the base cloud so click bursts can travel across the whole hero. */}
+        {/* The ambient canvas gives the background blobs their own bobbing depth, separate from the ripple system. */}
         <canvas
-          ref={canvasRef}
+          ref={ambientCanvasRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+        />
+
+        {/* The ripple canvas sits above the ambient blobs, so pulses no longer visually drag the background dots around. */}
+        <canvas
+          ref={burstCanvasRef}
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 h-full w-full"
         />
