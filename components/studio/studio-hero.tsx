@@ -16,8 +16,6 @@ function HeroBackground() {
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.021)_1px,transparent_1px)] bg-[size:100%_120px]" />
-      <div className="absolute right-[-18rem] top-[-18rem] h-[56rem] w-[56rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(255,202,45,0.40)_0%,rgba(249,169,31,0.36)_24%,rgba(88,41,199,0.22)_48%,rgba(43,183,199,0.16)_62%,rgba(255,255,255,0)_76%)] blur-3xl" />
-      <div className="absolute right-[-12rem] top-[-10rem] h-[40rem] w-[44rem] rotate-[-18deg] rounded-[40%] bg-[conic-gradient(from_220deg_at_50%_50%,rgba(88,41,199,0.00)_0deg,rgba(88,41,199,0.14)_55deg,rgba(203,195,223,0.55)_105deg,rgba(255,202,45,0.70)_160deg,rgba(249,169,31,0.65)_225deg,rgba(240,78,40,0.48)_280deg,rgba(88,41,199,0.00)_360deg)] blur-2xl" />
       <StudioTrustStripGuides />
     </div>
   );

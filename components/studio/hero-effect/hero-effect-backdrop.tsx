@@ -426,7 +426,6 @@ export function StudioHeroNoiseBackdrop({
           >
             {/* The anchor box sets placement, while this larger internal stage prevents the loop from clipping against its own local bounds. */}
             <div className="absolute left-1/2 top-1/2 h-[160%] w-[176%] -translate-x-1/2 -translate-y-1/2 sm:h-[164%] sm:w-[186%] md:h-[176%] md:w-[208%]">
-              <div className="absolute left-1/2 top-1/2 h-[16rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full ds-hero-signal-core opacity-72 blur-[42px] md:h-[24rem] md:w-[40rem]" />
               <StudioHeroInfinityCloud
                 isInViewport={isInViewport}
                 tuning={tuning}

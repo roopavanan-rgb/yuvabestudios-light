@@ -37,7 +37,7 @@ const backdropFields: SliderField<HeroEffectBackdropTuning>[] = [
   { key: "scaleY", label: "Path Height", min: 0.8, max: 3.4, step: 0.01, precision: 2 },
   { key: "zoom", label: "View Zoom", min: 0.72, max: 1.9, step: 0.01, precision: 2 },
   { key: "particleCount", label: "Density", min: 4000, max: 36000, step: 25, precision: 0 },
-  { key: "particleSpread", label: "Point Spread", min: 0.05, max: 0.42, step: 0.005, precision: 3 },
+  { key: "pointSpread", label: "Infinity Spread", min: 0.05, max: 0.42, step: 0.005, precision: 3 },
   { key: "offsetX", label: "Desktop X", min: -20, max: 42, step: 1, precision: 0, unit: "%" },
   { key: "offsetY", label: "Desktop Y", min: -80, max: 10, step: 1, precision: 0, unit: "%" },
 ];
@@ -50,16 +50,16 @@ const helixFields: SliderField<HeroHelixTuning>[] = [
   { key: "span", label: "Screen Span", min: 0.55, max: 1.5, step: 0.01, precision: 2 },
   { key: "amplitudeY", label: "Helix Height", min: 0.08, max: 0.7, step: 0.01, precision: 2 },
   { key: "amplitudeZ", label: "Helix Depth", min: 0.08, max: 0.7, step: 0.01, precision: 2 },
+  { key: "pointSpread", label: "Helix Spread", min: 0.05, max: 0.42, step: 0.005, precision: 3 },
   { key: "rotationYMax", label: "Rotate Y", min: 0, max: 0.9, step: 0.01, precision: 2 },
   { key: "rotationXMax", label: "Rotate X", min: -0.4, max: 0.1, step: 0.01, precision: 2 },
-  { key: "spreadScale", label: "Spread Tighten", min: 0.2, max: 1, step: 0.01, precision: 2 },
+  { key: "spreadScale", label: "Motion Tighten", min: 0.2, max: 1, step: 0.01, precision: 2 },
   { key: "morphStart", label: "Morph Start", min: 0, max: 0.45, step: 0.01, precision: 2 },
   { key: "morphEnd", label: "Morph End", min: 0.55, max: 1, step: 0.01, precision: 2 },
 ];
 
 const helixSharedPointFields: SliderField<HeroEffectBackdropTuning>[] = [
   { key: "particleCount", label: "Density", min: 4000, max: 36000, step: 25, precision: 0 },
-  { key: "particleSpread", label: "Point Spread", min: 0.05, max: 0.42, step: 0.005, precision: 3 },
 ];
 
 function formatSliderValue(value: number, precision: number, unit?: string) {
@@ -165,7 +165,7 @@ export function StudioHeroEffectDebugControls({
       <DebugPanel
         eyebrow="Hero Cloud"
         title="Infinity + Stage"
-        description="Tune the shared path footprint, point density, and desktop anchor without touching the module defaults."
+        description="Tune the infinity footprint, loop spread, point density, and desktop anchor without touching the module defaults."
         onReset={onResetBackdrop}
       >
         {backdropFields.map((field) => (
@@ -182,7 +182,7 @@ export function StudioHeroEffectDebugControls({
       <DebugPanel
         eyebrow="Helix Morph"
         title="Double Helix"
-        description="Control the breathing loop, strand read, morph staging, and the shared point-field density that the helix inherits."
+        description="Control the breathing loop, strand read, helix spread, morph staging, and the shared density budget."
         onReset={onResetHelix}
       >
         {helixSharedPointFields.map((field) => (

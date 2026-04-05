@@ -26,25 +26,26 @@ The current visual direction is:
 The current baked values are:
 
 - `Path Width`: `1.85`
-- `Path Height`: `1.91`
-- `View Zoom`: `1.60`
-- `Density`: `21500` base desktop target
-- `Point Spread`: `0.28`
-- `Desktop X`: `42%`
+- `Path Height`: `1.41`
+- `View Zoom`: `1.90`
+- `Density`: `36000` base desktop target
+- `Infinity Spread`: `0.155`
+- `Desktop X`: `-2%`
 - `Desktop Y`: `-22%`
 
 The current baked helix values are:
 
 - `Cycle Seconds`: `24`
-- `Turns`: `2.17`
-- `Helix Zoom`: `1.18`
-- `Horizontal Shift`: `0.08`
+- `Turns`: `2.20`
+- `Helix Zoom`: `1.04`
+- `Horizontal Shift`: `0.10`
 - `Screen Span`: `1.50`
-- `Helix Height`: `0.43`
-- `Helix Depth`: `0.28`
-- `Rotate Y`: `0.90`
-- `Rotate X`: `0.10`
-- `Spread Tighten`: `0.54`
+- `Helix Height`: `0.34`
+- `Helix Depth`: `0.26`
+- `Helix Spread`: `0.185`
+- `Rotate Y`: `0.38`
+- `Rotate X`: `0.04`
+- `Motion Tighten`: `0.54`
 - `Morph Start`: `0.08`
 - `Morph End`: `0.88`
 
@@ -76,7 +77,7 @@ Owns the full-section backdrop shell:
 - renders a dedicated ambient blob canvas
 - renders a separate burst canvas above the blob layer
 - conditionally mounts the live debug panels when the code switch is enabled
-- places the shared surface, grid, bloom, and Three.js layer behind the content
+- places the shared surface, grid, and Three.js layer behind the content
 
 ### [`./hero-effect-debug-controls.tsx`](./hero-effect-debug-controls.tsx)
 
@@ -132,10 +133,8 @@ Owns small shared helpers:
 Owns the shared hero-surface utilities:
 
 - `--gradient-hero-signal-stage`
-- `--gradient-hero-signal-core`
 - `--pattern-hero-signal-grid`
 - `.ds-surface-hero-signal`
-- `.ds-hero-signal-core`
 - `.ds-pattern-hero-signal-grid`
 
 ### [`../../../package.json`](../../../package.json)
@@ -291,14 +290,14 @@ The first panel controls:
 - `scaleY`
 - `zoom`
 - `particleCount`
-- `particleSpread`
+- `pointSpread`
 - `offsetX`
 - `offsetY`
 
 The second panel controls:
 
 - `particleCount`
-- `particleSpread`
+- `pointSpread`
 - `cycleSeconds`
 - `turns`
 - `zoom`
@@ -308,6 +307,7 @@ The second panel controls:
 - `amplitudeZ`
 - `rotationYMax`
 - `rotationXMax`
+- `pointSpread`
 - `spreadScale`
 - `morphStart`
 - `morphEnd`
@@ -319,7 +319,7 @@ Each panel has its own reset button, and both panels read from fresh local copie
 In [`./hero-effect-infinity-cloud.tsx`](./hero-effect-infinity-cloud.tsx):
 
 - `particleCount`
-- `particleSpread`
+- `pointSpread`
 - `particleDrift`
 - `helixTuning.spreadScale`
 - responsive density scaling inside `getResponsiveParticleCount`
@@ -328,7 +328,7 @@ In [`./hero-effect-infinity-cloud.tsx`](./hero-effect-infinity-cloud.tsx):
 - `particleGlowMaterial.opacity`
 - `particleCoreMaterial.opacity`
 
-Increase density and lower spread to make the shape feel fuller and less skeletal.
+Increase density and lower either shape's spread to make that structure feel fuller and less skeletal.
 
 ## Infinity cloud scale and placement
 
@@ -385,7 +385,6 @@ This controls how dramatic or restrained the click response feels.
 In [`../../../app/globals.css`](../../../app/globals.css):
 
 - hero surface gradient
-- center bloom gradient
 - grid texture opacity and scale
 
 These should stay in the design-system layer instead of being hardcoded into JSX.

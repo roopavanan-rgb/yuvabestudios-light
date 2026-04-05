@@ -243,20 +243,16 @@ export function StudioHeroInfinityCloud({
     const particlePositions = new Float32Array(particleCount * 3);
     const particleColors = new Float32Array(particleCount * 3);
     const particlePhase = new Float32Array(particleCount);
-    const particleSpread = new Float32Array(particleCount);
+    const particleSpreadSeed = new Float32Array(particleCount);
     const particleDrift = new Float32Array(particleCount);
     const particleStrand = new Uint8Array(particleCount);
 
-    // Each particle stores stable phase, strand, spread, and drift values so the cloud can morph without popping.
+    // Each particle stores stable phase, strand, spread seed, and drift values so the cloud can morph without popping.
     for (let index = 0; index < particleCount; index += 1) {
       const phase = Math.random();
       particlePhase[index] = phase;
       particleStrand[index] = index % 2;
-      particleSpread[index] = (Math.random() - 0.5) * (
-        reduceMotion
-          ? Math.min(tuning.particleSpread, 0.06)
-          : tuning.particleSpread
-      );
+      particleSpreadSeed[index] = Math.random() - 0.5;
       particleDrift[index] = 0.01 + Math.random() * 0.03;
       setParticleColor(particleColors, index, palette, phase);
     }
@@ -277,8 +273,8 @@ export function StudioHeroInfinityCloud({
     const particleGlowMaterial = new THREE.PointsMaterial({
       blending: THREE.AdditiveBlending,
       depthWrite: false,
-      opacity: reduceMotion ? 0.12 : 0.16,
-      size: 0.13,
+      opacity: reduceMotion ? 0.18 : 0.24,
+      size: 0.18,
       sizeAttenuation: true,
       transparent: true,
       vertexColors: true,
@@ -286,8 +282,8 @@ export function StudioHeroInfinityCloud({
     const particleCoreMaterial = new THREE.PointsMaterial({
       blending: THREE.AdditiveBlending,
       depthWrite: false,
-      opacity: reduceMotion ? 0.7 : 0.84,
-      size: 0.042,
+      opacity: reduceMotion ? 0.82 : 0.94,
+      size: 0.058,
       sizeAttenuation: true,
       transparent: true,
       vertexColors: true,
@@ -325,9 +321,15 @@ export function StudioHeroInfinityCloud({
     const renderFrame = (time: number) => {
       const timeSeconds = time * 0.001;
       const visibleWidth = camera.right - camera.left;
-      // The helix width is fit back into the current frustum so higher span or zoom values do not force the cloud to clip itself.
+      // The helix keeps a near-full-width footprint, but the fill still responds to the span and zoom sliders instead of collapsing to one fixed width.
+      const helixScreenFill = THREE.MathUtils.clamp(
+        0.44 + helixTuning.span * helixTuning.zoom * 0.36,
+        0.64,
+        0.98
+      );
+      // The base width is scaled back from the desired on-screen fill so the final helix can stay inside the frustum without neutralizing the tuning controls.
       const helixWidthBase =
-        (visibleWidth * 0.82) /
+        (visibleWidth * helixScreenFill) /
         Math.max(helixTuning.span * helixTuning.zoom, Number.EPSILON);
       const rawMorph = reduceMotion
         ? 0
@@ -342,21 +344,34 @@ export function StudioHeroInfinityCloud({
       const positionAttribute = particleGeometry.getAttribute(
         "position"
       ) as THREE.BufferAttribute;
+      const infinityPointSpread = reduceMotion
+        ? Math.min(tuning.pointSpread, 0.06)
+        : tuning.pointSpread;
+      const helixPointSpread = reduceMotion
+        ? Math.min(helixTuning.pointSpread, 0.06)
+        : helixTuning.pointSpread;
 
       for (let index = 0; index < particleCount; index += 1) {
         const phase = particlePhase[index];
         const drift = reduceMotion ? phase : phase + timeSeconds * 0.06;
         const wrapped = drift % 1;
         const strand = particleStrand[index];
-        // Tightening the lateral spread as the helix appears keeps the strands crisp instead of reading like one blurred ribbon.
-        const spreadScale = reduceMotion
+        // Each shape now owns its own point spread, while the helix can still tighten its live motion separately.
+        const pointSpread = THREE.MathUtils.lerp(
+          infinityPointSpread,
+          helixPointSpread,
+          morph
+        );
+        const motionTighten = reduceMotion
           ? 1
           : THREE.MathUtils.lerp(1, helixTuning.spreadScale, morph);
-        const motionOffset = (reduceMotion
-          ? particleSpread[index]
-          : particleSpread[index] +
-            Math.sin(timeSeconds * 1.6 + phase * TAU) * particleDrift[index]
-        ) * spreadScale;
+        const baseSpread = particleSpreadSeed[index] * pointSpread;
+        const motionOffset = reduceMotion
+          ? baseSpread
+          : baseSpread +
+            Math.sin(timeSeconds * 1.6 + phase * TAU) *
+              particleDrift[index] *
+              motionTighten;
 
         getInfinityPosition(wrapped, tuning.scaleX, tuning.scaleY, infinityPoint);
         getHelixPosition(wrapped, helixWidthBase, helixTuning, strand, helixPoint);
@@ -419,9 +434,11 @@ export function StudioHeroInfinityCloud({
       positionAttribute.needsUpdate = true;
 
       if (!reduceMotion) {
-        // Shifting by a fraction of the visible frustum keeps the helix bias proportional as the viewport gets wider.
+        // Shifting by a fraction of the active helix width keeps the bias proportional as the morph grows and shrinks.
         loopGroup.position.x =
-          -(visibleWidth * 0.5) * helixTuning.horizontalShift * morph;
+          -(visibleWidth * helixScreenFill * 0.5) *
+          helixTuning.horizontalShift *
+          morph;
         loopGroup.rotation.y = helixTuning.rotationYMax * morph;
         loopGroup.rotation.x = helixTuning.rotationXMax * morph;
         loopGroup.rotation.z = 0;
@@ -460,7 +477,7 @@ export function StudioHeroInfinityCloud({
     isInViewport,
     reduceMotion,
     tuning.particleCount,
-    tuning.particleSpread,
+    tuning.pointSpread,
     tuning.scaleX,
     tuning.scaleY,
     tuning.zoom,
@@ -473,6 +490,7 @@ export function StudioHeroInfinityCloud({
     helixTuning.rotationXMax,
     helixTuning.rotationYMax,
     helixTuning.span,
+    helixTuning.pointSpread,
     helixTuning.spreadScale,
     helixTuning.turns,
     helixTuning.zoom,

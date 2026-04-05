@@ -3,7 +3,7 @@ export type HeroInfinityCloudTuning = {
   scaleY: number;
   zoom: number;
   particleCount: number;
-  particleSpread: number;
+  pointSpread: number;
 };
 
 export type HeroHelixTuning = {
@@ -16,6 +16,7 @@ export type HeroHelixTuning = {
   span: number;
   amplitudeY: number;
   amplitudeZ: number;
+  pointSpread: number;
   spreadScale: number;
   morphStart: number;
   morphEnd: number;
@@ -36,28 +37,29 @@ export const showHeroEffectTuningPanels = false;
 
 export const defaultHeroInfinityCloudTuning: HeroInfinityCloudTuning = {
   scaleX: 1.85,
-  scaleY: 1.91,
-  zoom: 1.6,
-  particleCount: 21500,
-  particleSpread: 0.28,
+  scaleY: 1.41,
+  zoom: 1.9,
+  particleCount: 30000,
+  pointSpread: 0.155,
 };
 
 export const defaultHeroEffectBackdropTuning: HeroEffectBackdropTuning = {
   ...defaultHeroInfinityCloudTuning,
-  offsetX: 42,
+  offsetX: -2,
   offsetY: -22,
 };
 
 export const defaultHeroHelixTuning: HeroHelixTuning = {
   cycleSeconds: 24,
-  turns: 2.17,
-  zoom: 1.18,
-  rotationYMax: 0.9,
-  rotationXMax: 0.1,
-  horizontalShift: 0.17,
+  turns: 2.2,
+  zoom: 1.04,
+  rotationYMax: 0.38,
+  rotationXMax: 0.04,
+  horizontalShift: 0.1,
   span: 1.5,
-  amplitudeY: 0.43,
-  amplitudeZ: 0.58,
+  amplitudeY: 0.34,
+  amplitudeZ: 0.26,
+  pointSpread: 0.185,
   spreadScale: 0.54,
   morphStart: 0.08,
   morphEnd: 0.88,
