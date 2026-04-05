@@ -28,6 +28,20 @@ type InfinityPalette = {
   yellow: THREE.Color;
 };
 
+type CloudPoint3 = {
+  x: number;
+  y: number;
+  z: number;
+};
+
+const helixMorphCycleSeconds = 24;
+const helixTurns = 1.15;
+const helixRotationYMax = 0.34;
+const helixRotationXMax = -0.12;
+const infinityIdleRotationZ = 0.03;
+const infinityIdleYOffset = 0.025;
+const helixHorizontalShift = 0.82;
+
 function readInfinityPalette() {
   return {
     cyan: new THREE.Color(readCssToken("--cyan-500", "#2bb7c7")),
@@ -68,27 +82,70 @@ function getResponsiveParticleCount(
   return Math.max(1200, Math.round(particleCount));
 }
 
-// The infinity curve is procedural so we can tune the silhouette later without replacing a static asset.
-function getInfinityPosition(t: number, scaleX: number, scaleY: number) {
+// The infinity curve remains one procedural target in the morph so the cloud can settle back into the original branded silhouette.
+function getInfinityPosition(
+  t: number,
+  scaleX: number,
+  scaleY: number,
+  target: CloudPoint3
+) {
   const angle = t * TAU;
 
-  return {
-    x: Math.sin(angle) * scaleX,
-    y: Math.sin(angle * 2) * 0.5 * scaleY,
-  };
+  target.x = Math.sin(angle) * scaleX;
+  target.y = Math.sin(angle * 2) * 0.5 * scaleY;
+  target.z = 0;
 }
 
-// Offsetting particles along the local normal turns one thin path into a ribbon-like cloud.
-function getInfinityNormal(t: number, scaleX: number, scaleY: number) {
+// Offsetting particles along the local infinity normal turns one thin path into a ribbon-like cloud.
+function getInfinityNormal(
+  t: number,
+  scaleX: number,
+  scaleY: number,
+  target: CloudPoint3
+) {
   const angle = t * TAU;
   const dx = Math.cos(angle) * scaleX;
   const dy = Math.cos(angle * 2) * scaleY;
   const length = Math.hypot(dx, dy) || 1;
 
-  return {
-    x: -dy / length,
-    y: dx / length,
-  };
+  target.x = -dy / length;
+  target.y = dx / length;
+  target.z = 0;
+}
+
+function getHelixAngle(t: number, strand: number) {
+  return t * TAU * helixTurns + (strand === 0 ? 0 : Math.PI);
+}
+
+// The helix target uses the same phase domain as the infinity loop, so particles can split into two strands without respawning.
+function getHelixPosition(
+  t: number,
+  scaleX: number,
+  scaleY: number,
+  strand: number,
+  target: CloudPoint3
+) {
+  const angle = getHelixAngle(t, strand);
+
+  target.x = (t - 0.5) * scaleX * 1.92;
+  target.y = Math.sin(angle) * scaleY * 0.36;
+  target.z = Math.cos(angle) * scaleY * 0.34;
+}
+
+// The helix spread rides on an elliptical radial normal so the cloud keeps a readable strand thickness in 3D.
+function getHelixNormal(
+  t: number,
+  strand: number,
+  target: CloudPoint3
+) {
+  const angle = getHelixAngle(t, strand);
+  const radialY = Math.sin(angle) * 0.36;
+  const radialZ = Math.cos(angle) * 0.34;
+  const length = Math.hypot(radialY, radialZ) || 1;
+
+  target.x = 0;
+  target.y = radialY / length;
+  target.z = radialZ / length;
 }
 
 // The color ramp cycles through the brand palette so the cloud stays lively without introducing new hues.
@@ -184,11 +241,13 @@ export function StudioHeroInfinityCloud({
     const particlePhase = new Float32Array(particleCount);
     const particleSpread = new Float32Array(particleCount);
     const particleDrift = new Float32Array(particleCount);
+    const particleStrand = new Uint8Array(particleCount);
 
-    // Each particle stores its own phase, lateral spread, and drift so the loop reads like a cloud instead of a traced line.
+    // Each particle stores stable phase, strand, spread, and drift values so the cloud can morph without popping.
     for (let index = 0; index < particleCount; index += 1) {
       const phase = Math.random();
       particlePhase[index] = phase;
+      particleStrand[index] = index % 2;
       particleSpread[index] = (Math.random() - 0.5) * (
         reduceMotion
           ? Math.min(tuning.particleSpread, 0.06)
@@ -252,44 +311,115 @@ export function StudioHeroInfinityCloud({
     resizeObserver.observe(container);
     syncRendererSize();
 
+    const infinityPoint: CloudPoint3 = { x: 0, y: 0, z: 0 };
+    const helixPoint: CloudPoint3 = { x: 0, y: 0, z: 0 };
+    const infinityNormal: CloudPoint3 = { x: 0, y: 0, z: 0 };
+    const helixNormal: CloudPoint3 = { x: 0, y: 0, z: 0 };
     let frameId = 0;
 
-    // The frame loop continuously reprojects particles onto the procedural curve so the cloud stays dense but alive.
+    // The frame loop reprojects particles onto two procedural targets and blends them into a continuous breathing morph.
     const renderFrame = (time: number) => {
       const timeSeconds = time * 0.001;
+      const rawMorph = reduceMotion
+        ? 0
+        : 0.5 - 0.5 * Math.cos((timeSeconds * TAU) / helixMorphCycleSeconds);
+      const morph = reduceMotion
+        ? 0
+        : THREE.MathUtils.smootherstep(rawMorph, 0.08, 0.88);
       const positionAttribute = particleGeometry.getAttribute(
         "position"
       ) as THREE.BufferAttribute;
 
       for (let index = 0; index < particleCount; index += 1) {
-        const drift = reduceMotion
-          ? particlePhase[index]
-          : particlePhase[index] + timeSeconds * 0.06;
+        const phase = particlePhase[index];
+        const drift = reduceMotion ? phase : phase + timeSeconds * 0.06;
         const wrapped = drift % 1;
-        const point = getInfinityPosition(wrapped, tuning.scaleX, tuning.scaleY);
-        const normal = getInfinityNormal(wrapped, tuning.scaleX, tuning.scaleY);
-        const motionOffset = reduceMotion
+        const strand = particleStrand[index];
+        // Tightening the lateral spread as the helix appears keeps the strands crisp instead of reading like one blurred ribbon.
+        const spreadScale = reduceMotion
+          ? 1
+          : THREE.MathUtils.lerp(1, 0.56, morph);
+        const motionOffset = (reduceMotion
           ? particleSpread[index]
           : particleSpread[index] +
-            Math.sin(timeSeconds * 1.6 + particlePhase[index] * TAU) *
-              particleDrift[index];
-        const baseIndex = index * 3;
-        const particleX = point.x + normal.x * motionOffset;
-        const particleY = point.y + normal.y * motionOffset;
-        const particleZ = reduceMotion
-          ? 0
-          : Math.sin(timeSeconds * 0.75 + particlePhase[index] * TAU) * 0.028;
+            Math.sin(timeSeconds * 1.6 + phase * TAU) * particleDrift[index]
+        ) * spreadScale;
 
-        particlePositions[baseIndex] = particleX;
-        particlePositions[baseIndex + 1] = particleY;
-        particlePositions[baseIndex + 2] = particleZ;
+        getInfinityPosition(wrapped, tuning.scaleX, tuning.scaleY, infinityPoint);
+        getHelixPosition(wrapped, tuning.scaleX, tuning.scaleY, strand, helixPoint);
+        getInfinityNormal(wrapped, tuning.scaleX, tuning.scaleY, infinityNormal);
+        getHelixNormal(wrapped, strand, helixNormal);
+
+        let blendedNormalX = THREE.MathUtils.lerp(
+          infinityNormal.x,
+          helixNormal.x,
+          morph
+        );
+        let blendedNormalY = THREE.MathUtils.lerp(
+          infinityNormal.y,
+          helixNormal.y,
+          morph
+        );
+        let blendedNormalZ = THREE.MathUtils.lerp(
+          infinityNormal.z,
+          helixNormal.z,
+          morph
+        );
+        const normalLength =
+          Math.hypot(blendedNormalX, blendedNormalY, blendedNormalZ) || 1;
+
+        blendedNormalX /= normalLength;
+        blendedNormalY /= normalLength;
+        blendedNormalZ /= normalLength;
+
+        const blendedPointX = THREE.MathUtils.lerp(
+          infinityPoint.x,
+          helixPoint.x,
+          morph
+        );
+        const blendedPointY = THREE.MathUtils.lerp(
+          infinityPoint.y,
+          helixPoint.y,
+          morph
+        );
+        const blendedPointZ = THREE.MathUtils.lerp(
+          infinityPoint.z,
+          helixPoint.z,
+          morph
+        );
+        const ambientZ =
+          reduceMotion
+            ? 0
+            : Math.sin(timeSeconds * 0.75 + phase * TAU) *
+              0.028 *
+              (1 - morph * 0.8);
+        const baseIndex = index * 3;
+
+        particlePositions[baseIndex] =
+          blendedPointX + blendedNormalX * motionOffset;
+        particlePositions[baseIndex + 1] =
+          blendedPointY + blendedNormalY * motionOffset;
+        particlePositions[baseIndex + 2] =
+          blendedPointZ + blendedNormalZ * motionOffset + ambientZ;
       }
 
       positionAttribute.needsUpdate = true;
 
       if (!reduceMotion) {
-        loopGroup.rotation.z = Math.sin(timeSeconds * 0.16) * 0.03;
-        loopGroup.position.y = Math.sin(timeSeconds * 0.32) * 0.025;
+        // Sliding the group left during the helix phase lets the strands continue behind the copy without disturbing the infinity resting position.
+        loopGroup.position.x = -tuning.scaleX * helixHorizontalShift * morph;
+        loopGroup.rotation.y = helixRotationYMax * morph;
+        loopGroup.rotation.x = helixRotationXMax * morph;
+        loopGroup.rotation.z =
+          Math.sin(timeSeconds * 0.16) *
+          infinityIdleRotationZ *
+          (1 - morph * 0.65);
+        loopGroup.position.y =
+          Math.sin(timeSeconds * 0.32) *
+          infinityIdleYOffset *
+          (1 - morph * 0.55);
+      } else {
+        loopGroup.position.x = 0;
       }
 
       renderer.render(scene, camera);

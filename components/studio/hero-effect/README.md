@@ -7,7 +7,7 @@ The homepage hero uses a layered interactive backdrop with the editorial copy an
 The effect is made of four parts:
 
 1. A shared light brand surface and grid texture from the design system.
-2. A centered Three.js infinity-shaped particle cloud.
+2. A centered Three.js particle cloud that breathes between an infinity loop and a subtle double helix.
 3. A floating ambient blob layer with depth-based bobbing.
 4. A click-triggered 2D ripple pulse with restrained trailing particles.
 5. The hero text and CTA rendered above the full backdrop.
@@ -16,6 +16,7 @@ The current visual direction is:
 
 - the animated form sits in the center of the hero
 - the infinity shape is implied by particle density, not by a visible line stroke
+- the cloud now slowly breathes into a subtle horizontal double helix and back
 - the cursor-following glow has been removed
 - the temporary tuning panel has been removed
 - offscreen animation work is paused automatically
@@ -78,8 +79,8 @@ Owns the Three.js infinity cloud:
 
 - creates the WebGL renderer
 - builds the orthographic scene
-- computes positions along a horizontal infinity curve
-- attaches a dense point cloud to that curve
+- computes positions for both a horizontal infinity curve and a subtle 3D double helix
+- blends the same point cloud between those two targets on a slow breathing loop
 - scales particle budgets down on mobile and tablet
 - animates the particle field with slight drift so the form stays alive
 
@@ -118,14 +119,23 @@ The hero backdrop starts with a shared light gradient and subtle grid texture so
 
 This keeps the hero visually connected to the rest of the site and avoids one-off page styling.
 
-## 2. Three.js Infinity Cloud
+## 2. Three.js Morphing Cloud
 
-The infinity cloud is not a static asset. It is generated procedurally in Three.js.
+The hero cloud is not a static asset. It is generated procedurally in Three.js.
 
-The shape comes from a parametric horizontal infinity path:
+The base shape comes from a parametric horizontal infinity path:
 
 - `x = sin(t) * scaleX`
 - `y = sin(2t) * 0.5 * scaleY`
+
+The same particle field also has a second target: a horizontal double helix with two stable strands.
+
+The cloud slowly breathes between those two structures:
+
+- infinity
+- mid-morph hybrid
+- subtle 3D helix
+- back to infinity
 
 Each particle gets:
 
@@ -140,7 +150,7 @@ The important choice is density:
 - the curve line itself is not drawn anymore
 - the shape is visible through concentration, not outline
 
-The cloud uses additive blending, small point sizes, and subtle group motion so it feels like a living signal instead of a rigid diagram.
+The cloud uses additive blending, small point sizes, and restrained group rotation so it feels like a living signal instead of a rigid diagram.
 
 ## 3. Ambient Blob Layer
 
@@ -223,6 +233,7 @@ In [`./hero-effect-infinity-cloud.tsx`](./hero-effect-infinity-cloud.tsx):
 - `particleCount`
 - `particleSpread`
 - `particleDrift`
+- internal helix morph cycle and rotation constants
 - responsive density scaling inside `getResponsiveParticleCount`
 - `particleGlowMaterial.size`
 - `particleCoreMaterial.size`
@@ -281,6 +292,7 @@ As of now, the hero effect is:
 - centered
 - Three.js-based for the infinity cloud
 - dense enough that the loop path is hidden
+- breathing between infinity and a subtle horizontal double helix
 - interactive via subtle circular ripple pulses
 - configured through baked module defaults instead of an on-page tuning panel
 - brand-aligned through shared surface tokens

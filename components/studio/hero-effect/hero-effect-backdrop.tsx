@@ -426,12 +426,12 @@ export function StudioHeroNoiseBackdrop({
             style={desktopCloudStyle}
           >
             {/* The anchor box sets placement, while this larger internal stage prevents the loop from clipping against its own local bounds. */}
-            <div className="absolute left-1/2 top-1/2 h-[150%] w-[130%] -translate-x-1/2 -translate-y-1/2 sm:h-[154%] sm:w-[128%] md:h-[160%] md:w-[128%]">
+            <div className="absolute left-1/2 top-1/2 h-[156%] w-[144%] -translate-x-1/2 -translate-y-1/2 sm:h-[160%] sm:w-[146%] md:h-[168%] md:w-[152%]">
               <div className="absolute left-1/2 top-1/2 h-[16rem] w-[24rem] -translate-x-1/2 -translate-y-1/2 rounded-full ds-hero-signal-core opacity-72 blur-[42px] md:h-[24rem] md:w-[40rem]" />
               <StudioHeroInfinityCloud
                 isInViewport={isInViewport}
                 tuning={tuning}
-                className="opacity-98 [mask-image:radial-gradient(ellipse_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,0.98)_62%,rgba(0,0,0,0.88)_82%,rgba(0,0,0,0)_100%)]"
+                className="opacity-98 [mask-image:radial-gradient(ellipse_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,0.998)_78%,rgba(0,0,0,0.95)_94%,rgba(0,0,0,0)_100%)]"
               />
             </div>
           </div>
