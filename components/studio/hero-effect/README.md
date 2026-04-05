@@ -27,11 +27,11 @@ The current baked values are:
 
 - `Path Width`: `1.85`
 - `Path Height`: `1.91`
-- `View Zoom`: `1.06`
+- `View Zoom`: `1.60`
 - `Density`: `21500` base desktop target
 - `Point Spread`: `0.28`
-- `Desktop X`: `0%`
-- `Desktop Y`: `-50%`
+- `Desktop X`: `42%`
+- `Desktop Y`: `-22%`
 
 The current baked helix values are:
 

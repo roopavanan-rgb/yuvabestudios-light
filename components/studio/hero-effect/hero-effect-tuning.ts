@@ -37,15 +37,15 @@ export const showHeroEffectTuningPanels = false;
 export const defaultHeroInfinityCloudTuning: HeroInfinityCloudTuning = {
   scaleX: 1.85,
   scaleY: 1.91,
-  zoom: 1.06,
+  zoom: 1.6,
   particleCount: 21500,
   particleSpread: 0.28,
 };
 
 export const defaultHeroEffectBackdropTuning: HeroEffectBackdropTuning = {
   ...defaultHeroInfinityCloudTuning,
-  offsetX: 15,
-  offsetY: -50,
+  offsetX: 42,
+  offsetY: -22,
 };
 
 export const defaultHeroHelixTuning: HeroHelixTuning = {
@@ -57,7 +57,7 @@ export const defaultHeroHelixTuning: HeroHelixTuning = {
   horizontalShift: 0.17,
   span: 1.5,
   amplitudeY: 0.43,
-  amplitudeZ: 0.28,
+  amplitudeZ: 0.58,
   spreadScale: 0.54,
   morphStart: 0.08,
   morphEnd: 0.88,

@@ -223,6 +223,9 @@ export function StudioHeroInfinityCloud({
     renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
     container.appendChild(renderer.domElement);
+    renderer.domElement.style.display = "block";
+    renderer.domElement.style.height = "100%";
+    renderer.domElement.style.width = "100%";
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-3, 3, 1.7, -1.7, 0.1, 10);
@@ -321,7 +324,11 @@ export function StudioHeroInfinityCloud({
     // The frame loop reprojects particles onto two procedural targets and blends them into a continuous breathing morph.
     const renderFrame = (time: number) => {
       const timeSeconds = time * 0.001;
-      const helixWidthBase = camera.right - camera.left;
+      const visibleWidth = camera.right - camera.left;
+      // The helix width is fit back into the current frustum so higher span or zoom values do not force the cloud to clip itself.
+      const helixWidthBase =
+        (visibleWidth * 0.82) /
+        Math.max(helixTuning.span * helixTuning.zoom, Number.EPSILON);
       const rawMorph = reduceMotion
         ? 0
         : 0.5 - 0.5 * Math.cos((timeSeconds * TAU) / helixTuning.cycleSeconds);
@@ -414,7 +421,7 @@ export function StudioHeroInfinityCloud({
       if (!reduceMotion) {
         // Shifting by a fraction of the visible frustum keeps the helix bias proportional as the viewport gets wider.
         loopGroup.position.x =
-          -(helixWidthBase * 0.5) * helixTuning.horizontalShift * morph;
+          -(visibleWidth * 0.5) * helixTuning.horizontalShift * morph;
         loopGroup.rotation.y = helixTuning.rotationYMax * morph;
         loopGroup.rotation.x = helixTuning.rotationXMax * morph;
         loopGroup.rotation.z = 0;
