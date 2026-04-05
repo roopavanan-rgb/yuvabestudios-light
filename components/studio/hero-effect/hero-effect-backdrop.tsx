@@ -431,7 +431,7 @@ export function StudioHeroNoiseBackdrop({
                 isInViewport={isInViewport}
                 tuning={tuning}
                 helixTuning={helixTuning}
-                className="opacity-98 [mask-image:radial-gradient(ellipse_120%_86%_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,1)_74%,rgba(0,0,0,0.96)_90%,rgba(0,0,0,0.45)_97%,rgba(0,0,0,0)_100%)]"
+                className="opacity-98 [mask-image:radial-gradient(ellipse_148%_88%_at_center,rgba(0,0,0,1)_0%,rgba(0,0,0,1)_82%,rgba(0,0,0,0.97)_92%,rgba(0,0,0,0.62)_98%,rgba(0,0,0,0)_100%)]"
               />
             </div>
           </div>

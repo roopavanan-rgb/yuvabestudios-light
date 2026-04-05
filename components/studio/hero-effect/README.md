@@ -30,7 +30,7 @@ The current baked values are:
 - `View Zoom`: `1.06`
 - `Density`: `21500` base desktop target
 - `Point Spread`: `0.28`
-- `Desktop X`: `15%`
+- `Desktop X`: `0%`
 - `Desktop Y`: `-50%`
 
 The current baked helix values are:
@@ -38,7 +38,7 @@ The current baked helix values are:
 - `Cycle Seconds`: `24`
 - `Turns`: `2.17`
 - `Helix Zoom`: `1.18`
-- `Horizontal Shift`: `0.17`
+- `Horizontal Shift`: `0.08`
 - `Screen Span`: `1.50`
 - `Helix Height`: `0.43`
 - `Helix Depth`: `0.28`

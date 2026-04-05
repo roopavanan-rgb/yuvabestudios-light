@@ -37,7 +37,6 @@ type CloudPoint3 = {
   z: number;
 };
 
-const infinityIdleRotationZ = 0.03;
 const infinityIdleYOffset = 0.025;
 
 function readInfinityPalette() {
@@ -418,10 +417,7 @@ export function StudioHeroInfinityCloud({
           -(helixWidthBase * 0.5) * helixTuning.horizontalShift * morph;
         loopGroup.rotation.y = helixTuning.rotationYMax * morph;
         loopGroup.rotation.x = helixTuning.rotationXMax * morph;
-        loopGroup.rotation.z =
-          Math.sin(timeSeconds * 0.16) *
-          infinityIdleRotationZ *
-          (1 - morph * 0.65);
+        loopGroup.rotation.z = 0;
         loopGroup.position.y =
           Math.sin(timeSeconds * 0.32) *
           infinityIdleYOffset *
