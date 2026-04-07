@@ -29,7 +29,7 @@ export function StudioHero({ content }: StudioHeroProps) {
   return (
     <StudioHeroNoiseBackdrop
       id="about"
-      className="relative flex flex-col justify-start overflow-x-hidden overflow-y-visible bg-white pb-14 md:min-h-[calc(100svh-72px)] md:pb-20"
+      className="relative flex flex-col justify-start overflow-x-hidden overflow-y-visible bg-white pb-10 md:min-h-[clamp(46rem,calc(100svh-72px),60rem)] md:pb-0"
     >
       <HeroBackground />
 
@@ -89,7 +89,7 @@ export function StudioHero({ content }: StudioHeroProps) {
         </div>
       </StudioPageContainer>
 
-      <StudioTrustStrip />
+      <StudioTrustStrip className="mt-10 md:mt-auto" />
     </StudioHeroNoiseBackdrop>
   );
 }

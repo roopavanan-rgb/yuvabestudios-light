@@ -46,7 +46,7 @@ export const defaultHeroInfinityCloudTuning: HeroInfinityCloudTuning = {
 export const defaultHeroEffectBackdropTuning: HeroEffectBackdropTuning = {
   ...defaultHeroInfinityCloudTuning,
   offsetX: -2,
-  offsetY: -22,
+  offsetY: -12,
 };
 
 export const defaultHeroHelixTuning: HeroHelixTuning = {

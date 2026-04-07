@@ -2,6 +2,7 @@ import {
   StudioPageContainer,
   StudioPageRails,
 } from "@/components/studio/studio-page-shell";
+import { cn } from "@/lib/utils";
 
 const companyLogos = [
   { name: "Ageshift", src: "/assets/ageshift/logo.svg" },
@@ -104,10 +105,19 @@ function TrustStripDivider({ side }: TrustStripDividerProps) {
   );
 }
 
+type StudioTrustStripProps = {
+  className?: string;
+};
+
 // The trust strip stays modular so the hero can reuse the same edge system and marquee structure.
-export function StudioTrustStrip() {
+export function StudioTrustStrip({ className }: StudioTrustStripProps) {
   return (
-    <div className="relative z-10 mt-10 border-y border-slate-200/70 bg-white/80 backdrop-blur-sm">
+    <div
+      className={cn(
+        "relative z-10 border-y border-slate-200/70 bg-white/80 backdrop-blur-sm",
+        className
+      )}
+    >
       <StudioPageContainer className="relative md:px-0">
         {/* The viewport owns the clipping so the dividers and masks stay locked to the same edge. */}
         <div className="relative overflow-hidden">

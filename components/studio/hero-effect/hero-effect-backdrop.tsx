@@ -418,10 +418,10 @@ export function StudioHeroNoiseBackdrop({
         <div className="ds-surface-hero-signal absolute inset-0 opacity-90" />
         <div className="ds-pattern-hero-signal-grid absolute inset-0 opacity-30" />
 
-        {/* The desktop anchor nudges the cloud into the open space from the reference while mobile stays centered. */}
-        <div className="absolute inset-x-0 top-[12%] bottom-[10%] flex items-center justify-center">
+        {/* Desktop uses a fixed top anchor plus responsive growth so ultra-wide monitors keep the same visual placement instead of dropping the loop lower. */}
+        <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 justify-center md:top-[clamp(14rem,22vh,17rem)] md:-translate-y-0">
           <div
-            className="relative h-[16rem] w-[34rem] max-w-[132vw] sm:h-[18rem] sm:w-[42rem] md:h-[22rem] md:w-[58rem] md:translate-x-[var(--hero-cloud-offset-x)] md:translate-y-[var(--hero-cloud-offset-y)]"
+            className="relative h-[16rem] w-[34rem] max-w-[132vw] sm:h-[18rem] sm:w-[42rem] md:h-[clamp(22rem,24vw,30rem)] md:w-[clamp(58rem,64vw,84rem)] md:max-w-none md:translate-x-[var(--hero-cloud-offset-x)] md:translate-y-[var(--hero-cloud-offset-y)]"
             style={desktopCloudStyle}
           >
             {/* The anchor box sets placement, while this larger internal stage prevents the loop from clipping against its own local bounds. */}
