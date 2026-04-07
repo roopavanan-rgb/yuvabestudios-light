@@ -33,8 +33,8 @@ export function StudioHero({ content }: StudioHeroProps) {
     >
       <HeroBackground />
 
-      {/* The editorial content occupies the remaining viewport height after the rail is accounted for. */}
-      <StudioPageContainer className="relative z-10 flex items-start pb-6 pt-14 md:pb-12 md:pt-16">
+      {/* The editorial wrapper becomes the desktop centering region so the full copy stack stays balanced above the trust strip. */}
+      <StudioPageContainer className="relative z-10 flex items-start pb-6 pt-14 md:flex-1 md:items-center md:pb-12 md:pt-16">
         <div className="w-full">
           {/* The wash is pinned to the copy block with soft negative bleed so it feels atmospheric instead of boxed in. */}
           <div className="relative max-w-4xl lg:pl-4 xl:pl-4">
