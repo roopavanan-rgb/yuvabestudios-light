@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+} from "react";
 import Image from "next/image";
 import { Maximize2 } from "lucide-react";
 import {
@@ -439,7 +444,7 @@ export function StudioCaseStudyMockCard({
                 />
               </div>
               {/* A shared veil preserves copy legibility across the brighter custom backgrounds. */}
-              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.46)_0%,rgba(255,255,255,0.34)_34%,rgba(255,255,255,0.16)_68%,rgba(255,255,255,0.08)_100%)]" />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.46)_0%,rgba(255,255,255,0.34)_34%,rgba(255,255,255,0.28)_89%,rgba(255,255,255,0.08)_100%)]" />
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18)_0%,transparent_46%)]" />
               <div className={mockCardTextWashClassName} />
             </>

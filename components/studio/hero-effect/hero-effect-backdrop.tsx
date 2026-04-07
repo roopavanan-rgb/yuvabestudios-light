@@ -416,7 +416,7 @@ export function StudioHeroNoiseBackdrop({
       >
         {/* These shared utilities keep the hero atmosphere anchored to the design system instead of ad-hoc page styling. */}
         <div className="ds-surface-hero-signal absolute inset-0 opacity-90" />
-        <div className="ds-pattern-hero-signal-grid absolute inset-0 opacity-34" />
+        <div className="ds-pattern-hero-signal-grid absolute inset-0 opacity-30" />
 
         {/* The desktop anchor nudges the cloud into the open space from the reference while mobile stays centered. */}
         <div className="absolute inset-x-0 top-[12%] bottom-[10%] flex items-center justify-center">

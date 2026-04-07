@@ -14,8 +14,7 @@ import {
 function HeroBackground() {
   return (
     <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.042)_1px,transparent_1px)] bg-[size:120px_100%]" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(148,163,184,0.021)_1px,transparent_1px)] bg-[size:100%_120px]" />
+      {/* The hero keeps the shared page rails, while the backdrop owns the single large-grid treatment. */}
       <StudioTrustStripGuides />
     </div>
   );

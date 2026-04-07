@@ -150,7 +150,7 @@ Tracks the added runtime and typing dependencies for the Three.js layer:
 
 ## 1. Base Surface
 
-The hero backdrop starts with a shared light gradient and subtle grid texture so the animation sits inside the brand system rather than on a blank canvas.
+The hero backdrop starts with a shared light gradient and one softer large-format grid texture so the animation sits inside the brand system rather than on a blank canvas.
 
 This keeps the hero visually connected to the rest of the site and avoids one-off page styling.
 
