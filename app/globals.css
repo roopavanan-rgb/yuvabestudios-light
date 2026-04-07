@@ -326,6 +326,17 @@
     radial-gradient(78% 66% at 86% 16%, color-mix(in srgb, var(--cyan-200) 70%, white) 0%, rgba(255, 255, 255, 0) 60%),
     radial-gradient(92% 72% at 72% 92%, color-mix(in srgb, var(--lavender-500) 42%, white) 0%, rgba(255, 255, 255, 0) 66%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 248, 250, 0.82) 100%);
+  --gradient-hero-copy-wash:
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.985) 0%,
+      rgba(255, 255, 255, 0.975) 22%,
+      rgba(255, 255, 255, 0.94) 40%,
+      rgba(255, 255, 255, 0.82) 58%,
+      rgba(255, 255, 255, 0.48) 74%,
+      rgba(255, 255, 255, 0.16) 88%,
+      rgba(255, 255, 255, 0) 100%
+    );
   --pattern-hero-signal-grid:
     linear-gradient(to right, rgb(148 163 184 / 0.14) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(148 163 184 / 0.12) 1px, transparent 1px);
@@ -497,6 +508,13 @@ h6 {
 /* This shared utility keeps the hero interaction stage on one reusable brand-tinted light surface. */
 .ds-surface-hero-signal {
   background-image: var(--gradient-hero-signal-stage);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* This shared overlay keeps the hero copy readable without flattening the full signal field. */
+.ds-overlay-hero-copy-wash {
+  background-image: var(--gradient-hero-copy-wash);
   background-repeat: no-repeat;
   background-size: 100% 100%;
 }

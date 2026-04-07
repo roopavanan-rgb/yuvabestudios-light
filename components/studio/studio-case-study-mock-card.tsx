@@ -322,6 +322,13 @@ export function StudioCaseStudyMockCard({
     shouldUseFramedStage && mockViewport === "landscape";
   const shouldUseMobileWideLandscapeStage =
     isMobileViewport && shouldUseWideLandscapeStage;
+  // Landscape browser mocks should feel like the hero asset, so they expand almost edge-to-edge with a fixed 8px gutter.
+  const landscapeStageEdgeGutterClassName = shouldUseWideLandscapeStage
+    ? "px-2 sm:px-2 md:px-2 lg:px-2"
+    : undefined;
+  const mockStageWidthClassName = shouldUseWideLandscapeStage
+    ? "relative w-full md:-mx-4 md:w-[calc(100%+2rem)]"
+    : "relative max-w-[560px] scale-[0.8]";
   const fullImageAspectRatio =
     imageAspectRatio ?? (mockViewport === "portrait" ? "1310 / 2708" : "16 / 9");
   const serviceTags = services.map(normalizeServiceLabel);
@@ -520,6 +527,7 @@ export function StudioCaseStudyMockCard({
                 shouldUseFramedStage
                   ? layoutStyles.imageStageClassName
                   : "min-h-0 px-0 py-0",
+                landscapeStageEdgeGutterClassName,
                 span === "full" && fullSpanImageStageOverrides[layout],
               )}
             >
@@ -534,17 +542,14 @@ export function StudioCaseStudyMockCard({
                 }
                 transition={mockLiftSpring}
                 className={cn(
-                  shouldUseWideLandscapeStage
-                    ? "relative w-full max-w-[42rem]"
-                    : "relative max-w-[560px] scale-[0.8]",
+                  mockStageWidthClassName,
                   shouldUseWideLandscapeStage &&
                     (shouldUseMobileWideLandscapeStage
                       ? "my-0"
                       : "my-1 sm:my-1.5 md:my-2"),
                   span === "full" &&
-                    (shouldUseWideLandscapeStage
-                      ? "max-w-[46rem]"
-                      : "max-w-[680px]"),
+                    !shouldUseWideLandscapeStage &&
+                    "max-w-[680px]",
                 )}
               >
                 <motion.div

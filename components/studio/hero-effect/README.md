@@ -133,8 +133,10 @@ Owns small shared helpers:
 Owns the shared hero-surface utilities:
 
 - `--gradient-hero-signal-stage`
+- `--gradient-hero-copy-wash`
 - `--pattern-hero-signal-grid`
 - `.ds-surface-hero-signal`
+- `.ds-overlay-hero-copy-wash`
 - `.ds-pattern-hero-signal-grid`
 
 ### [`../../../package.json`](../../../package.json)
@@ -151,6 +153,8 @@ Tracks the added runtime and typing dependencies for the Three.js layer:
 The hero backdrop starts with a shared light gradient and subtle grid texture so the animation sits inside the brand system rather than on a blank canvas.
 
 This keeps the hero visually connected to the rest of the site and avoids one-off page styling.
+
+A dedicated left-to-right copy wash sits above the animation layers so the headline and supporting text stay readable while the right side still shows the full signal effect.
 
 ## 2. Three.js Morphing Cloud
 
