@@ -3,15 +3,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Check, LoaderCircle } from "lucide-react";
+import type ReCAPTCHA from "react-google-recaptcha";
 
 import { Button } from "@/components/ui/button";
 import { ModalShell } from "@/components/ui/modal-shell";
 import { START_PROJECT_EMAIL } from "@/lib/start-project";
 
-// Loaded client-side only — react-google-recaptcha accesses browser globals at import time.
-const ReCAPTCHA = dynamic(() => import("react-google-recaptcha"), { ssr: false });
+// Loaded client-side only via a forwardRef wrapper so the ref survives the dynamic import.
+const RecaptchaWidget = dynamic(
+  () => import("./recaptcha-widget").then((m) => m.RecaptchaWidget),
+  { ssr: false },
+);
 
 type StartProjectModalProps = {
   open: boolean;
@@ -55,42 +59,30 @@ export function StartProjectModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "success" | "error">("idle");
   const [submitMessage, setSubmitMessage] = useState("");
-  // Token captured via onChange; key forces a fresh widget mount on reset.
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
-  const [recaptchaKey, setRecaptchaKey] = useState(0);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  // A ref tracks pending so the onChange closure always reads the latest value without stale state.
+  const pendingRef = useRef(false);
 
-  function resetRecaptcha() {
-    setRecaptchaToken(null);
-    setRecaptchaKey((k) => k + 1);
-  }
-
-  // Each open should feel like a fresh start, not a stale draft from a prior CTA click.
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
+  function reset() {
     setName("");
     setEmail("");
     setPhone("");
     setNeeds([]);
     setNotes("");
+    recaptchaRef.current?.reset();
+    pendingRef.current = false;
+  }
+
+  // Each open should feel like a fresh start, not a stale draft from a prior CTA click.
+  useEffect(() => {
+    if (!open) return;
+    reset();
     setIsSubmitting(false);
     setSubmitState("idle");
     setSubmitMessage("");
-    resetRecaptcha();
   }, [open]);
 
-  // The modal submits to our route so the inquiry lands in Yuvabe's inbox without leaving the site.
-  async function handleSubmit(event: { preventDefault(): void }) {
-    event.preventDefault();
-
-    if (!recaptchaToken) {
-      setSubmitState("error");
-      setSubmitMessage("Please complete the reCAPTCHA check.");
-      return;
-    }
-
+  async function submitWithToken(token: string) {
     setIsSubmitting(true);
     setSubmitState("idle");
     setSubmitMessage("");
@@ -99,7 +91,7 @@ export function StartProjectModal({
       const response = await fetch("/api/start-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, needs, notes, source, recaptchaToken }),
+        body: JSON.stringify({ name, email, phone, needs, notes, source, recaptchaToken: token }),
       });
 
       const responseBody = (await response.json()) as { error?: string };
@@ -110,21 +102,30 @@ export function StartProjectModal({
 
       setSubmitState("success");
       setSubmitMessage("Your inquiry was saved. We'll get back to you soon.");
-      setName("");
-      setEmail("");
-      setPhone("");
-      setNeeds([]);
-      setNotes("");
-      resetRecaptcha();
-      return;
+      reset();
     } catch (error) {
       setSubmitState("error");
       setSubmitMessage(
         error instanceof Error ? error.message : "Unable to send your inquiry right now.",
       );
+      recaptchaRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  // Invisible reCAPTCHA fires onChange after execute() — submit happens here, not in handleSubmit.
+  function handleRecaptchaChange(token: string | null) {
+    if (!token || !pendingRef.current) return;
+    pendingRef.current = false;
+    void submitWithToken(token);
+  }
+
+  // The modal submits to our route so the inquiry lands in Yuvabe's inbox without leaving the site.
+  function handleSubmit(event: { preventDefault(): void }) {
+    event.preventDefault();
+    pendingRef.current = true;
+    recaptchaRef.current?.execute();
   }
 
   return (
@@ -138,13 +139,11 @@ export function StartProjectModal({
       contentClassName="h-full overflow-y-auto px-5 pb-6 pt-12 sm:px-8 sm:pb-6 lg:px-10 lg:pb-6"
     >
       <div className="relative grid gap-7 overflow-hidden rounded-[inherit] lg:h-[calc(100svh-10rem)] lg:min-h-0 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-8">
-        {/* The background glow shifts more attention to the form side without adding another heavy surface. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -bottom-10 right-[-4rem] top-8 hidden w-[46rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(88,41,199,0.18)_0%,rgba(203,195,223,0.22)_28%,rgba(255,202,45,0.18)_52%,rgba(255,255,255,0)_74%)] blur-3xl lg:block"
         />
 
-        {/* The left rail gives the modal stronger brand presence and a clearer founder-facing frame. */}
         <div className="space-y-6 lg:flex lg:h-full lg:flex-col lg:justify-center lg:pl-2 lg:pr-6">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-3 rounded-full border border-[color:color-mix(in_srgb,var(--lavender-500)_18%,white)] bg-white/80 px-3 py-2 shadow-[0_10px_26px_rgba(15,23,42,0.05)]">
@@ -180,15 +179,10 @@ export function StartProjectModal({
           </div>
         </div>
 
-        {/* The right column replaces the generic brief field with guided conversation starters and cleaner input copy. */}
         <div className="relative -mx-5 rounded-b-[inherit] border-t border-white/72 bg-white/92 px-5 pt-4 sm:-mx-8 sm:px-8 lg:-my-8 lg:mx-0 lg:flex lg:h-[calc(100%+4rem)] lg:min-h-0 lg:flex-col lg:overflow-hidden lg:rounded-[inherit] lg:border-l lg:border-t-0 lg:border-white/80 lg:px-8 lg:pb-8 lg:pt-8">
           <form className="space-y-4 lg:min-h-0 lg:overflow-y-auto lg:pr-1" onSubmit={handleSubmit}>
-            {/* The core contact fields stay lightweight so the founder can start fast. */}
             <div className="space-y-2">
-              <label
-                htmlFor="start-project-name"
-                className="text-label-lg text-[var(--neutral-800)]"
-              >
+              <label htmlFor="start-project-name" className="text-label-lg text-(--neutral-800)">
                 Name
               </label>
               <input
@@ -205,10 +199,7 @@ export function StartProjectModal({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label
-                  htmlFor="start-project-email"
-                  className="text-label-lg text-[var(--neutral-800)]"
-                >
+                <label htmlFor="start-project-email" className="text-label-lg text-(--neutral-800)">
                   Email
                 </label>
                 <input
@@ -225,10 +216,7 @@ export function StartProjectModal({
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="start-project-phone"
-                  className="text-label-lg text-[var(--neutral-800)]"
-                >
+                <label htmlFor="start-project-phone" className="text-label-lg text-(--neutral-800)">
                   Phone or WhatsApp
                 </label>
                 <input
@@ -244,32 +232,24 @@ export function StartProjectModal({
               </div>
             </div>
 
-            {/* The service-selection group maps the modal directly to Yuvabe's actual offer areas. */}
             <div className="space-y-2">
-              <div className="space-y-0.5">
-                <p className="text-label-lg text-[var(--neutral-800)]">
-                  Where do you want support?
-                </p>
-              </div>
+              <p className="text-label-lg text-(--neutral-800)">Where do you want support?</p>
               <div className="flex flex-wrap gap-2.5">
                 {conversationNeedOptions.map((option) => {
                   const isSelected = needs.includes(option);
-
                   return (
                     <button
                       key={option}
                       type="button"
                       aria-pressed={isSelected ? "true" : "false"}
                       onClick={() =>
-                        setNeeds((currentValues) =>
-                          toggleSelection(currentValues, option),
-                        )
+                        setNeeds((currentValues) => toggleSelection(currentValues, option))
                       }
                       className={[
                         pillClassName,
                         isSelected
                           ? "border-[var(--purple-500)] bg-[var(--purple-500)] text-white shadow-[0_12px_28px_rgba(88,41,199,0.22)]"
-                          : "border-slate-200 bg-white text-[var(--neutral-800)] hover:border-[color:color-mix(in_srgb,var(--purple-500)_24%,white)] hover:bg-white",
+                          : "border-slate-200 bg-white text-(--neutral-800) hover:border-[color-mix(in_srgb,var(--purple-500)_24%,white)] hover:bg-white",
                       ].join(" ")}
                     >
                       {isSelected ? <Check className="size-3.5 text-white" /> : null}
@@ -280,12 +260,8 @@ export function StartProjectModal({
               </div>
             </div>
 
-            {/* This optional field captures nuance after the guided starters have reduced the blank-page problem. */}
             <div className="space-y-2">
-              <label
-                htmlFor="start-project-notes"
-                className="text-label-lg text-[var(--neutral-800)]"
-              >
+              <label htmlFor="start-project-notes" className="text-label-lg text-(--neutral-800)">
                 Extra context
               </label>
               <textarea
@@ -298,14 +274,16 @@ export function StartProjectModal({
               />
             </div>
 
-            <ReCAPTCHA
-              key={recaptchaKey}
+            {/* Invisible — no widget shown; execute() is called on submit, onChange fires with the token. */}
+            <RecaptchaWidget
+              ref={recaptchaRef}
+              size="invisible"
+              badge="bottomright"
               sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-              onChange={(token) => setRecaptchaToken(token)}
-              onExpired={() => setRecaptchaToken(null)}
+              onChange={handleRecaptchaChange}
+              onExpired={() => { pendingRef.current = false; }}
             />
 
-            {/* The submit area keeps status visible so founders know whether the inquiry actually went through. */}
             <div className="space-y-2 pt-1">
               <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
@@ -327,8 +305,7 @@ export function StartProjectModal({
                       : "text-[var(--color-text-tertiary)]",
                 ].join(" ")}
               >
-                {submitMessage ||
-                  "Your inquiry is captured securely and queued for follow-up."}
+                {submitMessage || "Your inquiry is captured securely and queued for follow-up."}
               </p>
             </div>
           </form>
