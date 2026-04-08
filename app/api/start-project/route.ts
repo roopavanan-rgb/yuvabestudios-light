@@ -28,8 +28,11 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({ secret: secret ?? "", response: token }),
   });
-  const data = (await response.json()) as { success: boolean };
-  return data.success;
+  const data = (await response.json()) as { success: boolean; score?: number };
+  // v3 returns a score from 0.0 (bot) to 1.0 (human) — require at least 0.5
+  if (!data.success) return false;
+  if (typeof data.score === "number") return data.score >= 0.5;
+  return true;
 }
 
 async function sendAdminEmail(submission: StartProjectDraft) {
