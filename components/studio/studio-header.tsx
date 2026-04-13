@@ -13,7 +13,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import type { StudioHomepageNavItem } from "@/components/studio/studio-homepage-content";
 import { PremiumSurface } from "@/components/ui/premium-surface";
@@ -71,6 +71,9 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
   const headerBorderAlpha = useTransform(headerProgress, [0, 1], [0.56, 0.8]);
   const headerShadow = useMotionTemplate`0 ${headerShadowY}px ${headerShadowBlur}px rgba(15, 23, 42, ${headerShadowAlpha})`;
   const headerBorderColor = useMotionTemplate`rgba(255, 255, 255, ${headerBorderAlpha})`;
+  const visibleNavigationItems = navigationItems.filter(
+    (item) => item.label !== "AI Workflows",
+  );
 
   // Lock page scroll and flag the shell while the overlay menu is open so the background can blur and scale.
   useEffect(() => {
@@ -195,7 +198,6 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
   function renderNavigationItem(
     item: StudioHomepageNavItem,
     className: string,
-    isMobile = false,
   ) {
     if (item.href.startsWith("#")) {
       return (
@@ -206,12 +208,6 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
           className={className}
         >
           <span>{item.label}</span>
-          {isMobile ? (
-            <span className="inline-flex items-center gap-2 text-label-lg tracking-normal text-slate-400">
-              Go
-              <ArrowUpRight className="size-4" />
-            </span>
-          ) : null}
         </button>
       );
     }
@@ -225,12 +221,6 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
         className={className}
       >
         <span>{item.label}</span>
-        {isMobile ? (
-          <span className="inline-flex items-center gap-2 text-label-lg tracking-normal text-slate-400">
-            Go
-            <ArrowUpRight className="size-4" />
-          </span>
-        ) : null}
       </Link>
     );
   }
@@ -250,18 +240,18 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
             type="button"
             aria-label="Close navigation overlay"
             onClick={handleNavClick}
-            className="absolute inset-0 h-full w-full cursor-default bg-[rgba(255,255,255,0.2)] backdrop-blur-2xl"
+            className="absolute inset-0 h-full w-full cursor-default bg-[rgba(255,255,255,0.26)] backdrop-blur-2xl"
           />
 
-          {/* The overlay shell keeps the brand row and nav card floating above the softened page. */}
+          {/* The mobile menu expands into the same fullscreen posture as the contact modal while keeping the premium surface shell on larger breakpoints. */}
           <div className="absolute inset-0 overflow-y-auto">
-            <div className="min-h-full bg-[radial-gradient(circle_at_top,rgba(255,202,45,0.16),rgba(255,255,255,0)_34%),linear-gradient(180deg,rgba(255,255,255,0.42),rgba(255,255,255,0.22))] px-6 pb-10 pt-4">
+            <div className="min-h-[100svh] bg-[radial-gradient(circle_at_18%_0%,rgba(255,202,45,0.18)_0%,rgba(255,255,255,0)_30%),radial-gradient(circle_at_88%_14%,rgba(88,41,199,0.1)_0%,rgba(255,255,255,0)_34%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(255,255,255,0.92))] sm:px-6 sm:pb-8 sm:pt-4">
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -14 }}
                 transition={overlayTransition}
-                className="mx-auto flex max-w-7xl items-center justify-between gap-4"
+                className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 pb-4 pt-[calc(env(safe-area-inset-top)+1rem)] sm:px-0 sm:pb-2 sm:pt-0"
               >
                 <Link href="/" onClick={handleNavClick} className="flex shrink-0 items-center">
                   <Image
@@ -294,7 +284,7 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
                 elevation="lg"
                 blur="lg"
                 radius="xl"
-                className="mx-auto mt-6 max-w-7xl p-3"
+                className="mx-auto flex w-full max-w-7xl flex-col rounded-none border-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,248,250,0.9))] p-0 shadow-none sm:mt-4 sm:rounded-[2rem] sm:border sm:border-white/60 sm:bg-[linear-gradient(180deg,rgba(255,255,255,0.68),rgba(255,255,255,0.42))] sm:p-3 sm:shadow-[0_28px_80px_rgba(15,23,42,0.12)]"
               >
                 <motion.nav
                   id="mobile-site-nav"
@@ -302,13 +292,13 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
                   initial="closed"
                   animate="open"
                   exit="closed"
+                  className="flex min-h-[calc(100svh-env(safe-area-inset-top)-5.5rem)] flex-col justify-center gap-2 px-5 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] pt-3 sm:min-h-0 sm:gap-3 sm:px-2 sm:pb-2 sm:pt-1"
                 >
-                  {navigationItems.map((item) => (
+                  {visibleNavigationItems.map((item) => (
                     <motion.div key={item.label} variants={menuItemVariants}>
                       {renderNavigationItem(
                         item,
-                        "flex min-h-[5.5rem] w-full items-center justify-between rounded-[1.25rem] px-5 py-6 text-left text-[2.25rem] leading-[0.96] tracking-[-0.04em] text-slate-900 transition-colors hover:bg-white/55 hover:text-[var(--purple-500)] touch-manipulation sm:min-h-[6rem] sm:px-6 sm:py-6 sm:text-[2.5rem]",
-                        true,
+                        "group relative flex min-h-[4.5rem] w-full items-center rounded-[1.5rem] border border-transparent bg-[linear-gradient(135deg,rgba(255,255,255,0.72),rgba(255,255,255,0.34)_58%,rgba(248,248,250,0.18))] px-4 py-4 text-left text-heading-md leading-[1.02] text-[var(--color-text-primary)] shadow-[inset_0_1px_0_rgba(255,255,255,0.62)] transition-[transform,background-color,border-color,color,box-shadow] duration-200 hover:border-white/70 hover:bg-[linear-gradient(135deg,rgba(255,255,255,0.96),rgba(241,237,252,0.72)_58%,rgba(255,249,236,0.5))] hover:text-[var(--color-text-brand)] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_16px_36px_rgba(15,23,42,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 focus-visible:ring-offset-2 active:scale-[0.995] touch-manipulation sm:min-h-[5rem] sm:px-5 sm:py-5",
                       )}
                     </motion.div>
                   ))}
@@ -363,7 +353,7 @@ export function StudioHeader({ navigationItems }: StudioHeaderProps) {
 
               {/* Desktop navigation - right side */}
               <nav className="hidden items-center gap-8 lg:flex">
-                {navigationItems.map((item) =>
+                {visibleNavigationItems.map((item) =>
                   renderNavigationItem(
                     item,
                     "text-label-lg text-slate-900/90 transition-colors hover:text-[var(--purple-500)]",
