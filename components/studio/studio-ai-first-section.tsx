@@ -12,6 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { WorkflowCarousel } from "@/components/studio/studio-workflow-carousel";
 import { IllustrationCard } from "@/components/ui/illustration-card";
 import { cn } from "@/lib/utils";
 
@@ -110,157 +111,9 @@ function WorkflowShiftGraphic() {
         </div>
       </div>
 
-      {/* The lower lane turns the new workflow into a brighter loop with clear momentum and a final decision. */}
-      <div className="grid gap-6 px-5 py-6 md:grid-cols-[220px_minmax(0,1fr)] md:px-6 md:py-7">
-        <div className="space-y-3 md:pt-10">
-          <div className="space-y-2">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.24em] text-[rgb(255_232_186_/_0.78)]">
-              New AI-native workflow
-            </p>
-            <p className="max-w-[12rem] text-body-sm text-[rgb(255_232_186_/_0.74)]">
-              Faster loops around framing, prototyping, testing, and deciding.
-            </p>
-          </div>
-          <div className="inline-flex items-center gap-2 text-[rgb(255_232_186_/_0.82)]">
-            <Sparkles className="size-4 stroke-[1.8]" />
-            <span className="text-label-md">AI-native loop</span>
-          </div>
-        </div>
-
-        <div className="relative">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[16%] top-[28%] h-24 w-[60%] bg-[radial-gradient(circle,rgba(255,232,186,0.14)_0%,rgba(255,232,186,0)_76%)] blur-3xl"
-          />
-          <div className="relative hidden min-h-[18rem] md:block">
-            {/* The inline SVG keeps the connector paths crisp while the nodes remain editable HTML. */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 920 300"
-              className="pointer-events-none absolute inset-0 h-full w-full"
-              preserveAspectRatio="none"
-            >
-              <defs>
-                <linearGradient id="workflow-arrow" x1="0%" x2="100%" y1="0%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(255,232,186,0.18)" />
-                  <stop offset="45%" stopColor="rgba(255,232,186,0.9)" />
-                  <stop offset="100%" stopColor="rgba(255,232,186,0.18)" />
-                </linearGradient>
-                <linearGradient id="workflow-loop" x1="0%" x2="100%" y1="0%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(203,195,223,0)" />
-                  <stop offset="40%" stopColor="rgba(203,195,223,0.56)" />
-                  <stop offset="100%" stopColor="rgba(255,232,186,0.36)" />
-                </linearGradient>
-                <filter id="workflow-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="4" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              <path d="M160 120 C220 120 250 120 308 120" stroke="url(#workflow-arrow)" strokeWidth="5" strokeLinecap="round" fill="none" filter="url(#workflow-glow)" />
-              <polygon points="306,109 332,120 306,131" fill="rgba(255,232,186,0.92)" />
-
-              <path d="M420 120 C500 120 530 120 612 120" stroke="url(#workflow-arrow)" strokeWidth="5" strokeLinecap="round" fill="none" filter="url(#workflow-glow)" />
-              <polygon points="610,109 636,120 610,131" fill="rgba(255,232,186,0.92)" />
-
-              <path d="M720 120 C770 120 800 120 852 120" stroke="url(#workflow-arrow)" strokeWidth="6" strokeLinecap="round" fill="none" filter="url(#workflow-glow)" />
-              <polygon points="850,108 880,120 850,132" fill="rgba(255,232,186,0.96)" />
-
-              <path d="M668 162 C668 214 626 226 560 228" stroke="url(#workflow-loop)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-              <polygon points="568,219 542,228 568,237" fill="rgba(255,232,186,0.82)" />
-
-              <path d="M548 228 C486 228 454 212 438 164" stroke="url(#workflow-loop)" strokeWidth="3.5" strokeLinecap="round" fill="none" />
-              <polygon points="451,170 430,146 428,178" fill="rgba(255,232,186,0.78)" />
-
-              <path d="M314 120 C356 146 388 150 430 136" stroke="url(#workflow-loop)" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
-              <path d="M320 102 C372 90 398 96 442 118" stroke="url(#workflow-loop)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.42" />
-              <path d="M454 112 C530 92 590 92 654 112" stroke="url(#workflow-loop)" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.34" />
-            </svg>
-
-            <div className="absolute left-0 top-[3.65rem]">
-              <WorkflowNode
-                label="Frame"
-                tone="brand"
-                icon={<Compass className="size-5 stroke-[1.8]" />}
-              />
-            </div>
-
-            <div className="absolute left-[34%] top-[3.2rem]">
-              <WorkflowNode
-                label="Prototype"
-                tone="brand"
-                icon={<AppWindowMac className="size-5 stroke-[1.8]" />}
-              />
-            </div>
-
-            <div className="absolute left-[63%] top-[3.1rem]">
-              <WorkflowNode
-                label="Decide"
-                tone="brand"
-                icon={<BrainCircuit className="size-5 stroke-[1.8]" />}
-              />
-            </div>
-
-            <div className="absolute left-[49%] top-[11.65rem]">
-              <WorkflowNode
-                label="Test"
-                tone="brand"
-                compact
-                icon={<CheckCircle2 className="size-5 stroke-[1.8]" />}
-              />
-            </div>
-
-            <div className="absolute right-0 top-[5.4rem] flex items-center gap-3 text-[rgb(255_232_186_/_0.9)]">
-              <CheckCircle2 className="size-6 stroke-[1.8]" />
-              <div className="space-y-0.5">
-                <p className="text-label-md text-white">Final decision</p>
-                <p className="text-caption text-[rgb(255_232_186_/_0.68)]">Sharper path to launch</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4 md:hidden">
-            <div className="grid gap-4">
-              <WorkflowNode
-                label="Frame"
-                tone="brand"
-                compact
-                icon={<Compass className="size-5 stroke-[1.8]" />}
-              />
-              <WorkflowNode
-                label="Prototype"
-                tone="brand"
-                compact
-                icon={<AppWindowMac className="size-5 stroke-[1.8]" />}
-              />
-              <div className="grid grid-cols-2 gap-4">
-                <WorkflowNode
-                  label="Test"
-                  tone="brand"
-                  compact
-                  icon={<CheckCircle2 className="size-5 stroke-[1.8]" />}
-                />
-                <WorkflowNode
-                  label="Decide"
-                  tone="brand"
-                  compact
-                  icon={<BrainCircuit className="size-5 stroke-[1.8]" />}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 rounded-[1rem] border border-[rgb(255_202_45_/_0.16)] bg-[rgb(255_202_45_/_0.06)] px-4 py-3 text-[rgb(255_232_186_/_0.9)]">
-              <CheckCircle2 className="size-5 stroke-[1.8]" />
-              <div className="space-y-0.5">
-                <p className="text-label-md text-white">Final decision</p>
-                <p className="text-caption text-[rgb(255_232_186_/_0.68)]">Sharper path to launch</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* The lower lane replaces the static diagram with an interactive step-by-step carousel. */}
+      <div className="px-5 py-5 md:px-6 md:py-6">
+        <WorkflowCarousel />
       </div>
     </div>
   );
@@ -577,8 +430,7 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
         <div className="max-w-4xl space-y-4 md:space-y-5">
           <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-inverse-muted)]">AI-first DNA</p>
           <h2
-            className="text-section-display text-white md:max-w-4xl"
-            style={{ fontSize: "3.5rem", fontWeight: 600, wordSpacing: ".2rem" }}
+            className="text-section-display text-white md:max-w-4xl [font-size:3.5rem] [font-weight:600] [word-spacing:.2rem]"
           >
             The 0-to-1 workflow changed.
           </h2>
@@ -587,11 +439,11 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
           </p>
         </div>
 
-        {/* The workflow anchor card explains the overall shift before the supporting cards unpack the details. */}
+        {/* The workflow anchor card shows old vs new workflow, with the lower lane as an interactive carousel. */}
         <div className="mt-10">
           <IllustrationCard
             title="The workflow changed"
-            body="The old path was idea -> design -> build -> launch. The AI-native path is frame -> prototype -> test -> decide."
+            body="The old path was idea → design → build → launch. The AI-native path is frame → prototype → test → decide."
             illustration={<WorkflowShiftGraphic />}
           />
         </div>
