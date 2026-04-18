@@ -352,11 +352,11 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-80 w-3xl -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(88,41,199,0.45)_0%,rgba(88,41,199,0)_65%)] blur-3xl"
+        className="pointer-events-none absolute right-[-8rem] top-[-10rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(150,136,192,0.18)_0%,rgba(150,136,192,0)_72%)] blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-24 -top-16 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(120,80,220,0.22)_0%,rgba(120,80,220,0)_70%)] blur-3xl"
+        className="pointer-events-none absolute bottom-[-8rem] left-[18%] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.1)_0%,rgba(255,202,45,0)_74%)] blur-3xl"
       />
 
       {/* The dark rails preserve the homepage framing while adapting it to the night section. */}
