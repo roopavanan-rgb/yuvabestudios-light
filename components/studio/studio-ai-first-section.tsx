@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import { WorkflowCarousel } from "@/components/studio/studio-workflow-carousel";
+import { ScrollReveal } from "@/components/studio/studio-ai-micro-interactions";
 import { IllustrationCard } from "@/components/ui/illustration-card";
 import { cn } from "@/lib/utils";
 
@@ -148,7 +149,7 @@ function FramingInputRow({ number, label, tag }: { number: string; label: string
 
 function FramingCard() {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)]">
+    <div className="group relative h-full overflow-hidden ds-card-brand-night rounded-2xl">
       <div className="pointer-events-none absolute -left-12 -top-12 size-40 rounded-full bg-[radial-gradient(circle,rgb(88_41_199/0.2)_0%,transparent_70%)] transition-opacity duration-500 group-hover:opacity-150" />
 
       <div className="relative z-10 p-6 md:p-7">
@@ -265,7 +266,7 @@ const judgmentItems = [
 
 function JudgmentCard() {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)]">
+    <div className="group relative h-full overflow-hidden ds-card-brand-night rounded-2xl">
       <div className="pointer-events-none absolute -right-12 -top-12 size-48 rounded-full bg-[radial-gradient(circle,rgb(88_41_199/0.15)_0%,transparent_70%)] transition-opacity duration-500 group-hover:opacity-150" />
 
       <div className="relative z-10 p-6 md:p-7">
@@ -367,43 +368,57 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 md:px-10 md:py-20">
         {/* The intro keeps the section argument tight so the graphic grid can do the rest of the work. */}
-        <div className="max-w-4xl space-y-4 md:space-y-5">
-          <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-inverse-muted)]">AI-first DNA</p>
-          <h2
-            className="text-section-display text-white md:max-w-4xl [font-size:3.5rem] [font-weight:600] [word-spacing:.2rem]"
-          >
-            The 0-to-1 workflow changed.
-          </h2>
-          <p className="max-w-3xl text-body-lg text-[var(--color-text-inverse-muted)]">
-            Execution got cheaper. The edge moved to framing, faster experiments, richer MVPs, and better judgment.
-          </p>
-        </div>
+        <ScrollReveal delay={0}>
+          <div className="max-w-4xl space-y-4 md:space-y-5">
+            <p className="text-label-sm uppercase tracking-[0.22em] text-(--color-text-inverse-muted)">AI-first DNA</p>
+            <h2
+              className="text-section-display text-white md:max-w-4xl text-[3.5rem] font-semibold [word-spacing:.2rem]"
+            >
+              The 0-to-1 workflow changed.
+            </h2>
+            <p className="max-w-3xl text-body-lg text-(--color-text-inverse-muted)">
+              Execution got cheaper. The edge moved to framing, faster experiments, richer MVPs, and better judgment.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* The workflow anchor card shows old vs new workflow, with the lower lane as an interactive carousel. */}
-        <div className="mt-10">
+        <ScrollReveal delay={120} className="mt-10">
           <IllustrationCard
             title="The workflow changed"
             body="The old path was idea → design → build → launch. The AI-native path is frame → prototype → test → decide."
             illustration={<WorkflowShiftGraphic />}
           />
-        </div>
+        </ScrollReveal>
 
         {/* The lower grid breaks the change into four scan-friendly founder-relevant shifts. */}
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)] p-6 md:p-7">
-            <h3 className="mb-3 text-[1rem] font-semibold text-white">Making got faster</h3>
-            <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
-              From prompt to prototype to iteration — teams can explore and ship far earlier than before, without waiting for a full build.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)] p-6 md:p-7">
-            <h3 className="mb-3 text-[1rem] font-semibold text-white">Richer MVPs, earlier</h3>
-            <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
-              First versions can be usable enough to learn from — wireframe to interactive to useful signal — without a polished production build.
-            </p>
-          </div>
-          <FramingCard />
-          <JudgmentCard />
+          <ScrollReveal delay={80} className="h-full">
+            <div className="h-full ds-card-brand-night rounded-2xl p-6 md:p-7">
+              <h3 className="mb-3 font-display text-[clamp(1.75rem,2.4vw,2.2rem)] leading-[1.06] tracking-[-0.03em] text-white">Making got faster</h3>
+              <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
+                From prompt to prototype to iteration — teams can explore and ship far earlier than before, without waiting for a full build.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={160} className="h-full">
+            <div className="h-full ds-card-brand-night rounded-2xl p-6 md:p-7">
+              <h3 className="mb-3 font-display text-[clamp(1.75rem,2.4vw,2.2rem)] leading-[1.06] tracking-[-0.03em] text-white">Richer MVPs, earlier</h3>
+              <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
+                First versions can be usable enough to learn from — wireframe to interactive to useful signal — without a polished production build.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={240} className="h-full">
+            <div className="h-full">
+              <FramingCard />
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={320} className="h-full">
+            <div className="h-full">
+              <JudgmentCard />
+            </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>
