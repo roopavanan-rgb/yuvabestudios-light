@@ -84,9 +84,9 @@ function StagePanel({ stage }: { stage: WorkflowStage }) {
         </div>
 
         {/* Steps */}
-        <div className="flex flex-col gap-4">
+        <div className="grid gap-4">
           {stage.steps.map((step, i) => (
-            <div key={step.label} className={["ml-0", "ml-14", "ml-28"][i]}>
+            <div key={step.label} className={["place-self-start", "place-self-center", "place-self-end"][i]}>
               {step.highlight ? (
                 <div className="inline-flex items-center gap-3 rounded-md px-4 py-2.5 shadow-[inset_0_0_0_1px_rgb(88_120_255/0.25)]">
                   <span className="h-4 w-[3px] flex-shrink-0 rounded-full bg-[rgb(88_120_255)]" />

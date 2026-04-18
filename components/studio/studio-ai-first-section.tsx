@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment } from "react";
 import {
   Cog,
   Hourglass,
@@ -12,10 +12,6 @@ import { WorkflowCarousel } from "@/components/studio/studio-workflow-carousel";
 import { IllustrationCard } from "@/components/ui/illustration-card";
 import { cn } from "@/lib/utils";
 
-type GraphicStep = {
-  label: string;
-  tone?: "muted" | "brand" | "warm";
-};
 
 type LegacyStep = {
   label: string;
@@ -56,26 +52,14 @@ const legacyWorkflowSteps: LegacyStep[] = [
   },
 ];
 
-const speedGraphicSteps: GraphicStep[] = [
-  { label: "Prompt", tone: "muted" },
-  { label: "Prototype", tone: "brand" },
-  { label: "Iteration", tone: "muted" },
+
+const framingInputRows = [
+  { number: "01", label: "Signals", tag: "what's moving" },
+  { number: "02", label: "Users", tag: "who's hurting" },
+  { number: "03", label: "Assumptions", tag: "what must be true" },
 ];
 
-const framingInputs = ["Signals", "Users", "Assumptions"];
 
-
-function workflowStepClassName(tone: GraphicStep["tone"] = "muted") {
-  if (tone === "brand") {
-    return "border-[rgb(88_41_199_/_0.48)] bg-[rgb(88_41_199_/_0.18)] text-white shadow-[0_0_0_1px_rgb(88_41_199_/_0.2),0_12px_30px_rgb(88_41_199_/_0.18)]";
-  }
-
-  if (tone === "warm") {
-    return "border-[rgb(255_202_45_/_0.28)] bg-[rgb(255_202_45_/_0.12)] text-white";
-  }
-
-  return "border-[rgb(203_195_223_/_0.12)] bg-[rgb(255_255_255_/_0.04)] text-[var(--color-text-inverse-muted)]";
-}
 
 // This lane graphic compares the old linear workflow with the tighter AI-native loop in one glance.
 function WorkflowShiftGraphic() {
@@ -151,170 +135,68 @@ function WorkflowShiftGraphic() {
 }
 
 
-// This compact flow keeps the speed story to three visible beats so the card stays scannable on mobile.
-function SpeedGraphic() {
-  return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      {speedGraphicSteps.map((step, index) => (
-        <div key={step.label} className="relative">
-          {index < speedGraphicSteps.length - 1 ? (
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute left-[calc(100%-0.25rem)] top-1/2 hidden h-px w-[calc(100%+0.5rem)] -translate-y-1/2 sm:block bg-[rgb(88_41_199_/_0.28)]"
-            />
-          ) : null}
 
-          <div
-            className={cn(
-              "min-h-[7.5rem] cursor-pointer rounded-[1.25rem] border px-4 py-4 transition-all duration-300 ease-out hover:scale-[1.04] hover:shadow-[0_8px_32px_rgba(88,41,199,0.2)]",
-              workflowStepClassName(step.tone),
-              step.tone === "brand"
-                ? "before:absolute before:inset-x-[18%] before:top-[18%] before:h-8 before:rounded-full before:bg-[radial-gradient(circle,rgba(150,136,192,0.42)_0%,rgba(150,136,192,0)_78%)] before:blur-xl"
-                : undefined
-            )}
-          >
-            <div className="relative z-10 flex h-full flex-col justify-between">
-              <span className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-inverse-muted)]">Step {index + 1}</span>
-              <span className="text-heading-sm text-white">{step.label}</span>
-            </div>
-          </div>
-        </div>
-      ))}
+function FramingInputRow({ number, label, tag }: { number: string; label: string; tag: string }) {
+  return (
+    <div className="group flex cursor-default items-center gap-3 rounded-xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.03)] px-4 py-3 transition-all duration-200 hover:translate-x-1.5 hover:border-[rgb(88_41_199/0.45)] hover:bg-[rgb(88_41_199/0.08)]">
+      <span className="w-6 shrink-0 text-[0.62rem] font-bold tabular-nums tracking-wider text-[rgb(88_41_199)]">{number}</span>
+      <span className="flex-1 text-[0.88rem] font-semibold text-white">{label}</span>
+      <span className="text-[0.7rem] italic text-[rgb(255_255_255/0.3)]">{tag}</span>
     </div>
   );
 }
 
-// These stacked panels show fidelity rising quickly without needing a literal UI screenshot.
-function MvpGraphic() {
+function FramingCard() {
   return (
-    <div className="grid gap-3 sm:grid-cols-3">
-      {[
-        {
-          eyebrow: "First pass",
-          title: "Wireframe",
-          chrome: "bg-[rgb(255_255_255_/_0.05)]",
-        },
-        {
-          eyebrow: "Soon after",
-          title: "Interactive",
-          chrome: "bg-[rgb(88_41_199_/_0.16)] border-[rgb(88_41_199_/_0.42)]",
-        },
-        {
-          eyebrow: "Ready to learn",
-          title: "Useful signal",
-          chrome: "bg-[rgb(255_202_45_/_0.08)] border-[rgb(255_202_45_/_0.2)]",
-        },
-      ].map((panel) => (
-        <div
-          key={panel.title}
-          className={cn(
-            "cursor-pointer rounded-[1.25rem] border border-[rgb(203_195_223/0.12)] p-4 transition-all duration-300 ease-out hover:scale-[1.04] hover:border-[rgb(203_195_223/0.22)]",
-            panel.chrome
-          )}
-        >
-          <div className="space-y-3">
-            <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-inverse-muted)]">{panel.eyebrow}</p>
-            <div className="space-y-2">
-              <div className="h-2.5 w-20 rounded-full bg-[rgb(255_255_255_/_0.16)]" />
-              <div className="h-2.5 w-full rounded-full bg-[rgb(255_255_255_/_0.1)]" />
-              <div className="h-2.5 w-[78%] rounded-full bg-[rgb(255_255_255_/_0.08)]" />
-            </div>
-            <p className="text-label-lg text-white">{panel.title}</p>
+    <div className="group relative overflow-hidden rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)]">
+      <div className="pointer-events-none absolute -left-12 -top-12 size-40 rounded-full bg-[radial-gradient(circle,rgb(88_41_199/0.2)_0%,transparent_70%)] transition-opacity duration-500 group-hover:opacity-150" />
+
+      <div className="relative z-10 p-6 md:p-7">
+        {/* Eyebrow + badge */}
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="size-1.5 rounded-full bg-[rgb(88_41_199)]" />
+            <span className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[rgb(88_41_199)]">I · Framing</span>
           </div>
+          <span className="text-[0.65rem] tabular-nums tracking-widest text-[rgb(255_255_255/0.25)]">01/02</span>
         </div>
-      ))}
-    </div>
-  );
-}
 
-// This funnel makes the “many inputs into one wedge” framing idea visible without turning into a full process map.
-function FramingGraphic() {
-  return (
-    <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
-      <div className="space-y-3">
-        {framingInputs.map((input) => (
-          <div
-            key={input}
-            className="cursor-default rounded-full border border-[rgb(203_195_223/0.12)] bg-[rgb(255_255_255/0.04)] px-4 py-2.5 text-label-md text-(--color-text-inverse-muted) transition-all duration-200 hover:translate-x-1.5 hover:border-[rgb(88_41_199/0.35)] hover:bg-[rgb(88_41_199/0.08)] hover:text-white"
-          >
-            {input}
+        {/* Title + subtitle */}
+        <h3 className="mb-2 font-display text-[clamp(1.75rem,2.4vw,2.2rem)] leading-[1.06] tracking-[-0.03em] text-white">
+          Framing matters <em className="not-italic text-[rgb(130_100_255)]">more.</em>
+        </h3>
+        <p className="mb-7 text-[0.84rem] leading-relaxed text-[rgb(255_255_255/0.42)]">
+          When execution is cheap, picking the right problem and wedge becomes the real advantage. That&apos;s still human work.
+        </p>
+
+        {/* Diagram */}
+        <div className="flex items-center">
+          <div className="flex flex-1 flex-col gap-3">
+            {framingInputRows.map((row) => (
+              <FramingInputRow key={row.label} number={row.number} label={row.label} tag={row.tag} />
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div className="relative mx-auto h-28 w-full max-w-[12rem] md:w-48">
-        <div className="absolute left-0 right-10 top-1/2 h-px -translate-y-1/2 bg-[rgb(203_195_223_/_0.16)]" />
-        <div className="absolute right-0 top-1/2 h-20 w-24 -translate-y-1/2 overflow-hidden rounded-[1.25rem] border border-[rgb(88_41_199_/_0.4)] bg-[rgb(88_41_199_/_0.16)] shadow-[0_16px_36px_rgb(88_41_199_/_0.18)]">
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.1),rgba(255,255,255,0))]" />
-          <div className="relative flex h-full items-center justify-center px-4 text-center text-label-md text-white">
-            Right wedge
-          </div>
-        </div>
-        <div className="absolute left-[22%] top-[18%] h-px w-[36%] rotate-[22deg] bg-[rgb(203_195_223_/_0.18)]" />
-        <div className="absolute left-[22%] top-1/2 h-px w-[36%] -translate-y-1/2 bg-[rgb(203_195_223_/_0.18)]" />
-        <div className="absolute left-[22%] bottom-[18%] h-px w-[36%] -rotate-[22deg] bg-[rgb(203_195_223_/_0.18)]" />
-      </div>
-    </div>
-  );
-}
+          <svg width="88" height="144" viewBox="0 0 88 144" fill="none" className="shrink-0" aria-hidden>
+            <path d="M 0 20 C 36 20 50 72 65 72" stroke="rgb(88 41 199 / 0.38)" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 0 72 L 65 72" stroke="rgb(88 41 199 / 0.38)" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 0 124 C 36 124 50 72 65 72" stroke="rgb(88 41 199 / 0.38)" strokeWidth="1.3" strokeLinecap="round" />
+            <path d="M 65 72 L 88 72" stroke="rgb(88 41 199 / 0.55)" strokeWidth="1.3" strokeLinecap="round" />
+            <circle cx="65" cy="72" r="2.5" fill="rgb(88 41 199)" />
+          </svg>
 
-type JudgmentRowProps = {
-  icon: ReactNode;
-  title: string;
-  tone: "cool" | "warm";
-};
-
-// These rows mirror the reference card's left/right evidence list while staying inside Yuvabe's palette.
-function JudgmentRow({ icon, title, tone }: JudgmentRowProps) {
-  return (
-    <div className="group grid cursor-default grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3 transition-transform duration-200 hover:translate-x-1.5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-4">
-      <span
-        className={cn(
-          "flex size-10 items-center justify-center transition-all duration-200 group-hover:scale-110 md:size-11",
-          tone === "warm"
-            ? "text-[var(--green-500)] group-hover:drop-shadow-[0_0_6px_rgb(255_202_45/0.6)]"
-            : "text-[var(--cyan-200)] group-hover:drop-shadow-[0_0_6px_rgb(88_41_199/0.6)]"
-        )}
-      >
-        {icon}
-      </span>
-      <p className="text-heading-md leading-[1.04] tracking-[-0.02em] text-white transition-colors duration-200 group-hover:text-white/90">{title}</p>
-    </div>
-  );
-}
-
-// The inline SVG keeps the beam and fulcrum geometry close to the reference while labels remain responsive HTML.
-function JudgmentBalanceGraphic() {
-  return (
-    <div className="pt-1">
-      <div className="relative mx-auto w-full max-w-[40rem]">
-        {/* Labels above SVG */}
-        <div className="mb-5 flex justify-around px-2 md:px-3">
-          {/* AI circle — violet */}
-          <div className="group flex size-36 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(88_41_199/0.75)] bg-[rgb(88_41_199/0.14)] shadow-[0_0_28px_rgb(88_41_199/0.22)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(88_41_199/1)] hover:bg-[rgb(88_41_199/0.22)] hover:shadow-[0_0_48px_rgb(88_41_199/0.45)] md:size-40">
-            <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[rgb(160_130_255)] transition-colors duration-300 group-hover:text-[rgb(180_160_255)]">AI</p>
-            <p className="mt-1 text-center font-display text-[0.95rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
-              Many<br />AI-Generated<br />Options
-            </p>
-          </div>
-          {/* Human circle — yellow */}
-          <div className="group flex size-36 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(255_202_45/0.65)] bg-[rgb(255_202_45/0.07)] shadow-[0_0_28px_rgb(255_202_45/0.15)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(255_202_45/1)] hover:bg-[rgb(255_202_45/0.13)] hover:shadow-[0_0_48px_rgb(255_202_45/0.35)] md:size-40">
-            <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[rgb(255_202_45)] transition-colors duration-300 group-hover:text-[rgb(255_220_100)]">Human</p>
-            <p className="mt-1 text-center font-display text-[0.95rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
-              One<br />Human<br />Judgment
-            </p>
+          <div className="shrink-0 w-[8.5rem] cursor-default rounded-2xl border border-[rgb(88_41_199/0.5)] bg-[rgb(88_41_199/0.16)] p-4 shadow-[0_0_28px_rgb(88_41_199/0.2)] transition-all duration-300 hover:border-[rgb(88_41_199/0.85)] hover:shadow-[0_0_48px_rgb(88_41_199/0.4)]">
+            <p className="mb-2 text-[0.55rem] font-bold uppercase tracking-[0.24em] text-[rgb(160_130_255/0.75)]">Output</p>
+            <p className="font-display text-[1.1rem] leading-tight tracking-[-0.02em] text-white">Right<br />Wedge</p>
+            <p className="mt-3 text-[0.58rem] font-medium uppercase tracking-[0.16em] text-[rgb(88_41_199/0.7)]">→ Sharpest point</p>
           </div>
         </div>
 
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 640 150"
-          className="h-34 w-full"
-          preserveAspectRatio="none"
-        >
-          <rect x="18" y="28" width="604" height="10" fill="none" stroke="rgb(120,80,220)" strokeWidth="2.4" opacity="0.6" />
-          <path d="M320 41 L365 145 H275 Z" fill="none" stroke="rgb(255,202,45)" strokeWidth="2.4" opacity="0.6" />
-        </svg>
+        {/* Footer */}
+        <div className="mt-6 flex items-center justify-between border-t border-dashed border-[rgb(255_255_255/0.08)] pt-4">
+          <p className="text-[0.72rem] italic text-[rgb(255_255_255/0.28)]">Inputs are commodity.</p>
+          <p className="text-[0.72rem] italic text-[rgb(255_255_255/0.28)]">Framing is the moat.</p>
+        </div>
       </div>
     </div>
   );
@@ -322,105 +204,139 @@ function JudgmentBalanceGraphic() {
 
 function JudgmentBurstIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 5v4" />
-      <path d="M16 23v4" />
-      <path d="M6.5 9.5 9.6 12" />
-      <path d="M22.4 20 25.5 22.5" />
-      <path d="M5 16h4" />
-      <path d="M23 16h4" />
-      <path d="M6.5 22.5 9.6 20" />
-      <path d="M22.4 12 25.5 9.5" />
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 5v4M16 23v4M6.5 9.5 9.6 12M22.4 20 25.5 22.5M5 16h4M23 16h4M6.5 22.5 9.6 20M22.4 12 25.5 9.5" />
       <path d="M13.2 13.8c0-1.9 1.4-3.3 2.8-3.3s2.8 1.4 2.8 3.3c0 2.1-2.8 4.3-2.8 4.3s-2.8-2.2-2.8-4.3Z" />
-      <path d="M12 22h8" />
     </svg>
   );
 }
 
 function JudgmentLinesIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-      <path d="M4 9h24" />
-      <path d="M4 16h18" />
-      <path d="M4 23h24" />
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M4 9h24M4 16h18M4 23h24" />
     </svg>
   );
 }
 
 function JudgmentDoorIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7 24V9.5L18 7v17" />
-      <path d="M18 8.5 25 10v14l-7-1.5" />
-      <path d="M14 16h.1" />
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7 24V9.5L18 7v17M18 8.5 25 10v14l-7-1.5M14 16h.1" />
     </svg>
   );
 }
 
 function JudgmentSelectionIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M16 7c2.5 0 4.5 2 4.5 4.5S18.5 16 16 16s-4.5-2-4.5-4.5S13.5 7 16 7Z" />
       <path d="M7 24c1.4-3.6 4.4-5.6 9-5.6 4.6 0 7.6 2 9 5.6" />
-      <path d="M23.5 7.5 27 11l-3.5 3.5" />
-      <path d="M27 11h-7" />
+      <path d="M23.5 7.5 27 11l-3.5 3.5M27 11h-7" />
     </svg>
   );
 }
 
 function JudgmentDirectionIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="16" cy="16" r="9" />
-      <path d="M16 7v18" />
-      <path d="M12 12.5 16 8l4 4.5" />
-      <path d="M12.5 24H20" />
+      <path d="M16 7v18M12 12.5 16 8l4 4.5M12.5 24H20" />
     </svg>
   );
 }
 
 function JudgmentValueIcon() {
   return (
-    <svg viewBox="0 0 32 32" className="size-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 6v20" />
-      <path d="M8 10h16" />
-      <path d="M10.5 10 7 17h7l-3.5-7Z" />
-      <path d="M25 17h-7l3.5-7 3.5 7Z" />
-      <path d="M12 25h8" />
+    <svg viewBox="0 0 32 32" className="size-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 6v20M8 10h16M10.5 10 7 17h7l-3.5-7ZM25 17h-7l3.5-7 3.5 7ZM12 25h8" />
     </svg>
   );
 }
 
-// This replica follows the reference card closely while translating it into Yuvabe's token-led dark palette.
-function JudgmentGraphic() {
+const judgmentItems = [
+  { Icon: JudgmentBurstIcon, title: "Abundance of Choices", desc: "Generation is cheap; options multiply fast.", tone: "muted" as const },
+  { Icon: JudgmentSelectionIcon, title: "Strategic Selection", desc: "One choice, well-reasoned.", tone: "bright" as const },
+  { Icon: JudgmentLinesIcon, title: "Lack of Clarity", desc: "Possibility without a point of view.", tone: "muted" as const },
+  { Icon: JudgmentDirectionIcon, title: "Clear Direction", desc: "A single, committed line of travel.", tone: "bright" as const },
+  { Icon: JudgmentDoorIcon, title: "Increased Possibility", desc: "More doors open than before.", tone: "muted" as const },
+  { Icon: JudgmentValueIcon, title: "Determined Value", desc: "Worth is set at the point of choice.", tone: "bright" as const },
+];
+
+function JudgmentCard() {
   return (
-    <div className="px-2 pb-1 pt-2 md:px-3">
-      <div className="space-y-8 md:space-y-9">
-        {/* The centered headline mirrors the reference card while staying in Yuvabe's typography system. */}
-        <div className="mx-auto max-w-[35rem] text-center">
-          <h4 className="font-display text-[clamp(1.9rem,2.7vw,2.85rem)] leading-[0.98] tracking-[-0.045em] text-white">
-            AI expands possibilities, but human judgment
-            <br />
-            determines value.
-          </h4>
+    <div className="group relative overflow-hidden rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)]">
+      <div className="pointer-events-none absolute -right-12 -top-12 size-48 rounded-full bg-[radial-gradient(circle,rgb(88_41_199/0.15)_0%,transparent_70%)] transition-opacity duration-500 group-hover:opacity-150" />
+
+      <div className="relative z-10 p-6 md:p-7">
+        {/* Eyebrow + badge */}
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="size-1.5 rounded-full bg-[rgb(88_41_199)]" />
+            <span className="text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[rgb(88_41_199)]">II · Judgment</span>
+          </div>
+          <span className="text-[0.65rem] tabular-nums tracking-widest text-[rgb(255_255_255/0.25)]">02/02</span>
         </div>
 
-        {/* The left/right evidence columns stay close to the reference spacing and hierarchy. */}
-        <div className="grid gap-x-10 gap-y-4 sm:grid-cols-2 sm:gap-y-5 md:gap-x-16">
-          <div className="space-y-4 md:space-y-5">
-            <JudgmentRow icon={<JudgmentBurstIcon />} title="Abundance of Choices" tone="cool" />
-            <JudgmentRow icon={<JudgmentLinesIcon />} title="Lack of Clarity" tone="cool" />
-            <JudgmentRow icon={<JudgmentDoorIcon />} title="Increased Possibility" tone="cool" />
-          </div>
+        {/* Title */}
+        <h3 className="mb-3 font-display text-[clamp(1.75rem,2.4vw,2.2rem)] leading-[1.06] tracking-[-0.03em] text-white">
+          AI expands possibilities, but{" "}
+          <em className="not-italic text-[rgb(130_100_255)]">human judgment</em>{" "}
+          determines value.
+        </h3>
+        <p className="mb-7 text-[0.84rem] leading-relaxed text-[rgb(255_255_255/0.42)]">
+          AI expands possibilities. Strategic selection, clear direction, and determined value still come from people who know what they&apos;re building toward.
+        </p>
 
-          <div className="space-y-4 md:space-y-5">
-            <JudgmentRow icon={<JudgmentSelectionIcon />} title="Strategic Selection" tone="warm" />
-            <JudgmentRow icon={<JudgmentDirectionIcon />} title="Clear Direction" tone="warm" />
-            <JudgmentRow icon={<JudgmentValueIcon />} title="Determined Value" tone="warm" />
-          </div>
+        {/* 2-column grid of items */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-5">
+          {judgmentItems.map(({ Icon, title, desc, tone }) => (
+            <div
+              key={title}
+              className="group/item flex cursor-default flex-col gap-2 transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              <div className={cn(
+                "flex size-7 items-center justify-center rounded-lg transition-all duration-200",
+                tone === "bright"
+                  ? "bg-[rgb(88_41_199/0.2)] text-[rgb(160_130_255)] group-hover/item:bg-[rgb(88_41_199/0.3)] group-hover/item:drop-shadow-[0_0_6px_rgb(88_41_199/0.6)]"
+                  : "bg-[rgb(255_255_255/0.06)] text-[rgb(255_255_255/0.45)] group-hover/item:bg-[rgb(255_255_255/0.1)] group-hover/item:text-[rgb(255_255_255/0.65)]"
+              )}>
+                <Icon />
+              </div>
+              <p className={cn(
+                "text-[0.85rem] font-semibold leading-snug",
+                tone === "bright" ? "text-white" : "text-[rgb(255_255_255/0.72)]"
+              )}>
+                {title}
+              </p>
+              <p className="text-[0.72rem] leading-relaxed text-[rgb(255_255_255/0.35)]">{desc}</p>
+            </div>
+          ))}
         </div>
 
-        <JudgmentBalanceGraphic />
+        {/* Balance beam — AI vs Human judgment */}
+        <div className="mt-8 border-t border-[rgb(255_255_255/0.06)] pt-6">
+          <div className="relative mx-auto w-full max-w-xl">
+            <div className="mb-4 flex justify-around px-2">
+              <div className="group flex size-32 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(88_41_199/0.7)] bg-[rgb(88_41_199/0.12)] shadow-[0_0_24px_rgb(88_41_199/0.2)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(88_41_199/1)] hover:shadow-[0_0_40px_rgb(88_41_199/0.42)] md:size-36">
+                <p className="text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-[rgb(160_130_255)] transition-colors duration-300 group-hover:text-[rgb(180_160_255)]">AI</p>
+                <p className="mt-1 text-center font-display text-[0.88rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
+                  Many<br />AI-Generated<br />Options
+                </p>
+              </div>
+              <div className="group flex size-32 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(255_202_45/0.55)] bg-[rgb(255_202_45/0.06)] shadow-[0_0_24px_rgb(255_202_45/0.12)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(255_202_45/1)] hover:shadow-[0_0_40px_rgb(255_202_45/0.3)] md:size-36">
+                <p className="text-[0.55rem] font-semibold uppercase tracking-[0.22em] text-[rgb(255_202_45)] transition-colors duration-300 group-hover:text-[rgb(255_220_100)]">Human</p>
+                <p className="mt-1 text-center font-display text-[0.88rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
+                  One<br />Human<br />Judgment
+                </p>
+              </div>
+            </div>
+            <svg aria-hidden viewBox="0 0 640 120" className="w-full" preserveAspectRatio="none">
+              <rect x="18" y="22" width="604" height="8" fill="none" stroke="rgb(120,80,220)" strokeWidth="2" opacity="0.55" />
+              <path d="M320 33 L362 115 H278 Z" fill="none" stroke="rgb(255,202,45)" strokeWidth="2" opacity="0.55" />
+            </svg>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -436,11 +352,11 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute right-[-8rem] top-[-10rem] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,rgba(150,136,192,0.18)_0%,rgba(150,136,192,0)_72%)] blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 h-80 w-3xl -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(88,41,199,0.45)_0%,rgba(88,41,199,0)_65%)] blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute bottom-[-8rem] left-[18%] h-[18rem] w-[18rem] rounded-full bg-[radial-gradient(circle,rgba(255,202,45,0.1)_0%,rgba(255,202,45,0)_74%)] blur-3xl"
+        className="pointer-events-none absolute -right-24 -top-16 h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(120,80,220,0.22)_0%,rgba(120,80,220,0)_70%)] blur-3xl"
       />
 
       {/* The dark rails preserve the homepage framing while adapting it to the night section. */}
@@ -474,27 +390,20 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
 
         {/* The lower grid breaks the change into four scan-friendly founder-relevant shifts. */}
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <IllustrationCard
-            title="Making got faster"
-            body="From prompt to prototype to iteration, teams can explore and ship far earlier than before."
-            illustration={<SpeedGraphic />}
-          />
-          <IllustrationCard
-            title="Richer MVPs, earlier"
-            body="First versions can be usable enough to learn from without waiting for a full polished build."
-            illustration={<MvpGraphic />}
-          />
-          <IllustrationCard
-            title="Framing matters more"
-            body="When execution gets cheaper, picking the right problem and wedge becomes the real advantage."
-            illustration={<FramingGraphic />}
-          />
-          <IllustrationCard
-            title="Judgment matters more"
-            body="AI expands options fast, but taste, evidence, and prioritization still decide what should ship."
-            illustration={<JudgmentGraphic />}
-            graphicOnly
-          />
+          <div className="rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)] p-6 md:p-7">
+            <h3 className="mb-3 text-[1rem] font-semibold text-white">Making got faster</h3>
+            <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
+              From prompt to prototype to iteration — teams can explore and ship far earlier than before, without waiting for a full build.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-[rgb(203_195_223/0.1)] bg-[rgb(255_255_255/0.025)] p-6 md:p-7">
+            <h3 className="mb-3 text-[1rem] font-semibold text-white">Richer MVPs, earlier</h3>
+            <p className="text-[0.88rem] leading-relaxed text-[rgb(255_255_255/0.45)]">
+              First versions can be usable enough to learn from — wireframe to interactive to useful signal — without a polished production build.
+            </p>
+          </div>
+          <FramingCard />
+          <JudgmentCard />
         </div>
       </div>
     </section>
