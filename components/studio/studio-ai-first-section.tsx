@@ -1,9 +1,5 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import {
-  AppWindowMac,
-  BrainCircuit,
-  CheckCircle2,
-  Compass,
   Cog,
   Hourglass,
   Lightbulb,
@@ -21,11 +17,43 @@ type GraphicStep = {
   tone?: "muted" | "brand" | "warm";
 };
 
-const legacyWorkflowSteps: GraphicStep[] = [
-  { label: "Idea", tone: "muted" },
-  { label: "Design", tone: "muted" },
-  { label: "Build", tone: "muted" },
-  { label: "Launch", tone: "muted" },
+type LegacyStep = {
+  label: string;
+  subtitle: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  circleClass: string;
+  labelClass: string;
+};
+
+const legacyWorkflowSteps: LegacyStep[] = [
+  {
+    label: "Idea",
+    subtitle: "Discovery & sparks",
+    Icon: Lightbulb,
+    circleClass: "border-[rgb(88_41_199/0.55)] bg-[rgb(88_41_199/0.2)] shadow-[0_0_32px_rgb(88_41_199/0.28),inset_0_0_16px_rgb(88_41_199/0.1)]",
+    labelClass: "text-[rgb(160_130_255)]",
+  },
+  {
+    label: "Design",
+    subtitle: "Specs & mockups",
+    Icon: PencilRuler,
+    circleClass: "border-[rgb(32_160_185/0.55)] bg-[rgb(32_160_185/0.2)] shadow-[0_0_32px_rgb(32_160_185/0.28),inset_0_0_16px_rgb(32_160_185/0.1)]",
+    labelClass: "text-[rgb(60_200_225)]",
+  },
+  {
+    label: "Build",
+    subtitle: "Engineering & QA",
+    Icon: Cog,
+    circleClass: "border-[rgb(25_145_120/0.55)] bg-[rgb(25_145_120/0.2)] shadow-[0_0_32px_rgb(25_145_120/0.28),inset_0_0_16px_rgb(25_145_120/0.1)]",
+    labelClass: "text-[rgb(50_190_165)]",
+  },
+  {
+    label: "Launch",
+    subtitle: "Release & ship",
+    Icon: Rocket,
+    circleClass: "border-[rgb(130_155_35/0.55)] bg-[rgb(130_155_35/0.2)] shadow-[0_0_32px_rgb(130_155_35/0.28),inset_0_0_16px_rgb(130_155_35/0.1)]",
+    labelClass: "text-[rgb(175_200_55)]",
+  },
 ];
 
 const speedGraphicSteps: GraphicStep[] = [
@@ -35,15 +63,7 @@ const speedGraphicSteps: GraphicStep[] = [
 ];
 
 const framingInputs = ["Signals", "Users", "Assumptions"];
-const legacyWorkflowIcons = [Lightbulb, PencilRuler, Cog, Rocket];
 
-type WorkflowNodeProps = {
-  label: string;
-  tone?: "muted" | "brand";
-  className?: string;
-  icon?: ReactNode;
-  compact?: boolean;
-};
 
 function workflowStepClassName(tone: GraphicStep["tone"] = "muted") {
   if (tone === "brand") {
@@ -62,40 +82,51 @@ function WorkflowShiftGraphic() {
   return (
     <div className="overflow-hidden rounded-[1.5rem] border border-[rgb(203_195_223_/_0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))]">
       {/* The upper lane frames the old path as a slower, dimmer sequence. */}
-      <div className="grid gap-6 px-5 py-5 md:grid-cols-[220px_minmax(0,1fr)] md:px-6 md:py-6">
-        <div className="space-y-3 md:pt-8">
-          <div className="space-y-2">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.24em] text-[var(--color-text-inverse-muted)]">
-              Old workflow
-            </p>
-            <div className="flex items-center gap-2 text-[var(--color-text-inverse-muted)]/70">
-              {legacyWorkflowIcons.map((Icon, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Icon className="size-4 stroke-[1.7]" />
-                  {index < legacyWorkflowIcons.length - 1 ? (
-                    <span className="h-px w-4 bg-white/10" />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex items-center gap-2 text-[var(--color-text-inverse-muted)]/72">
-            <Hourglass className="size-5 stroke-[1.6]" />
-            <span className="text-label-md">Linear production path</span>
+      <div className="px-5 py-6 md:px-6 md:py-8">
+        {/* Header */}
+        <div className="mb-6 flex items-center gap-4">
+          <p className="text-[0.7rem] font-medium uppercase tracking-[0.24em] text-(--color-text-inverse-muted)">
+            Old workflow
+          </p>
+          <div className="flex items-center gap-1.5 text-(--color-text-inverse-muted)/72">
+            <Hourglass className="size-4 stroke-[1.6]" />
+            <span className="text-label-sm">Linear production path</span>
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-4 sm:gap-3">
+        {/* Step circles */}
+        <div className="flex items-start">
           {legacyWorkflowSteps.map((step, index) => (
-            <div key={step.label} className="relative">
-              {index < legacyWorkflowSteps.length - 1 ? (
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-[calc(100%-0.1rem)] top-1/2 hidden h-[2px] w-[calc(100%+0.2rem)] -translate-y-1/2 sm:block bg-[linear-gradient(90deg,rgba(203,195,223,0.16),rgba(203,195,223,0.28),rgba(203,195,223,0.16))]"
-                />
-              ) : null}
-              <WorkflowNode label={step.label} tone="muted" compact />
-            </div>
+            <Fragment key={step.label}>
+              {/* Circle + label */}
+              <div className="group flex flex-col items-center">
+                <div
+                  className={cn(
+                    "flex size-20 cursor-pointer items-center justify-center rounded-full border transition-all duration-300 ease-out hover:scale-110 md:size-24",
+                    step.circleClass
+                  )}
+                >
+                  <step.Icon className="size-7 stroke-[1.5] text-white transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
+                </div>
+                <p className={cn("mt-2.5 text-[0.95rem] font-semibold tracking-[-0.01em]", step.labelClass)}>
+                  {step.label}
+                </p>
+                <p className="mt-0.5 text-[0.72rem] text-(--color-text-inverse-muted)">
+                  {step.subtitle}
+                </p>
+              </div>
+
+              {/* Connector with step number */}
+              {index < legacyWorkflowSteps.length - 1 && (
+                <div className="flex flex-1 items-center self-start pt-10 md:pt-12">
+                  <div className="h-px flex-1 bg-white/10" />
+                  <span className="px-2 text-[0.6rem] font-medium tabular-nums tracking-widest text-(--color-text-inverse-muted)/50">
+                    0{index + 1}
+                  </span>
+                  <div className="h-px flex-1 bg-white/10" />
+                </div>
+              )}
+            </Fragment>
           ))}
         </div>
       </div>
@@ -119,26 +150,6 @@ function WorkflowShiftGraphic() {
   );
 }
 
-// The workflow node keeps the reference-inspired step shape reusable across the upper and lower lanes.
-function WorkflowNode({ label, tone = "muted", className, icon, compact = false }: WorkflowNodeProps) {
-  return (
-    <div
-      className={cn(
-        "relative flex items-center justify-center [clip-path:polygon(25%_0%,75%_0%,100%_22%,100%_78%,75%_100%,25%_100%,0%_78%,0%_22%)]",
-        compact ? "h-[7.2rem] w-[6.2rem]" : "h-[8.25rem] w-[7rem] md:h-[9rem] md:w-[7.75rem]",
-        tone === "brand"
-          ? "border border-[rgb(255_232_186_/_0.38)] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(88,41,199,0.14))] text-white shadow-[0_0_0_1px_rgba(255,232,186,0.12),0_0_30px_rgba(255,232,186,0.16),0_16px_42px_rgba(88,41,199,0.18)]"
-          : "border border-[rgb(203_195_223_/_0.16)] bg-[linear-gradient(180deg,rgba(203,195,223,0.18),rgba(255,255,255,0.08))] text-[rgb(217_223_239_/_0.88)] shadow-[0_10px_24px_rgba(6,9,24,0.16)]",
-        className
-      )}
-    >
-      <div className={cn("flex flex-col items-center text-center", compact ? "gap-1.5" : "gap-2")}>
-        {icon ? <span className={cn("opacity-90", tone === "brand" ? "text-[rgb(255_232_186)]" : "text-white/72")}>{icon}</span> : null}
-        <span className={cn("uppercase tracking-[0.06em]", compact ? "text-label-md" : "text-label-lg")}>{label}</span>
-      </div>
-    </div>
-  );
-}
 
 // This compact flow keeps the speed story to three visible beats so the card stays scannable on mobile.
 function SpeedGraphic() {
@@ -155,7 +166,7 @@ function SpeedGraphic() {
 
           <div
             className={cn(
-              "min-h-[7.5rem] rounded-[1.25rem] border px-4 py-4",
+              "min-h-[7.5rem] cursor-pointer rounded-[1.25rem] border px-4 py-4 transition-all duration-300 ease-out hover:scale-[1.04] hover:shadow-[0_8px_32px_rgba(88,41,199,0.2)]",
               workflowStepClassName(step.tone),
               step.tone === "brand"
                 ? "before:absolute before:inset-x-[18%] before:top-[18%] before:h-8 before:rounded-full before:bg-[radial-gradient(circle,rgba(150,136,192,0.42)_0%,rgba(150,136,192,0)_78%)] before:blur-xl"
@@ -197,7 +208,7 @@ function MvpGraphic() {
         <div
           key={panel.title}
           className={cn(
-            "rounded-[1.25rem] border border-[rgb(203_195_223_/_0.12)] p-4",
+            "cursor-pointer rounded-[1.25rem] border border-[rgb(203_195_223/0.12)] p-4 transition-all duration-300 ease-out hover:scale-[1.04] hover:border-[rgb(203_195_223/0.22)]",
             panel.chrome
           )}
         >
@@ -224,7 +235,7 @@ function FramingGraphic() {
         {framingInputs.map((input) => (
           <div
             key={input}
-            className="rounded-full border border-[rgb(203_195_223_/_0.12)] bg-[rgb(255_255_255_/_0.04)] px-4 py-2.5 text-label-md text-[var(--color-text-inverse-muted)]"
+            className="cursor-default rounded-full border border-[rgb(203_195_223/0.12)] bg-[rgb(255_255_255/0.04)] px-4 py-2.5 text-label-md text-(--color-text-inverse-muted) transition-all duration-200 hover:translate-x-1.5 hover:border-[rgb(88_41_199/0.35)] hover:bg-[rgb(88_41_199/0.08)] hover:text-white"
           >
             {input}
           </div>
@@ -256,18 +267,18 @@ type JudgmentRowProps = {
 // These rows mirror the reference card's left/right evidence list while staying inside Yuvabe's palette.
 function JudgmentRow({ icon, title, tone }: JudgmentRowProps) {
   return (
-    <div className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-4">
+    <div className="group grid cursor-default grid-cols-[2.5rem_minmax(0,1fr)] items-center gap-3 transition-transform duration-200 hover:translate-x-1.5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-4">
       <span
         className={cn(
-          "flex size-10 items-center justify-center md:size-11",
+          "flex size-10 items-center justify-center transition-all duration-200 group-hover:scale-110 md:size-11",
           tone === "warm"
-            ? "text-[var(--green-500)]"
-            : "text-[var(--cyan-200)]"
+            ? "text-[var(--green-500)] group-hover:drop-shadow-[0_0_6px_rgb(255_202_45/0.6)]"
+            : "text-[var(--cyan-200)] group-hover:drop-shadow-[0_0_6px_rgb(88_41_199/0.6)]"
         )}
       >
         {icon}
       </span>
-      <p className="text-heading-md leading-[1.04] tracking-[-0.02em] text-white">{title}</p>
+      <p className="text-heading-md leading-[1.04] tracking-[-0.02em] text-white transition-colors duration-200 group-hover:text-white/90">{title}</p>
     </div>
   );
 }
@@ -277,20 +288,33 @@ function JudgmentBalanceGraphic() {
   return (
     <div className="pt-1">
       <div className="relative mx-auto w-full max-w-[40rem]">
+        {/* Labels above SVG */}
+        <div className="mb-5 flex justify-around px-2 md:px-3">
+          {/* AI circle — violet */}
+          <div className="group flex size-36 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(88_41_199/0.75)] bg-[rgb(88_41_199/0.14)] shadow-[0_0_28px_rgb(88_41_199/0.22)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(88_41_199/1)] hover:bg-[rgb(88_41_199/0.22)] hover:shadow-[0_0_48px_rgb(88_41_199/0.45)] md:size-40">
+            <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[rgb(160_130_255)] transition-colors duration-300 group-hover:text-[rgb(180_160_255)]">AI</p>
+            <p className="mt-1 text-center font-display text-[0.95rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
+              Many<br />AI-Generated<br />Options
+            </p>
+          </div>
+          {/* Human circle — yellow */}
+          <div className="group flex size-36 cursor-pointer flex-col items-center justify-center rounded-full border-2 border-[rgb(255_202_45/0.65)] bg-[rgb(255_202_45/0.07)] shadow-[0_0_28px_rgb(255_202_45/0.15)] transition-all duration-300 ease-out hover:scale-105 hover:border-[rgb(255_202_45/1)] hover:bg-[rgb(255_202_45/0.13)] hover:shadow-[0_0_48px_rgb(255_202_45/0.35)] md:size-40">
+            <p className="text-[0.58rem] font-semibold uppercase tracking-[0.22em] text-[rgb(255_202_45)] transition-colors duration-300 group-hover:text-[rgb(255_220_100)]">Human</p>
+            <p className="mt-1 text-center font-display text-[0.95rem] leading-tight tracking-[-0.02em] text-white transition-transform duration-300 group-hover:scale-105">
+              One<br />Human<br />Judgment
+            </p>
+          </div>
+        </div>
+
         <svg
           aria-hidden="true"
           viewBox="0 0 640 150"
-          className="h-[8.5rem] w-full"
+          className="h-34 w-full"
           preserveAspectRatio="none"
         >
-          <rect x="18" y="28" width="604" height="10" fill="none" stroke="white" strokeWidth="2.4" />
-          <path d="M320 41 L365 145 H275 Z" fill="none" stroke="white" strokeWidth="2.4" />
+          <rect x="18" y="28" width="604" height="10" fill="none" stroke="rgb(120,80,220)" strokeWidth="2.4" opacity="0.6" />
+          <path d="M320 41 L365 145 H275 Z" fill="none" stroke="rgb(255,202,45)" strokeWidth="2.4" opacity="0.6" />
         </svg>
-
-        <div className="mt-3 grid grid-cols-2 gap-4 px-4 text-center md:px-5">
-          <p className="text-heading-sm tracking-[-0.01em] text-white">AI-Generated Options</p>
-          <p className="text-heading-sm tracking-[-0.01em] text-white">Human Judgment</p>
-        </div>
       </div>
     </div>
   );

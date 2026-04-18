@@ -83,12 +83,12 @@ function StagePanel({ stage }: { stage: WorkflowStage }) {
           </p>
         </div>
 
-        {/* Staggered steps */}
+        {/* Steps */}
         <div className="flex flex-col gap-4">
           {stage.steps.map((step, i) => (
-            <div key={step.label} style={{ marginLeft: `${i * 1.75}rem` }}>
+            <div key={step.label} className={["ml-0", "ml-14", "ml-28"][i]}>
               {step.highlight ? (
-                <div className="inline-flex items-center gap-3 rounded-md bg-[rgb(22_32_72)] px-4 py-2.5 shadow-[inset_0_0_0_1px_rgb(88_120_255_/_0.25)]">
+                <div className="inline-flex items-center gap-3 rounded-md px-4 py-2.5 shadow-[inset_0_0_0_1px_rgb(88_120_255/0.25)]">
                   <span className="h-4 w-[3px] flex-shrink-0 rounded-full bg-[rgb(88_120_255)]" />
                   <span className="text-[0.95rem] font-semibold text-white">
                     {step.label}
@@ -129,7 +129,7 @@ export function WorkflowCarousel() {
   const translatePct = (activeIndex / workflowStages.length) * 100;
 
   return (
-    <div className="overflow-hidden rounded-[1.25rem] border border-[rgb(255_255_255_/_0.07)] bg-[rgb(8_6_22)]">
+    <div className="overflow-hidden rounded-[1.25rem] border border-[rgb(255_255_255_/_0.07)]">
       {/* Header strip */}
       <div className="border-b border-[rgb(255_255_255_/_0.07)] px-7 py-3 md:px-8">
         <p className="text-[0.68rem] font-medium uppercase tracking-[0.22em] text-[rgb(255_232_186_/_0.72)]">
