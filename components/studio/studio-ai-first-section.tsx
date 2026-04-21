@@ -34,15 +34,7 @@ const speedGraphicSteps: GraphicStep[] = [
   { label: "Iteration", tone: "muted" },
 ];
 
-// Computes a pointy-top regular hexagon SVG path string centered at (cx, cy) with radius r.
-function computeHexPath(cx: number, cy: number, r: number): string {
-  const pts: string[] = [];
-  for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i - Math.PI / 2;
-    pts.push((cx + r * Math.cos(a)).toFixed(1) + "," + (cy + r * Math.sin(a)).toFixed(1));
-  }
-  return "M" + pts.join(" L") + " Z";
-}
+
 
 // Signal labels fed into the framing funnel SVG.
 const framingSignals = [
@@ -600,10 +592,18 @@ function FramingGraphic() {
   const outX = 880;
   const outY = 280;
 
-  const hexPath = computeHexPath(hexCx, hexCy, hexR);
-  const hexHalfW = hexR * Math.cos(Math.PI / 6);
-  const hexLeftX = hexCx - hexHalfW;
-  const hexRightX = hexCx + hexHalfW;
+  // Crystal gem: scaled from 123x242 viewBox, centered at the hex position.
+  const crystalScale = 0.7;
+  const crystalTx = hexCx - (123 / 2) * crystalScale;
+  const crystalTy = hexCy - (242 / 2) * crystalScale;
+  const crystalLeft = crystalTx + 2 * crystalScale;
+  const crystalRight = crystalTx + 115 * crystalScale;
+  const crystalFill = `var(--color-workflow-native-gold-soft)`;
+  const crystalStroke = `var(--color-workflow-native-node-stroke)`;
+  const cpTopRight = `M77.6887 2.49081L49.0991 2.63298L45.25 2.65209L47.4789 5.79026L82.979 55.7909L83.5761 56.633L84.6099 56.6326L112.106 56.6326L115.905 56.6321L113.756 53.5009L79.348 3.35891L78.748 2.4856L77.6887 2.49081Z`;
+  const cpBottomRight = `M116.109 182.525L83.2659 182.525L46.1917 236.057C61.3715 236.268 64.314 236.486 79.0092 236.924L116.109 182.525Z`;
+  const cpLeftFacet = `M51.9668 21.7227L23.0752 67.1279L22.9971 67.251V176.545L23.0938 176.677L53.4922 218.07L43.3926 232.271L4.6084 178.227L4.10938 61.79L41.6299 8.47266L51.9668 21.7227Z`;
+  const cpOutline = `M43.2168 6.44238L83.2168 60.4424L83.6123 60.9766L83.6094 61.6416L83.1094 178.642L83.1064 179.286L82.7275 179.809L44.2275 232.809L42.5889 235.063L40.9775 232.789L2.36816 178.289L2 177.77V61.0049L2.3584 60.4902L39.9678 6.49023L41.5596 4.20508L43.2168 6.44238Z`;
 
   const noFill = `none`;
   const svgClass = `h-auto w-full`;
@@ -626,7 +626,7 @@ function FramingGraphic() {
             const x = 30 + ((seed * 13) % 940);
             const y = 20 + ((seed * 29) % 520);
             const len = 8 + ((seed * 7) % 30);
-            if (x > hexRightX - 10 && x < outX - 20 && Math.abs(y - hexCy) < 30) return null;
+            if (x > crystalRight - 10 && x < outX - 20 && Math.abs(y - hexCy) < 30) return null;
             return (
               <line
                 key={i}
@@ -648,7 +648,7 @@ function FramingGraphic() {
         {/* One curved signal line + animated overlay per input label */}
         {framingSignals.map((label, i) => {
           const startY = 80 + i * 55;
-          const d = `M220,${startY} C360,${startY} 430,${hexCy} ${hexLeftX.toFixed(1)},${hexCy}`;
+          const d = `M220,${startY} C360,${startY} 430,${hexCy} ${crystalLeft.toFixed(1)},${hexCy}`;
           return (
             <g key={label}>
               <path d={d} stroke={gold} strokeWidth={1} fill={noFill} opacity={0.35} />
@@ -682,7 +682,7 @@ function FramingGraphic() {
           return (
             <path
               key={`ray-${i}`}
-              d={`M${startX},${startY} Q430,${hexCy} ${hexLeftX.toFixed(1)},${hexCy}`}
+              d={`M${startX},${startY} Q430,${hexCy} ${crystalLeft.toFixed(1)},${hexCy}`}
               stroke={gold}
               strokeWidth={0.6}
               fill={noFill}
@@ -691,28 +691,26 @@ function FramingGraphic() {
           );
         })}
 
-        {/* Hex node outer shell and inner highlight ring */}
-        <path d={hexPath} fill={bgDeep} stroke={gold} strokeWidth={2.5} />
-        <path
-          d={hexPath}
-          fill={noFill}
-          stroke={gold}
-          strokeWidth={1}
-          strokeOpacity={0.5}
-          transform={`translate(${hexCx} ${hexCy}) scale(0.85) translate(${-hexCx} ${-hexCy})`}
-        />
+        {/* Crystal gem node: 123x242 SVG scaled and centered at (hexCx, hexCy) */}
+        <g transform={`translate(${crystalTx} ${crystalTy}) scale(${crystalScale})`}>
+          <rect x={83.1094} y={60.6328} width={34} height={118} fill={crystalFill} stroke={crystalStroke} strokeWidth={5} />
+          <path d={cpTopRight} fill={crystalFill} stroke={crystalStroke} strokeWidth={4} />
+          <path d={cpBottomRight} fill={crystalFill} stroke={crystalStroke} strokeWidth={4} />
+          <path d={cpLeftFacet} fill={crystalFill} fillOpacity={0.5} stroke={crystalFill} />
+          <path d={cpOutline} fill={noFill} stroke={crystalStroke} strokeWidth={4} />
+        </g>
 
         {/* Outgoing fanned rays from hex right edge to the output node */}
         {Array.from({ length: 18 }).map((_, i) => {
           const t = (i - 8.5) / 8.5;
           const startY = hexCy + t * hexR * 0.55;
-          const ctrlX = (hexRightX + outX) / 2;
+          const ctrlX = (crystalRight + outX) / 2;
           const ctrlY = hexCy + t * 25;
           const isCenter = Math.abs(t) < 0.15;
           return (
             <path
               key={`out-${i}`}
-              d={`M${hexRightX.toFixed(1)},${startY.toFixed(1)} Q${ctrlX.toFixed(1)},${ctrlY.toFixed(1)} ${outX - 32},${outY}`}
+              d={`M${crystalRight.toFixed(1)},${startY.toFixed(1)} Q${ctrlX.toFixed(1)},${ctrlY.toFixed(1)} ${outX - 32},${outY}`}
               stroke={gold}
               strokeWidth={isCenter ? 1.4 : 0.7}
               fill={noFill}
@@ -723,7 +721,7 @@ function FramingGraphic() {
 
         {/* Animated dashed center beam */}
         <path
-          d={`M${hexRightX.toFixed(1)},${hexCy} Q${((hexRightX + outX) / 2).toFixed(1)},${hexCy} ${outX - 32},${outY}`}
+          d={`M${crystalRight.toFixed(1)},${hexCy} Q${((crystalRight + outX) / 2).toFixed(1)},${hexCy} ${outX - 32},${outY}`}
           stroke={gold}
           strokeWidth={2}
           fill={noFill}
