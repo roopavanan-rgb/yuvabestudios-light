@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import {
   Bot,
   LineChart,
@@ -95,50 +96,75 @@ export function StudioServices({ content }: StudioServicesProps) {
               {studioServices.map((service, index) => {
                 const Icon = service.icon;
                 const showDesktopDivider = index < studioServices.length - 1;
+                const cardClassName = [
+                  "relative min-h-[18rem] rounded-none border-0 px-5 py-5 sm:p-5 md:min-h-[19rem] md:p-6 lg:p-7",
+                  "border-b border-slate-200/80 md:border-b-0",
+                  showDesktopDivider
+                    ? "md:border-r md:border-slate-200/80"
+                    : "",
+                ].join(" ");
 
-                return (
-                  <PremiumSurface
-                    key={service.title}
-                    tone="glassSubtle"
-                    elevation="none"
-                    blur="sm"
-                    radius="md"
-                    className={[
-                      "relative min-h-[18rem] rounded-none border-0 px-5 py-5 sm:p-5 md:min-h-[19rem] md:p-6 lg:p-7",
-                      "border-b border-slate-200/80 md:border-b-0",
-                      showDesktopDivider
-                        ? "md:border-r md:border-slate-200/80"
-                        : "",
-                    ].join(" ")}
-                  >
-                    {/* Each column now reads more like an editorial metric block than a standard feature card. */}
-                    <div className="space-y-5 text-left">
-                      <div className="flex items-center justify-between gap-4">
-                        <p className="text-heading-lg text-[color:color-mix(in_srgb,var(--neutral-700)_68%,white)]">
-                          {`${index + 1}`.padStart(2, "0")}
-                        </p>
-                        <div className="flex size-11 items-center justify-center rounded-full border border-white/70 bg-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
-                          <Icon
-                            className={["size-5", service.accentClassName].join(
-                              " ",
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <h3 className="max-w-[8.5ch] text-display-muted-editorial leading-[0.9]">
-                          {service.title}
-                        </h3>
-                        <p className="max-w-[20ch] text-body-md font-bold text-[var(--color-text-brand)]">
-                          <strong>{service.shortLabel}</strong>
-                        </p>
-                        <p className="max-w-[30ch] text-body-md text-[var(--color-text-secondary)]">
-                          {service.description}
-                        </p>
+                const cardInner = (
+                  <div className="space-y-5 text-left">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="text-heading-lg text-[color:color-mix(in_srgb,var(--neutral-700)_68%,white)]">
+                        {`${index + 1}`.padStart(2, "0")}
+                      </p>
+                      <div className="flex size-11 items-center justify-center rounded-full border border-white/70 bg-white/88 shadow-[0_10px_28px_rgba(15,23,42,0.06)]">
+                        <Icon
+                          className={["size-5", service.accentClassName].join(
+                            " ",
+                          )}
+                        />
                       </div>
                     </div>
-                  </PremiumSurface>
+
+                    <div className="space-y-3">
+                      <h3 className="max-w-[8.5ch] text-display-muted-editorial leading-[0.9]">
+                        {service.title}
+                      </h3>
+                      <p className="max-w-[20ch] text-body-md font-bold text-[var(--color-text-brand)]">
+                        <strong>{service.shortLabel}</strong>
+                      </p>
+                      <p className="max-w-[30ch] text-body-md text-[var(--color-text-secondary)]">
+                        {service.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+
+                return (
+                  service.href ? (
+                    <PremiumSurface
+                      key={service.title}
+                      asChild
+                      tone="glassSubtle"
+                      elevation="none"
+                      blur="sm"
+                      radius="md"
+                      className={cardClassName}
+                    >
+                      <Link
+                        href={service.href}
+                        className="group block h-full transition-transform duration-300 ease-out hover:[transform:perspective(1200px)_rotateX(0.4deg)_translateY(-2px)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20 focus-visible:ring-offset-2"
+                      >
+                        {/* Linked service cards keep the same structure while adding a subtle premium hover response. */}
+                        {cardInner}
+                      </Link>
+                    </PremiumSurface>
+                  ) : (
+                    <PremiumSurface
+                      key={service.title}
+                      tone="glassSubtle"
+                      elevation="none"
+                      blur="sm"
+                      radius="md"
+                      className={cardClassName}
+                    >
+                      {/* Each column now reads more like an editorial metric block than a standard feature card. */}
+                      {cardInner}
+                    </PremiumSurface>
+                  )
                 );
               })}
             </div>

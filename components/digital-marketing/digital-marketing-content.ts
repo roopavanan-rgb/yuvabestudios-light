@@ -1,0 +1,117 @@
+export type DigitalMarketingHeroContent = {
+  title: string;
+  subtitle: string;
+  description: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
+export type DigitalMarketingCaseStudy = {
+  slug: string;
+  title: string;
+  description: string;
+  category: string;
+  thumbnailSrc?: string;
+  ctaLabel: string;
+};
+
+export type DigitalMarketingPageContent = {
+  hero: DigitalMarketingHeroContent;
+  caseStudiesTitle: string;
+  caseStudiesDescription: string;
+  caseStudies: DigitalMarketingCaseStudy[];
+  servicesTitle: string;
+  services: Array<{
+    title: string;
+    description: string;
+    iconKey: "megaphone" | "layout" | "penTool" | "lineChart";
+  }>;
+};
+
+export const digitalMarketingPageContent: DigitalMarketingPageContent = {
+  hero: {
+    title: "Digital Marketing",
+    subtitle: "Campaigns built for traction",
+    description:
+      "Positioning, landing pages, campaigns, and analytics systems that turn launches into measurable growth.",
+    ctaLabel: "Start Your Project",
+    ctaHref: "/#process",
+  },
+  caseStudiesTitle: "Digital Marketing Case Studies",
+  caseStudiesDescription:
+    "Proof from launch campaigns, positioning systems, and growth loops built for founders moving fast.",
+  caseStudies: [
+    {
+      slug: "tvam",
+      title: "tvam",
+      description:
+        "Unified product narrative and campaign touchpoints to improve trust, response quality, and acquisition efficiency.",
+      category: "Campaign Strategy",
+      thumbnailSrc: "/assets/tvam/cover-summary.png",
+      ctaLabel: "View Case Study",
+    },
+    {
+      slug: "kittykat",
+      title: "KittyKat",
+      description:
+        "Turned AI-led visual production into a repeatable campaign engine for higher-volume launch storytelling.",
+      category: "Performance Creative",
+      thumbnailSrc: "/assets/KK/Cover-summary.png",
+      ctaLabel: "View Case Study",
+    },
+    {
+      slug: "general-aeronautics",
+      title: "General Aeronautics",
+      description:
+        "Reframed complex product lines into clearer digital messaging and campaign-ready positioning assets.",
+      category: "Positioning",
+      thumbnailSrc: "/assets/general-aeronautics/cover-summary.jpeg",
+      ctaLabel: "View Case Study",
+    },
+    {
+      slug: "bevolve",
+      title: "Bevolve.ai",
+      description:
+        "Aligned product communication and conversion pathways for an AI sustainability platform launch.",
+      category: "Growth Messaging",
+      thumbnailSrc: "/assets/bevolve/cover-summary.png",
+      ctaLabel: "View Case Study",
+    },
+    {
+      slug: "ageshift",
+      title: "AgeShift",
+      description:
+        "Connected product and campaign narratives across wellness journeys to strengthen adoption loops.",
+      category: "Lifecycle Marketing",
+      thumbnailSrc: "/assets/ageshift/ageshift_cover.png",
+      ctaLabel: "View Case Study",
+    },
+  ],
+  servicesTitle: "Digital Marketing Services",
+  services: [
+    {
+      title: "Positioning and launch messaging",
+      description:
+        "Craft category-aware launch narratives, value framing, and message hierarchy founders can scale across channels.",
+      iconKey: "megaphone",
+    },
+    {
+      title: "Landing pages and conversion systems",
+      description:
+        "Design and ship conversion-focused page systems with clear CTA hierarchy, offer sequencing, and trust architecture.",
+      iconKey: "layout",
+    },
+    {
+      title: "Campaign planning and creative operations",
+      description:
+        "Build repeatable campaign calendars, creative workflows, and channel execution loops that keep teams shipping.",
+      iconKey: "penTool",
+    },
+    {
+      title: "Analytics and growth experimentation",
+      description:
+        "Set up tracking, experiment design, and insight loops to turn campaign data into smarter growth decisions.",
+      iconKey: "lineChart",
+    },
+  ],
+};

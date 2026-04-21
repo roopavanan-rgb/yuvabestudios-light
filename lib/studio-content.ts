@@ -90,6 +90,7 @@ const defaultServicesContent: StudioHomepageServicesContent = {
       shortLabel: "Campaigns built for traction",
       description:
         "Positioning, landing pages, campaigns, and analytics that turn launches into growth.",
+      href: "/digital-marketing",
     },
   ],
 };
@@ -403,6 +404,7 @@ function parseServiceItem(
     title: expectString(value.title, `${label}.title`),
     shortLabel: expectString(value.shortLabel, `${label}.shortLabel`),
     description: expectString(value.description, `${label}.description`),
+    href: optionalString(value.href),
   };
 }
 
@@ -415,6 +417,7 @@ function normalizeServiceItem(
   const title = parsed.title.trim();
   const shortLabel = parsed.shortLabel.trim();
   const description = parsed.description.trim();
+  const href = normalizeOptionalString(parsed.href);
 
   if (!title && !shortLabel && !description) {
     return null;
@@ -424,6 +427,7 @@ function normalizeServiceItem(
     title,
     shortLabel,
     description,
+    href,
   };
 }
 
@@ -575,6 +579,27 @@ function mergeHomepageContentWithFallback(
       JSON.stringify(defaultBeforeTestimonialsCtaContent) &&
     JSON.stringify(fallbackContent.beforeTestimonialsCta) !==
       JSON.stringify(defaultBeforeTestimonialsCtaContent);
+  const fallbackServiceHrefByTitle = new Map(
+    fallbackContent.services.items
+      .filter((item) => item.href)
+      .map((item) => [item.title.trim().toLowerCase(), item.href as string]),
+  );
+  const mergedServices = {
+    ...remoteContent.services,
+    items: remoteContent.services.items.map((item) => {
+      const normalizedTitle = item.title.trim().toLowerCase();
+      const fallbackHref = fallbackServiceHrefByTitle.get(normalizedTitle);
+
+      if (item.href || !fallbackHref) {
+        return item;
+      }
+
+      return {
+        ...item,
+        href: fallbackHref,
+      };
+    }),
+  };
 
   return {
     ...remoteContent,
@@ -590,6 +615,7 @@ function mergeHomepageContentWithFallback(
     beforeTestimonialsCta: shouldUseFallbackBeforeTestimonialsCta
       ? fallbackContent.beforeTestimonialsCta
       : remoteContent.beforeTestimonialsCta,
+    services: mergedServices,
     testimonials: shouldUseFallbackTestimonials
       ? fallbackContent.testimonials
       : remoteContent.testimonials,
