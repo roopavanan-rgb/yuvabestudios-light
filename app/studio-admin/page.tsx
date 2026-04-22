@@ -7,6 +7,7 @@ import {
   getStudioAboutPageContent,
   getStudioAiWorkflowsContent,
   getStudioCaseStudies,
+  getStudioDigitalMarketingContent,
   getStudioHomepageContent,
 } from "@/lib/studio-content";
 
@@ -28,12 +29,14 @@ export default async function StudioAdminPage({
     homepageContent,
     aboutContent,
     aiWorkflowsContent,
+    digitalMarketingContent,
     caseStudies,
   ] = await Promise.all([
     searchParams,
     getStudioHomepageContent({ source: "supabase" }),
     getStudioAboutPageContent({ source: "supabase" }),
     getStudioAiWorkflowsContent(),
+    getStudioDigitalMarketingContent({ source: "supabase" }),
     getStudioCaseStudies({ source: "supabase" }),
   ]);
 
@@ -50,7 +53,9 @@ export default async function StudioAdminPage({
         ? "about"
         : tab === "ai-workflows"
           ? "ai-workflows"
-          : "homepage";
+          : tab === "digital-marketing"
+            ? "digital-marketing"
+            : "homepage";
 
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(246,247,250,0.98))] px-6 py-10 text-foreground md:px-10">
@@ -60,7 +65,9 @@ export default async function StudioAdminPage({
           <p className="text-label-sm uppercase tracking-[0.22em] text-[var(--color-text-tertiary)]">
             Internal / Content editor
           </p>
-          <h1 className="text-heading-xl text-foreground">Minimal content CMS</h1>
+          <h1 className="text-heading-xl text-foreground">
+            Minimal content CMS
+          </h1>
           <p className="max-w-3xl text-body-lg text-muted-foreground">
             Edit homepage, about-page, AI Workflows, and case-study content,
             save to Supabase, then refresh the site to review the change
@@ -72,6 +79,7 @@ export default async function StudioAdminPage({
           homepageContent={homepageContent}
           aboutContent={aboutContent}
           aiWorkflowsContent={aiWorkflowsContent}
+          digitalMarketingContent={digitalMarketingContent}
           caseStudies={editableCaseStudies}
           initialCaseStudyId={selectedCaseStudyId}
           initialTab={initialTab}

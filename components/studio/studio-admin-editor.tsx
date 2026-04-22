@@ -8,6 +8,7 @@ import {
   saveAboutContentAction,
   saveAiWorkflowsContentAction,
   saveCaseStudyContentAction,
+  saveDigitalMarketingContentAction,
   saveHomepageContentAction,
 } from "@/app/studio-admin/actions";
 import type { StudioAboutPageContent } from "@/components/studio/studio-about-content";
@@ -25,6 +26,11 @@ import type {
   StudioCaseStudyId,
 } from "@/components/studio/studio-case-study-content";
 import type {
+  StudioDigitalMarketingCaseStudy,
+  StudioDigitalMarketingContent,
+  StudioDigitalMarketingServiceItem,
+} from "@/components/studio/studio-digital-marketing-content";
+import type {
   StudioHomepageContent,
   StudioHomepageServiceItem,
 } from "@/components/studio/studio-homepage-content";
@@ -36,9 +42,10 @@ type StudioAdminEditorProps = {
   homepageContent: StudioHomepageContent;
   aboutContent: StudioAboutPageContent;
   aiWorkflowsContent: StudioAiWorkflowsContent;
+  digitalMarketingContent: StudioDigitalMarketingContent;
   caseStudies: StudioEditableCaseStudy[];
   initialCaseStudyId?: string;
-  initialTab: "homepage" | "about" | "ai-workflows" | "case-studies";
+  initialTab: "homepage" | "about" | "ai-workflows" | "digital-marketing" | "case-studies";
   savedState?: string;
 };
 
@@ -1105,6 +1112,7 @@ export function StudioAdminEditor({
   homepageContent,
   aboutContent,
   aiWorkflowsContent,
+  digitalMarketingContent,
   caseStudies,
   initialCaseStudyId,
   initialTab,
@@ -1114,6 +1122,7 @@ export function StudioAdminEditor({
   const [homepageDraft, setHomepageDraft] = useState(homepageContent);
   const [aboutDraft, setAboutDraft] = useState(aboutContent);
   const [aiWorkflowsDraft, setAiWorkflowsDraft] = useState(aiWorkflowsContent);
+  const [digitalMarketingDraft, setDigitalMarketingDraft] = useState(digitalMarketingContent);
   const [caseStudyDrafts, setCaseStudyDrafts] = useState(caseStudies);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(
     initialCaseStudyId ?? caseStudies[0]?.id ?? "",
@@ -1146,14 +1155,16 @@ export function StudioAdminEditor({
               ? "About content saved. Refresh the about page to review it."
               : savedState === "ai-workflows"
                 ? "AI Workflows content saved. Refresh the AI Workflows page to review it."
-            : "Case study saved. Refresh the homepage or the case-study route to review it."}
+                : savedState === "digital-marketing"
+                  ? "Digital Marketing content saved. Refresh the digital marketing page to review it."
+                  : "Case study saved. Refresh the homepage or the case-study route to review it."}
         </div>
       ) : null}
 
       <Tabs
         value={activeTab}
         onValueChange={(value) =>
-          setActiveTab(value as "homepage" | "about" | "ai-workflows" | "case-studies")
+          setActiveTab(value as "homepage" | "about" | "ai-workflows" | "digital-marketing" | "case-studies")
         }
         className="space-y-6"
       >
@@ -1161,6 +1172,7 @@ export function StudioAdminEditor({
           <TabsTrigger value="homepage">Homepage</TabsTrigger>
           <TabsTrigger value="about">About</TabsTrigger>
           <TabsTrigger value="ai-workflows">AI Workflows</TabsTrigger>
+          <TabsTrigger value="digital-marketing">Digital Marketing</TabsTrigger>
           <TabsTrigger value="case-studies">Case studies</TabsTrigger>
         </TabsList>
 
@@ -1867,6 +1879,417 @@ export function StudioAdminEditor({
               label="Save AI Workflows content"
               previewHref="/ai-workflows"
             />
+          </form>
+        </TabsContent>
+
+        <TabsContent value="digital-marketing">
+          <form action={saveDigitalMarketingContentAction} className="space-y-6">
+            <input
+              type="hidden"
+              name="payload"
+              value={JSON.stringify(digitalMarketingDraft)}
+              readOnly
+            />
+            <Card>
+              <CardHeader>
+                <CardTitle>Digital Marketing content</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 pb-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Hero</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Title">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.hero.title}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              hero: { ...digitalMarketingDraft.hero, title: event.target.value },
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="Subtitle">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.hero.subtitle}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              hero: { ...digitalMarketingDraft.hero, subtitle: event.target.value },
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <Field label="Description">
+                      <textarea
+                        className={textareaClassName}
+                        value={digitalMarketingDraft.hero.description}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            hero: {
+                              ...digitalMarketingDraft.hero,
+                              description: event.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </Field>
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="CTA label">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.hero.ctaLabel ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              hero: {
+                                ...digitalMarketingDraft.hero,
+                                ctaLabel: event.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="CTA href">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.hero.ctaHref ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              hero: {
+                                ...digitalMarketingDraft.hero,
+                                ctaHref: event.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Services section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Section title">
+                      <input
+                        className={formControlClassName}
+                        value={digitalMarketingDraft.servicesTitle}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            servicesTitle: event.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                          Service items
+                        </p>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              services: [
+                                ...digitalMarketingDraft.services,
+                                { title: "", description: "", iconKey: "megaphone" },
+                              ],
+                            })
+                          }
+                        >
+                          Add service
+                        </Button>
+                      </div>
+                      {digitalMarketingDraft.services.map(
+                        (service: StudioDigitalMarketingServiceItem, index: number) => (
+                          <Card key={`dm-service-${index}`}>
+                            <CardHeader className="flex flex-row items-center justify-between gap-3">
+                              <CardTitle className="text-body-lg">
+                                Service {index + 1}
+                              </CardTitle>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                onClick={() =>
+                                  setDigitalMarketingDraft({
+                                    ...digitalMarketingDraft,
+                                    services: removeAt(digitalMarketingDraft.services, index),
+                                  })
+                                }
+                              >
+                                Remove
+                              </Button>
+                            </CardHeader>
+                            <CardContent className="space-y-4 pb-6">
+                              <Field label="Title">
+                                <input
+                                  className={formControlClassName}
+                                  value={service.title}
+                                  onChange={(event) =>
+                                    setDigitalMarketingDraft({
+                                      ...digitalMarketingDraft,
+                                      services: replaceAt(digitalMarketingDraft.services, index, {
+                                        ...service,
+                                        title: event.target.value,
+                                      }),
+                                    })
+                                  }
+                                />
+                              </Field>
+                              <Field label="Description">
+                                <textarea
+                                  className={textareaClassName}
+                                  value={service.description}
+                                  onChange={(event) =>
+                                    setDigitalMarketingDraft({
+                                      ...digitalMarketingDraft,
+                                      services: replaceAt(digitalMarketingDraft.services, index, {
+                                        ...service,
+                                        description: event.target.value,
+                                      }),
+                                    })
+                                  }
+                                />
+                              </Field>
+                              <Field label="Icon key">
+                                <select
+                                  className={formControlClassName}
+                                  value={service.iconKey}
+                                  onChange={(event) =>
+                                    setDigitalMarketingDraft({
+                                      ...digitalMarketingDraft,
+                                      services: replaceAt(digitalMarketingDraft.services, index, {
+                                        ...service,
+                                        iconKey: event.target
+                                          .value as StudioDigitalMarketingServiceItem["iconKey"],
+                                      }),
+                                    })
+                                  }
+                                >
+                                  <option value="megaphone">megaphone</option>
+                                  <option value="layout">layout</option>
+                                  <option value="penTool">penTool</option>
+                                  <option value="lineChart">lineChart</option>
+                                </select>
+                              </Field>
+                            </CardContent>
+                          </Card>
+                        ),
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Case studies section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Section title">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.caseStudiesTitle}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              caseStudiesTitle: event.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <Field label="Section description">
+                      <textarea
+                        className={textareaClassName}
+                        value={digitalMarketingDraft.caseStudiesDescription}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            caseStudiesDescription: event.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                          Case study cards
+                        </p>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              caseStudies: [
+                                ...digitalMarketingDraft.caseStudies,
+                                {
+                                  slug: "",
+                                  title: "",
+                                  description: "",
+                                  category: "",
+                                  ctaLabel: "View Case Study",
+                                },
+                              ],
+                            })
+                          }
+                        >
+                          Add case study
+                        </Button>
+                      </div>
+                      {digitalMarketingDraft.caseStudies.map(
+                        (cs: StudioDigitalMarketingCaseStudy, index: number) => (
+                          <Card key={`dm-cs-${index}`}>
+                            <CardHeader className="flex flex-row items-center justify-between gap-3">
+                              <CardTitle className="text-body-lg">
+                                {cs.title || `Case Study ${index + 1}`}
+                              </CardTitle>
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                size="sm"
+                                onClick={() =>
+                                  setDigitalMarketingDraft({
+                                    ...digitalMarketingDraft,
+                                    caseStudies: removeAt(
+                                      digitalMarketingDraft.caseStudies,
+                                      index,
+                                    ),
+                                  })
+                                }
+                              >
+                                Remove
+                              </Button>
+                            </CardHeader>
+                            <CardContent className="space-y-4 pb-6">
+                              <div className="grid gap-4 lg:grid-cols-2">
+                                <Field label="Slug">
+                                  <input
+                                    className={formControlClassName}
+                                    value={cs.slug}
+                                    onChange={(event) =>
+                                      setDigitalMarketingDraft({
+                                        ...digitalMarketingDraft,
+                                        caseStudies: replaceAt(
+                                          digitalMarketingDraft.caseStudies,
+                                          index,
+                                          { ...cs, slug: event.target.value },
+                                        ),
+                                      })
+                                    }
+                                  />
+                                </Field>
+                                <Field label="Title">
+                                  <input
+                                    className={formControlClassName}
+                                    value={cs.title}
+                                    onChange={(event) =>
+                                      setDigitalMarketingDraft({
+                                        ...digitalMarketingDraft,
+                                        caseStudies: replaceAt(
+                                          digitalMarketingDraft.caseStudies,
+                                          index,
+                                          { ...cs, title: event.target.value },
+                                        ),
+                                      })
+                                    }
+                                  />
+                                </Field>
+                              </div>
+                              <Field label="Description">
+                                <textarea
+                                  className={textareaClassName}
+                                  value={cs.description}
+                                  onChange={(event) =>
+                                    setDigitalMarketingDraft({
+                                      ...digitalMarketingDraft,
+                                      caseStudies: replaceAt(
+                                        digitalMarketingDraft.caseStudies,
+                                        index,
+                                        { ...cs, description: event.target.value },
+                                      ),
+                                    })
+                                  }
+                                />
+                              </Field>
+                              <div className="grid gap-4 lg:grid-cols-2">
+                                <Field label="Category">
+                                  <input
+                                    className={formControlClassName}
+                                    value={cs.category}
+                                    onChange={(event) =>
+                                      setDigitalMarketingDraft({
+                                        ...digitalMarketingDraft,
+                                        caseStudies: replaceAt(
+                                          digitalMarketingDraft.caseStudies,
+                                          index,
+                                          { ...cs, category: event.target.value },
+                                        ),
+                                      })
+                                    }
+                                  />
+                                </Field>
+                                <Field label="CTA label">
+                                  <input
+                                    className={formControlClassName}
+                                    value={cs.ctaLabel}
+                                    onChange={(event) =>
+                                      setDigitalMarketingDraft({
+                                        ...digitalMarketingDraft,
+                                        caseStudies: replaceAt(
+                                          digitalMarketingDraft.caseStudies,
+                                          index,
+                                          { ...cs, ctaLabel: event.target.value },
+                                        ),
+                                      })
+                                    }
+                                  />
+                                </Field>
+                              </div>
+                              <Field label="Thumbnail src">
+                                <input
+                                  className={formControlClassName}
+                                  value={cs.thumbnailSrc ?? ""}
+                                  onChange={(event) =>
+                                    setDigitalMarketingDraft({
+                                      ...digitalMarketingDraft,
+                                      caseStudies: replaceAt(
+                                        digitalMarketingDraft.caseStudies,
+                                        index,
+                                        { ...cs, thumbnailSrc: event.target.value },
+                                      ),
+                                    })
+                                  }
+                                />
+                              </Field>
+                            </CardContent>
+                          </Card>
+                        ),
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
+            <StickySaveBar label="Save Digital Marketing" previewHref="/digital-marketing" />
           </form>
         </TabsContent>
 

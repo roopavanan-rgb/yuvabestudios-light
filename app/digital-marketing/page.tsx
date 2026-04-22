@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 
-import { digitalMarketingPageContent } from "@/components/digital-marketing/digital-marketing-content";
 import { DigitalMarketingPage } from "@/components/digital-marketing/digital-marketing-page";
 import { getAbsoluteUrl } from "@/lib/site";
-import { getStudioHomepageContent } from "@/lib/studio-content";
+import {
+  getStudioDigitalMarketingContent,
+  getStudioHomepageContent,
+} from "@/lib/studio-content";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default async function DigitalMarketingRoutePage() {
-  const homepageContent = await getStudioHomepageContent();
+  const [homepageContent, digitalMarketingContent] = await Promise.all([
+    getStudioHomepageContent(),
+    getStudioDigitalMarketingContent(),
+  ]);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -55,7 +60,7 @@ export default async function DigitalMarketingRoutePage() {
       />
       <DigitalMarketingPage
         navigationItems={homepageContent.navigationItems}
-        content={digitalMarketingPageContent}
+        content={digitalMarketingContent}
       />
     </>
   );

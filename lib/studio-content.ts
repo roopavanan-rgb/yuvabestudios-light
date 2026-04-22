@@ -44,6 +44,11 @@ import type {
   StudioAiWorkflowsHeroContent,
   StudioAiWorkflowsStageContent,
 } from "@/components/studio/studio-ai-workflows-content";
+import type {
+  StudioDigitalMarketingCaseStudy,
+  StudioDigitalMarketingContent,
+  StudioDigitalMarketingServiceItem,
+} from "@/components/studio/studio-digital-marketing-content";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const dataDirectory = path.join(process.cwd(), "components", "studio", "data");
@@ -54,12 +59,17 @@ const aiWorkflowsFilePath = path.join(
   dataDirectory,
   "studio-ai-workflows-content.json",
 );
+const digitalMarketingFilePath = path.join(
+  dataDirectory,
+  "studio-digital-marketing-content.json",
+);
 const contentDocumentsTable = "content_documents";
 type StudioContentDocumentKey =
   | "homepage"
   | "case_studies"
   | "about"
-  | "ai_workflows";
+  | "ai_workflows"
+  | "digital_marketing";
 type StudioContentSource = "auto" | "local" | "supabase";
 type StudioContentOptions = {
   source?: StudioContentSource;
@@ -1904,4 +1914,163 @@ export async function saveStudioCaseStudy(
     options,
   );
   return nextCaseStudies[caseStudyIndex];
+}
+
+function parseDigitalMarketingCaseStudy(
+  value: unknown,
+  label: string,
+): StudioDigitalMarketingCaseStudy {
+  assertRecord(value, label);
+  return {
+    slug: expectString(value.slug, `${label}.slug`),
+    title: expectString(value.title, `${label}.title`),
+    description: expectString(value.description, `${label}.description`),
+    category: expectString(value.category, `${label}.category`),
+    thumbnailSrc: optionalString(value.thumbnailSrc),
+    ctaLabel: expectString(value.ctaLabel, `${label}.ctaLabel`),
+  };
+}
+
+function parseDigitalMarketingServiceItem(
+  value: unknown,
+  label: string,
+): StudioDigitalMarketingServiceItem {
+  assertRecord(value, label);
+  return {
+    title: expectString(value.title, `${label}.title`),
+    description: expectString(value.description, `${label}.description`),
+    iconKey: expectString(
+      value.iconKey,
+      `${label}.iconKey`,
+    ) as StudioDigitalMarketingServiceItem["iconKey"],
+  };
+}
+
+function parseDigitalMarketingContent(value: unknown): StudioDigitalMarketingContent {
+  assertRecord(value, "digital marketing content");
+  assertRecord(value.hero, "digital marketing content.hero");
+  return {
+    hero: {
+      title: expectString(value.hero.title, "digital marketing content.hero.title"),
+      subtitle: expectString(value.hero.subtitle, "digital marketing content.hero.subtitle"),
+      description: expectString(
+        value.hero.description,
+        "digital marketing content.hero.description",
+      ),
+      ctaLabel: optionalString(value.hero.ctaLabel),
+      ctaHref: optionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(
+      value.caseStudiesTitle,
+      "digital marketing content.caseStudiesTitle",
+    ),
+    caseStudiesDescription: expectString(
+      value.caseStudiesDescription,
+      "digital marketing content.caseStudiesDescription",
+    ),
+    caseStudies: expectArray(
+      value.caseStudies,
+      "digital marketing content.caseStudies",
+    ).map((item, index) =>
+      parseDigitalMarketingCaseStudy(
+        item,
+        `digital marketing content.caseStudies[${index}]`,
+      ),
+    ),
+    servicesTitle: expectString(
+      value.servicesTitle,
+      "digital marketing content.servicesTitle",
+    ),
+    services: expectArray(
+      value.services,
+      "digital marketing content.services",
+    ).map((item, index) =>
+      parseDigitalMarketingServiceItem(
+        item,
+        `digital marketing content.services[${index}]`,
+      ),
+    ),
+  };
+}
+
+export function parseStudioDigitalMarketingContentInput(
+  value: unknown,
+): StudioDigitalMarketingContent {
+  assertRecord(value, "digital marketing content payload");
+  assertRecord(value.hero, "digital marketing content payload.hero");
+  return {
+    hero: {
+      title: expectString(
+        value.hero.title,
+        "digital marketing content payload.hero.title",
+      ).trim(),
+      subtitle: expectString(
+        value.hero.subtitle,
+        "digital marketing content payload.hero.subtitle",
+      ).trim(),
+      description: expectString(
+        value.hero.description,
+        "digital marketing content payload.hero.description",
+      ).trim(),
+      ctaLabel: normalizeOptionalString(value.hero.ctaLabel),
+      ctaHref: normalizeOptionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(
+      value.caseStudiesTitle,
+      "digital marketing content payload.caseStudiesTitle",
+    ).trim(),
+    caseStudiesDescription: expectString(
+      value.caseStudiesDescription,
+      "digital marketing content payload.caseStudiesDescription",
+    ).trim(),
+    caseStudies: expectArray(
+      value.caseStudies,
+      "digital marketing content payload.caseStudies",
+    )
+      .map((item, index) =>
+        parseDigitalMarketingCaseStudy(
+          item,
+          `digital marketing content payload.caseStudies[${index}]`,
+        ),
+      )
+      .filter((item): item is StudioDigitalMarketingCaseStudy => Boolean(item)),
+    servicesTitle: expectString(
+      value.servicesTitle,
+      "digital marketing content payload.servicesTitle",
+    ).trim(),
+    services: expectArray(
+      value.services,
+      "digital marketing content payload.services",
+    )
+      .map((item, index) =>
+        parseDigitalMarketingServiceItem(
+          item,
+          `digital marketing content payload.services[${index}]`,
+        ),
+      )
+      .filter((item): item is StudioDigitalMarketingServiceItem => Boolean(item)),
+  };
+}
+
+export async function getStudioDigitalMarketingContent(
+  options?: StudioContentOptions,
+) {
+  const rawContent = await getStudioContentDocument<unknown>(
+    "digital_marketing",
+    digitalMarketingFilePath,
+    options,
+  );
+  return parseDigitalMarketingContent(rawContent);
+}
+
+export async function saveStudioDigitalMarketingContent(
+  content: StudioDigitalMarketingContent,
+  options?: StudioContentOptions,
+) {
+  await saveStudioContentDocument(
+    "digital_marketing",
+    digitalMarketingFilePath,
+    content,
+    options,
+  );
 }
