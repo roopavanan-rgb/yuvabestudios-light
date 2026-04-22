@@ -13,17 +13,13 @@ type CaseStudyCardProps = {
   caseStudy: DigitalMarketingCaseStudy;
 };
 
-// This reusable card keeps thumbnail, category, and CTA structure consistent across digital-marketing proof lists.
+// Medium card — entry animation is provided by the parent grid slot's motion wrapper.
 export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
   return (
     <motion.article
-      variants={{
-        hidden: { opacity: 0, y: 18 },
-        show: { opacity: 1, y: 0 },
-      }}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="h-full"
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="group h-full"
     >
       <PremiumSurface
         tone="glass"
@@ -32,14 +28,13 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
         radius="xl"
         className="flex h-full flex-col overflow-hidden border-white/75 p-0"
       >
-        {/* The image area keeps visual rhythm stable even when a case study does not supply a thumbnail. */}
-        <div className="relative h-44 w-full overflow-hidden border-b border-slate-200/70 bg-[var(--color-background-canvas)]">
+        <div className="relative h-44 w-full overflow-hidden border-b border-slate-200/70 bg-(--color-background-canvas)">
           {caseStudy.thumbnailSrc ? (
             <Image
               src={caseStudy.thumbnailSrc}
               alt={`${caseStudy.title} cover`}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             />
           ) : (
             <div className="h-full w-full bg-[linear-gradient(135deg,rgba(88,41,199,0.18),rgba(255,202,45,0.14))]" />
@@ -50,10 +45,10 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
           <Badge variant="brandTagSubtle" className="w-fit">
             {caseStudy.category}
           </Badge>
-          <h3 className="text-heading-lg text-[var(--neutral-950)]">
+          <h3 className="text-heading-lg text-(--neutral-950)">
             {caseStudy.title}
           </h3>
-          <p className="text-body-md text-[var(--color-text-secondary)]">
+          <p className="text-body-md text-(--color-text-secondary)">
             {caseStudy.description}
           </p>
           <div className="mt-auto pt-1">

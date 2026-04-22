@@ -84,22 +84,24 @@ const defaultServicesContent: StudioHomepageServicesContent = {
     "we help founders decide what to build, launch it well, and scale what works.",
   items: [
     {
-      title: "Product Engineering",
-      shortLabel: "From product strategy to launch",
+      title: "AI-Native Engineering",
+      shortLabel: "End-to-end build, shipped right",
       description:
-        "Product shaping, roadmap planning, launch clarity, and scaling support for what starts working.",
+        "Product strategy, AI-native apps, and launch-ready engineering for B2B and B2C teams — one connected system from brief to build.",
+      href: "/ai-native-engineering",
     },
     {
-      title: "AI-Native Apps",
-      shortLabel: "AI-native apps and workflows",
+      title: "UI/UX Design",
+      shortLabel: "Interfaces people actually use",
       description:
-        "Complex AI workflows, copilots, and application-layer products for B2B and B2C teams.",
+        "Research-led design, product flows, and visual systems built for clarity, conversion, and the real contexts founders are shipping into.",
+      href: "/uiux-design",
     },
     {
       title: "Digital Marketing",
       shortLabel: "Campaigns built for traction",
       description:
-        "Positioning, landing pages, campaigns, and analytics that turn launches into growth.",
+        "Positioning, landing pages, campaigns, and analytics that turn launches into measurable growth.",
       href: "/digital-marketing",
     },
   ],
