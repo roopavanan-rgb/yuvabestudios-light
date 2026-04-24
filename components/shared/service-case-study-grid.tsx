@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 import type { DigitalMarketingCaseStudy } from "@/components/digital-marketing/digital-marketing-content";
 import { ServiceCaseStudyCard } from "@/components/shared/service-case-study-card";
+import { ServiceCaseStudyPreviewDialog } from "@/components/shared/service-case-study-preview-dialog";
 
 const containerVariants = {
   hidden: {},
@@ -26,38 +28,47 @@ type ServiceCaseStudyGridProps = {
 };
 
 /**
- * Shared grid for all three service pages.
- * Layout: first item is a full-width featured card; remaining items fill a 2-column grid.
- * Stagger entry animation is orchestrated here; cards manage hover independently.
+ * Equal 2-column grid matching the reference design — all cards the same size.
+ * Stagger entry animation orchestrated here; cards open a preview modal on click.
  */
 export function ServiceCaseStudyGrid({ items }: ServiceCaseStudyGridProps) {
-  const [featured, ...rest] = items;
+  const [activeItem, setActiveItem] = useState<DigitalMarketingCaseStudy | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  function handleOpenPreview(item: DigitalMarketingCaseStudy) {
+    setActiveItem(item);
+    setIsPreviewOpen(true);
+  }
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.12 }}
-      className="grid gap-4 md:grid-cols-2"
-    >
-      {/* First card spans the full grid width at a larger size */}
-      {featured && (
-        <motion.div variants={itemVariants} className="md:col-span-2">
-          <ServiceCaseStudyCard caseStudy={featured} featured />
-        </motion.div>
-      )}
+    <>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.12 }}
+        className="grid gap-4 md:grid-cols-2"
+      >
+        {items.map((item) => (
+          <motion.div
+            key={item.slug}
+            variants={itemVariants}
+            className="flex h-full flex-col"
+          >
+            <ServiceCaseStudyCard
+              caseStudy={item}
+              onOpenPreview={() => handleOpenPreview(item)}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
 
-      {/* Remaining cards fill the 2-column grid equally */}
-      {rest.map((item) => (
-        <motion.div
-          key={item.slug}
-          variants={itemVariants}
-          className="flex h-full flex-col"
-        >
-          <ServiceCaseStudyCard caseStudy={item} />
-        </motion.div>
-      ))}
-    </motion.div>
+      <ServiceCaseStudyPreviewDialog
+        caseStudy={activeItem}
+        open={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        onAfterClose={() => setActiveItem(null)}
+      />
+    </>
   );
 }

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
-import { uiuxDesignPageContent } from "@/components/uiux-design/uiux-design-content";
 import { UiuxDesignPage } from "@/components/uiux-design/uiux-design-page";
 import { getAbsoluteUrl } from "@/lib/site";
-import { getStudioHomepageContent } from "@/lib/studio-content";
+import {
+  getStudioHomepageContent,
+  getStudioUiuxDesignContent,
+} from "@/lib/studio-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "UI/UX Design",
@@ -28,7 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default async function UiuxDesignRoutePage() {
-  const homepageContent = await getStudioHomepageContent();
+  const [homepageContent, uiuxContent] = await Promise.all([
+    getStudioHomepageContent(),
+    getStudioUiuxDesignContent(),
+  ]);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -55,7 +60,7 @@ export default async function UiuxDesignRoutePage() {
       />
       <UiuxDesignPage
         navigationItems={homepageContent.navigationItems}
-        content={uiuxDesignPageContent}
+        content={uiuxContent}
       />
     </>
   );

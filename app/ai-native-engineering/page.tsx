@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 
-import { aiNativeEngineeringPageContent } from "@/components/ai-native-engineering/ai-native-engineering-content";
 import { AiNativeEngineeringPage } from "@/components/ai-native-engineering/ai-native-engineering-page";
 import { getAbsoluteUrl } from "@/lib/site";
-import { getStudioHomepageContent } from "@/lib/studio-content";
+import {
+  getStudioAiNativeEngineeringContent,
+  getStudioHomepageContent,
+} from "@/lib/studio-content";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "AI-Native Engineering",
@@ -28,7 +30,10 @@ export const metadata: Metadata = {
 };
 
 export default async function AiNativeEngineeringRoutePage() {
-  const homepageContent = await getStudioHomepageContent();
+  const [homepageContent, aiNativeContent] = await Promise.all([
+    getStudioHomepageContent(),
+    getStudioAiNativeEngineeringContent(),
+  ]);
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -55,7 +60,7 @@ export default async function AiNativeEngineeringRoutePage() {
       />
       <AiNativeEngineeringPage
         navigationItems={homepageContent.navigationItems}
-        content={aiNativeEngineeringPageContent}
+        content={aiNativeContent}
       />
     </>
   );

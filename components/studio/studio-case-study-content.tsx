@@ -20,6 +20,14 @@ export const studioCaseStudyIds = [
   "tvam",
   "kittykat",
   "ageshift",
+  "av-marathon",
+  "rangasutra",
+  "hemplanet",
+  "matrimandir",
+  "buglerock",
+  "prakiti-sattva",
+  "bevikve",
+  "yuvanext",
 ] as const;
 
 export type StudioCaseStudyId = (typeof studioCaseStudyIds)[number];

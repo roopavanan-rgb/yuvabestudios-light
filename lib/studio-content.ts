@@ -49,6 +49,16 @@ import type {
   StudioDigitalMarketingContent,
   StudioDigitalMarketingServiceItem,
 } from "@/components/studio/studio-digital-marketing-content";
+import type {
+  StudioUiuxDesignCaseStudy,
+  StudioUiuxDesignContent,
+  StudioUiuxDesignServiceItem,
+} from "@/components/studio/studio-uiux-design-content";
+import type {
+  StudioAiNativeEngineeringCaseStudy,
+  StudioAiNativeEngineeringContent,
+  StudioAiNativeEngineeringServiceItem,
+} from "@/components/studio/studio-ai-native-engineering-content";
 import { getSupabaseAdminClient } from "@/lib/supabase-admin";
 
 const dataDirectory = path.join(process.cwd(), "components", "studio", "data");
@@ -63,13 +73,23 @@ const digitalMarketingFilePath = path.join(
   dataDirectory,
   "studio-digital-marketing-content.json",
 );
+const uiuxDesignFilePath = path.join(
+  dataDirectory,
+  "studio-uiux-design-content.json",
+);
+const aiNativeEngineeringFilePath = path.join(
+  dataDirectory,
+  "studio-ai-native-engineering-content.json",
+);
 const contentDocumentsTable = "content_documents";
 type StudioContentDocumentKey =
   | "homepage"
   | "case_studies"
   | "about"
   | "ai_workflows"
-  | "digital_marketing";
+  | "digital_marketing"
+  | "uiux_design"
+  | "ai_native_engineering";
 type StudioContentSource = "auto" | "local" | "supabase";
 type StudioContentOptions = {
   source?: StudioContentSource;
@@ -1918,19 +1938,114 @@ export async function saveStudioCaseStudy(
   return nextCaseStudies[caseStudyIndex];
 }
 
-function parseDigitalMarketingCaseStudy(
-  value: unknown,
-  label: string,
-): StudioDigitalMarketingCaseStudy {
+function parseServiceCaseStudyBase(value: unknown, label: string) {
+  type StudioServiceCaseStudyProofPointIconKey =
+    NonNullable<StudioDigitalMarketingCaseStudy["proofPoints"]>[number]["iconKey"];
+  type StudioServiceCaseStudyProofPoint = NonNullable<
+    StudioDigitalMarketingCaseStudy["proofPoints"]
+  >[number];
+  type StudioServiceCaseStudyBase = Omit<
+    StudioDigitalMarketingCaseStudy,
+    "proofPoints"
+  > & {
+    proofPoints?: StudioServiceCaseStudyProofPoint[];
+  };
+
+  const serviceCaseStudyProofPointIconKeys = [
+    "barChart3",
+    "bot",
+    "layoutGrid",
+    "scanSearch",
+    "sparkles",
+  ] as const satisfies StudioServiceCaseStudyProofPointIconKey[];
+
+  function parseServiceCaseStudyProofPoint(
+    item: Record<string, unknown>,
+    itemLabel: string,
+  ): StudioServiceCaseStudyProofPoint {
+    const iconKey = expectString(item.iconKey, `${itemLabel}.iconKey`);
+
+    if (
+      !serviceCaseStudyProofPointIconKeys.includes(
+        iconKey as StudioServiceCaseStudyProofPointIconKey,
+      )
+    ) {
+      throw new Error(
+        `${itemLabel}.iconKey must be one of ${serviceCaseStudyProofPointIconKeys.join(", ")}.`,
+      );
+    }
+
+    return {
+      iconKey: iconKey as StudioServiceCaseStudyProofPointIconKey,
+      title: expectString(item.title, `${itemLabel}.title`),
+      description: expectString(item.description, `${itemLabel}.description`),
+    };
+  }
+
   assertRecord(value, label);
   return {
     slug: expectString(value.slug, `${label}.slug`),
     title: expectString(value.title, `${label}.title`),
     description: expectString(value.description, `${label}.description`),
     category: expectString(value.category, `${label}.category`),
+    services: value.services
+      ? expectStringArray(value.services, `${label}.services`)
+      : undefined,
+    outcomes: value.outcomes
+      ? expectStringArray(value.outcomes, `${label}.outcomes`)
+      : undefined,
     thumbnailSrc: optionalString(value.thumbnailSrc),
     ctaLabel: expectString(value.ctaLabel, `${label}.ctaLabel`),
-  };
+    workGallery: value.workGallery
+      ? expectArray(value.workGallery, `${label}.workGallery`).map((item, index) => {
+          assertRecord(item, `${label}.workGallery[${index}]`);
+          return {
+            src: expectString(item.src, `${label}.workGallery[${index}].src`),
+            alt: expectString(item.alt, `${label}.workGallery[${index}].alt`),
+            label: expectString(item.label, `${label}.workGallery[${index}].label`),
+          };
+        })
+      : undefined,
+    proofPoints: value.proofPoints
+      ? expectArray(value.proofPoints, `${label}.proofPoints`).map((item, index) => {
+          assertRecord(item, `${label}.proofPoints[${index}]`);
+          return parseServiceCaseStudyProofPoint(
+            item,
+            `${label}.proofPoints[${index}]`,
+          );
+        })
+      : undefined,
+    testimonial: value.testimonial
+      ? (() => {
+          assertRecord(value.testimonial, `${label}.testimonial`);
+          return {
+            quote: expectString(value.testimonial.quote, `${label}.testimonial.quote`),
+            attribution: expectString(value.testimonial.attribution, `${label}.testimonial.attribution`),
+          };
+        })()
+      : undefined,
+  } satisfies StudioServiceCaseStudyBase;
+}
+
+function parseDigitalMarketingCaseStudy(
+  value: unknown,
+  label: string,
+): StudioDigitalMarketingCaseStudy {
+  return parseServiceCaseStudyBase(value, label);
+}
+
+function parseUiuxDesignCaseStudy(
+  value: unknown,
+  label: string,
+): StudioUiuxDesignCaseStudy {
+  return parseServiceCaseStudyBase(value, label);
+}
+
+function parseAiNativeEngineeringCaseStudy(
+  value: unknown,
+  label: string,
+): StudioAiNativeEngineeringCaseStudy {
+  return parseServiceCaseStudyBase(value, label);
 }
 
 function parseDigitalMarketingServiceItem(
@@ -1945,6 +2060,36 @@ function parseDigitalMarketingServiceItem(
       value.iconKey,
       `${label}.iconKey`,
     ) as StudioDigitalMarketingServiceItem["iconKey"],
+  };
+}
+
+function parseUiuxDesignServiceItem(
+  value: unknown,
+  label: string,
+): StudioUiuxDesignServiceItem {
+  assertRecord(value, label);
+  return {
+    title: expectString(value.title, `${label}.title`),
+    description: expectString(value.description, `${label}.description`),
+    iconKey: expectString(
+      value.iconKey,
+      `${label}.iconKey`,
+    ) as StudioUiuxDesignServiceItem["iconKey"],
+  };
+}
+
+function parseAiNativeEngineeringServiceItem(
+  value: unknown,
+  label: string,
+): StudioAiNativeEngineeringServiceItem {
+  assertRecord(value, label);
+  return {
+    title: expectString(value.title, `${label}.title`),
+    description: expectString(value.description, `${label}.description`),
+    iconKey: expectString(
+      value.iconKey,
+      `${label}.iconKey`,
+    ) as StudioAiNativeEngineeringServiceItem["iconKey"],
   };
 }
 
@@ -2072,6 +2217,89 @@ export async function saveStudioDigitalMarketingContent(
   await saveStudioContentDocument(
     "digital_marketing",
     digitalMarketingFilePath,
+    content,
+    options,
+  );
+}
+
+function parseUiuxDesignContent(value: unknown): StudioUiuxDesignContent {
+  assertRecord(value, "uiux design content");
+  assertRecord(value.hero, "uiux design content.hero");
+  return {
+    hero: {
+      title: expectString(value.hero.title, "uiux design content.hero.title"),
+      subtitle: expectString(value.hero.subtitle, "uiux design content.hero.subtitle"),
+      description: expectString(value.hero.description, "uiux design content.hero.description"),
+      ctaLabel: optionalString(value.hero.ctaLabel),
+      ctaHref: optionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(value.caseStudiesTitle, "uiux design content.caseStudiesTitle"),
+    caseStudiesDescription: expectString(value.caseStudiesDescription, "uiux design content.caseStudiesDescription"),
+    caseStudies: expectArray(value.caseStudies, "uiux design content.caseStudies").map((item, index) =>
+      parseUiuxDesignCaseStudy(item, `uiux design content.caseStudies[${index}]`),
+    ),
+    servicesTitle: expectString(value.servicesTitle, "uiux design content.servicesTitle"),
+    services: expectArray(value.services, "uiux design content.services").map((item, index) =>
+      parseUiuxDesignServiceItem(item, `uiux design content.services[${index}]`),
+    ),
+  };
+}
+
+export async function getStudioUiuxDesignContent(options?: StudioContentOptions) {
+  const rawContent = await getStudioContentDocument<unknown>(
+    "uiux_design",
+    uiuxDesignFilePath,
+    options,
+  );
+  return parseUiuxDesignContent(rawContent);
+}
+
+export async function saveStudioUiuxDesignContent(
+  content: StudioUiuxDesignContent,
+  options?: StudioContentOptions,
+) {
+  await saveStudioContentDocument("uiux_design", uiuxDesignFilePath, content, options);
+}
+
+function parseAiNativeEngineeringContent(value: unknown): StudioAiNativeEngineeringContent {
+  assertRecord(value, "ai native engineering content");
+  assertRecord(value.hero, "ai native engineering content.hero");
+  return {
+    hero: {
+      title: expectString(value.hero.title, "ai native engineering content.hero.title"),
+      subtitle: expectString(value.hero.subtitle, "ai native engineering content.hero.subtitle"),
+      description: expectString(value.hero.description, "ai native engineering content.hero.description"),
+      ctaLabel: optionalString(value.hero.ctaLabel),
+      ctaHref: optionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(value.caseStudiesTitle, "ai native engineering content.caseStudiesTitle"),
+    caseStudiesDescription: expectString(value.caseStudiesDescription, "ai native engineering content.caseStudiesDescription"),
+    caseStudies: expectArray(value.caseStudies, "ai native engineering content.caseStudies").map((item, index) =>
+      parseAiNativeEngineeringCaseStudy(item, `ai native engineering content.caseStudies[${index}]`),
+    ),
+    servicesTitle: expectString(value.servicesTitle, "ai native engineering content.servicesTitle"),
+    services: expectArray(value.services, "ai native engineering content.services").map((item, index) =>
+      parseAiNativeEngineeringServiceItem(item, `ai native engineering content.services[${index}]`),
+    ),
+  };
+}
+
+export async function getStudioAiNativeEngineeringContent(options?: StudioContentOptions) {
+  const rawContent = await getStudioContentDocument<unknown>(
+    "ai_native_engineering",
+    aiNativeEngineeringFilePath,
+    options,
+  );
+  return parseAiNativeEngineeringContent(rawContent);
+}
+
+export async function saveStudioAiNativeEngineeringContent(
+  content: StudioAiNativeEngineeringContent,
+  options?: StudioContentOptions,
+) {
+  await saveStudioContentDocument(
+    "ai_native_engineering",
+    aiNativeEngineeringFilePath,
     content,
     options,
   );

@@ -98,7 +98,7 @@ const nativeTestLoopArrowHeadPath =
 
 function NativeFrameFlow() {
   return (
-    <div className="relative w-[12.25rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
+    <div className="relative w-[9rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
       <svg aria-hidden="true" viewBox="0 0 1275 812" className="h-auto w-full">
         <path
           d={nativeFrameHexPath}
@@ -127,7 +127,7 @@ function NativeFrameFlow() {
 
 function NativePrototypeFlow() {
   return (
-    <div className="relative w-[15rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
+    <div className="relative w-[11rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
       <svg aria-hidden="true" viewBox="0 0 1755 812" className="h-auto w-full">
         <path
           d={nativePrototypeHexPath}
@@ -153,10 +153,7 @@ function NativePrototypeFlow() {
         />
       </svg>
       <div className="pointer-events-none absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1.5 text-[var(--color-workflow-native-gold)]">
-        <div className="flex items-center gap-1">
-          <AppWindowMac className="size-6 stroke-[1.8]" />
-          <Cog className="size-5.5 stroke-[1.8]" />
-        </div>
+        <AppWindowMac className="size-6 stroke-[1.8]" />
         <span className="text-label-lg uppercase tracking-[0.03em] text-white">
           Prototype
         </span>
@@ -167,7 +164,7 @@ function NativePrototypeFlow() {
 
 function NativeDecideFlow() {
   return (
-    <div className="relative w-[14rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
+    <div className="relative w-42 ds-workflow-node-pulse ds-workflow-native-svg-glow">
       <svg aria-hidden="true" viewBox="0 0 1295 1178" className="h-auto w-full">
         <path
           d={nativeDecideLoopPath}
@@ -204,7 +201,7 @@ function NativeDecideFlow() {
 
 function NativeTestFlow() {
   return (
-    <div className="relative w-[9.75rem] ds-workflow-node-pulse ds-workflow-native-svg-glow">
+    <div className="relative w-28 ds-workflow-node-pulse ds-workflow-native-svg-glow">
       <svg aria-hidden="true" viewBox="0 0 1092 611" className="h-auto w-full">
         <path
           d={nativeTestHexPath}
@@ -367,32 +364,32 @@ function WorkflowShiftGraphic() {
             aria-hidden="true"
             className="pointer-events-none absolute left-[24%] top-[20%] h-36 w-[54%] bg-[radial-gradient(circle,color-mix(in_srgb,var(--color-workflow-native-gold)_26%,transparent)_0%,transparent_72%)] blur-3xl"
           />
-          <div className="relative hidden min-h-[22rem] md:block">
+          <div className="relative hidden min-h-64 md:block">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute left-[35.5%] top-[5.35rem] h-[3.2rem] w-[17rem] bg-[var(--gradient-workflow-native-beam)] blur-2xl"
+              className="pointer-events-none absolute left-[35.5%] top-16 h-10 w-48 bg-(--gradient-workflow-native-beam) blur-2xl"
             />
 
-            <div className="absolute left-[2%] top-[4.45rem]">
+            <div className="absolute left-[1%] top-12">
               <NativeFrameFlow />
             </div>
 
-            <div className="absolute left-[34%] top-[4.35rem]">
+            <div className="absolute left-[22%] top-12">
               <NativePrototypeFlow />
             </div>
 
-            <div className="absolute left-[66.5%] top-[3.45rem]">
+            <div className="absolute left-[44%] top-9">
               <NativeDecideFlow />
             </div>
 
-            <div className="absolute left-[54.2%] top-[14.45rem]">
+            <div className="absolute left-[34%] top-42">
               <NativeTestFlow />
             </div>
 
-            <div className="absolute right-[-8.5rem] top-[7.35rem] flex items-center gap-2 text-[var(--color-workflow-native-gold)]">
-              <Compass className="size-6 stroke-[1.8]" />
+            <div className="absolute right-6 top-20 flex items-center gap-2 text-(--color-workflow-native-gold)">
+              <Compass className="size-5 stroke-[1.8]" />
               <div className="space-y-0.5">
-                <p className="text-label-xl text-white">Final decision</p>
+                <p className="text-label-lg text-white">Final decision</p>
                 <p className="text-body-sm text-[color-mix(in_srgb,var(--color-workflow-native-gold)_78%,white)]">
                   Sharper path to launch
                 </p>
@@ -1093,12 +1090,28 @@ export function StudioAiFirstSection({ className }: { className?: string }) {
           <IllustrationCard
             title="Making got faster"
             body="From prompt to prototype to iteration, teams can explore and ship far earlier than before."
-            illustration={<SpeedGraphic />}
+            illustration={
+              <div className="overflow-hidden rounded-xl">
+                <img
+                  src="/assets/making.jpeg"
+                  alt="Making got faster"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            }
           />
           <IllustrationCard
             title="Richer MVPs, earlier"
             body="First versions can be usable enough to learn from without waiting for a full polished build."
-            illustration={<MvpGraphic />}
+            illustration={
+              <div className="overflow-hidden rounded-xl">
+                <img
+                  src="/assets/mvps.jpeg"
+                  alt="Richer MVPs, earlier"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            }
           />
           <IllustrationCard
             className="lg:col-span-2"

@@ -13,8 +13,13 @@ export type StudioDigitalMarketingCaseStudy = {
   title: string;
   description: string;
   category: string;
+  services?: string[];
+  outcomes?: string[];
   thumbnailSrc?: string;
   ctaLabel: string;
+  workGallery?: Array<{ src: string; alt: string; label: string }>;
+  proofPoints?: Array<{ iconKey: "barChart3" | "bot" | "layoutGrid" | "scanSearch" | "sparkles"; title: string; description: string }>;
+  testimonial?: { quote: string; attribution: string };
 };
 
 export type StudioDigitalMarketingServiceItem = {
