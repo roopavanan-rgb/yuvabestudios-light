@@ -1783,7 +1783,7 @@ async function getStudioContentDocument<T>(
 
   if (contentSource === "supabase") {
     const payload = await readContentDocument(key);
-
+console.log("Fetching key:", key, "Payload result:", payload);
     if (payload === undefined) {
       throw new Error(`Missing Supabase content document "${key}".`);
     }
@@ -2245,6 +2245,35 @@ function parseUiuxDesignContent(value: unknown): StudioUiuxDesignContent {
   };
 }
 
+export function parseStudioUiuxDesignContentInput(
+  value: unknown,
+): StudioUiuxDesignContent {
+  assertRecord(value, "uiux design content payload");
+  assertRecord(value.hero, "uiux design content payload.hero");
+  return {
+    hero: {
+      title: expectString(value.hero.title, "uiux design content payload.hero.title").trim(),
+      subtitle: expectString(value.hero.subtitle, "uiux design content payload.hero.subtitle").trim(),
+      description: expectString(value.hero.description, "uiux design content payload.hero.description").trim(),
+      ctaLabel: normalizeOptionalString(value.hero.ctaLabel),
+      ctaHref: normalizeOptionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(value.caseStudiesTitle, "uiux design content payload.caseStudiesTitle").trim(),
+    caseStudiesDescription: expectString(value.caseStudiesDescription, "uiux design content payload.caseStudiesDescription").trim(),
+    caseStudies: expectArray(value.caseStudies, "uiux design content payload.caseStudies")
+      .map((item, index) =>
+        parseUiuxDesignCaseStudy(item, `uiux design content payload.caseStudies[${index}]`),
+      )
+      .filter((item): item is StudioUiuxDesignCaseStudy => Boolean(item)),
+    servicesTitle: expectString(value.servicesTitle, "uiux design content payload.servicesTitle").trim(),
+    services: expectArray(value.services, "uiux design content payload.services")
+      .map((item, index) =>
+        parseUiuxDesignServiceItem(item, `uiux design content payload.services[${index}]`),
+      )
+      .filter((item): item is StudioUiuxDesignServiceItem => Boolean(item)),
+  };
+}
+
 export async function getStudioUiuxDesignContent(options?: StudioContentOptions) {
   const rawContent = await getStudioContentDocument<unknown>(
     "uiux_design",
@@ -2297,6 +2326,35 @@ function parseAiNativeEngineeringContent(value: unknown): StudioAiNativeEngineer
     services: expectArray(value.services, "ai native engineering content.services").map((item, index) =>
       parseAiNativeEngineeringServiceItem(item, `ai native engineering content.services[${index}]`),
     ),
+  };
+}
+
+export function parseStudioAiNativeEngineeringContentInput(
+  value: unknown,
+): StudioAiNativeEngineeringContent {
+  assertRecord(value, "ai native engineering content payload");
+  assertRecord(value.hero, "ai native engineering content payload.hero");
+  return {
+    hero: {
+      title: expectString(value.hero.title, "ai native engineering content payload.hero.title").trim(),
+      subtitle: expectString(value.hero.subtitle, "ai native engineering content payload.hero.subtitle").trim(),
+      description: expectString(value.hero.description, "ai native engineering content payload.hero.description").trim(),
+      ctaLabel: normalizeOptionalString(value.hero.ctaLabel),
+      ctaHref: normalizeOptionalString(value.hero.ctaHref),
+    },
+    caseStudiesTitle: expectString(value.caseStudiesTitle, "ai native engineering content payload.caseStudiesTitle").trim(),
+    caseStudiesDescription: expectString(value.caseStudiesDescription, "ai native engineering content payload.caseStudiesDescription").trim(),
+    caseStudies: expectArray(value.caseStudies, "ai native engineering content payload.caseStudies")
+      .map((item, index) =>
+        parseAiNativeEngineeringCaseStudy(item, `ai native engineering content payload.caseStudies[${index}]`),
+      )
+      .filter((item): item is StudioAiNativeEngineeringCaseStudy => Boolean(item)),
+    servicesTitle: expectString(value.servicesTitle, "ai native engineering content payload.servicesTitle").trim(),
+    services: expectArray(value.services, "ai native engineering content payload.services")
+      .map((item, index) =>
+        parseAiNativeEngineeringServiceItem(item, `ai native engineering content payload.services[${index}]`),
+      )
+      .filter((item): item is StudioAiNativeEngineeringServiceItem => Boolean(item)),
   };
 }
 

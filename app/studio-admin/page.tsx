@@ -5,10 +5,12 @@ import {
 import { StudioAdminEditor } from "@/components/studio/studio-admin-editor";
 import {
   getStudioAboutPageContent,
+  getStudioAiNativeEngineeringContent,
   getStudioAiWorkflowsContent,
   getStudioCaseStudies,
   getStudioDigitalMarketingContent,
   getStudioHomepageContent,
+  getStudioUiuxDesignContent,
 } from "@/lib/studio-content";
 
 export const dynamic = "force-dynamic";
@@ -29,14 +31,18 @@ export default async function StudioAdminPage({
     homepageContent,
     aboutContent,
     aiWorkflowsContent,
+    aiNativeEngineeringContent,
     digitalMarketingContent,
+    uiuxDesignContent,
     caseStudies,
   ] = await Promise.all([
     searchParams,
     getStudioHomepageContent({ source: "supabase" }),
     getStudioAboutPageContent({ source: "supabase" }),
     getStudioAiWorkflowsContent(),
+    getStudioAiNativeEngineeringContent({ source: "supabase" }),
     getStudioDigitalMarketingContent({ source: "supabase" }),
+    getStudioUiuxDesignContent({ source: "supabase" }),
     getStudioCaseStudies({ source: "supabase" }),
   ]);
 
@@ -53,8 +59,8 @@ export default async function StudioAdminPage({
         ? "about"
         : tab === "ai-workflows"
           ? "ai-workflows"
-          : tab === "digital-marketing"
-            ? "digital-marketing"
+          : tab === "services" || tab === "digital-marketing" || tab === "ai-native-engineering"
+            ? "services"
             : "homepage";
 
   return (
@@ -79,7 +85,9 @@ export default async function StudioAdminPage({
           homepageContent={homepageContent}
           aboutContent={aboutContent}
           aiWorkflowsContent={aiWorkflowsContent}
+          aiNativeEngineeringContent={aiNativeEngineeringContent}
           digitalMarketingContent={digitalMarketingContent}
+          uiuxDesignContent={uiuxDesignContent}
           caseStudies={editableCaseStudies}
           initialCaseStudyId={selectedCaseStudyId}
           initialTab={initialTab}

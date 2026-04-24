@@ -6,10 +6,12 @@ import { useFormStatus } from "react-dom";
 
 import {
   saveAboutContentAction,
+  saveAiNativeEngineeringContentAction,
   saveAiWorkflowsContentAction,
   saveCaseStudyContentAction,
   saveDigitalMarketingContentAction,
   saveHomepageContentAction,
+  saveUiuxDesignContentAction,
 } from "@/app/studio-admin/actions";
 import type { StudioAboutPageContent } from "@/components/studio/studio-about-content";
 import type {
@@ -31,6 +33,16 @@ import type {
   StudioDigitalMarketingServiceItem,
 } from "@/components/studio/studio-digital-marketing-content";
 import type {
+  StudioAiNativeEngineeringCaseStudy,
+  StudioAiNativeEngineeringContent,
+  StudioAiNativeEngineeringServiceItem,
+} from "@/components/studio/studio-ai-native-engineering-content";
+import type {
+  StudioUiuxDesignCaseStudy,
+  StudioUiuxDesignContent,
+  StudioUiuxDesignServiceItem,
+} from "@/components/studio/studio-uiux-design-content";
+import type {
   StudioHomepageContent,
   StudioHomepageServiceItem,
 } from "@/components/studio/studio-homepage-content";
@@ -42,10 +54,12 @@ type StudioAdminEditorProps = {
   homepageContent: StudioHomepageContent;
   aboutContent: StudioAboutPageContent;
   aiWorkflowsContent: StudioAiWorkflowsContent;
+  aiNativeEngineeringContent: StudioAiNativeEngineeringContent;
   digitalMarketingContent: StudioDigitalMarketingContent;
+  uiuxDesignContent: StudioUiuxDesignContent;
   caseStudies: StudioEditableCaseStudy[];
   initialCaseStudyId?: string;
-  initialTab: "homepage" | "about" | "ai-workflows" | "digital-marketing" | "case-studies";
+  initialTab: "homepage" | "about" | "ai-workflows" | "services" | "case-studies";
   savedState?: string;
 };
 
@@ -1112,17 +1126,22 @@ export function StudioAdminEditor({
   homepageContent,
   aboutContent,
   aiWorkflowsContent,
+  aiNativeEngineeringContent,
   digitalMarketingContent,
+  uiuxDesignContent,
   caseStudies,
   initialCaseStudyId,
   initialTab,
   savedState,
 }: StudioAdminEditorProps) {
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [servicesSubTab, setServicesSubTab] = useState<"ai-native-engineering" | "uiux-design" | "digital-marketing">("ai-native-engineering");
   const [homepageDraft, setHomepageDraft] = useState(homepageContent);
   const [aboutDraft, setAboutDraft] = useState(aboutContent);
   const [aiWorkflowsDraft, setAiWorkflowsDraft] = useState(aiWorkflowsContent);
+  const [aiNativeEngineeringDraft, setAiNativeEngineeringDraft] = useState(aiNativeEngineeringContent);
   const [digitalMarketingDraft, setDigitalMarketingDraft] = useState(digitalMarketingContent);
+  const [uiuxDesignDraft, setUiuxDesignDraft] = useState(uiuxDesignContent);
   const [caseStudyDrafts, setCaseStudyDrafts] = useState(caseStudies);
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(
     initialCaseStudyId ?? caseStudies[0]?.id ?? "",
@@ -1157,14 +1176,18 @@ export function StudioAdminEditor({
                 ? "AI Workflows content saved. Refresh the AI Workflows page to review it."
                 : savedState === "digital-marketing"
                   ? "Digital Marketing content saved. Refresh the digital marketing page to review it."
-                  : "Case study saved. Refresh the homepage or the case-study route to review it."}
+                  : savedState === "uiux-design"
+                    ? "UI/UX Design content saved. Refresh the UI/UX Design page to review it."
+                    : savedState === "ai-native-engineering"
+                      ? "AI Native Engineering content saved. Refresh the page to review it."
+                      : "Case study saved. Refresh the homepage or the case-study route to review it."}
         </div>
       ) : null}
 
       <Tabs
         value={activeTab}
         onValueChange={(value) =>
-          setActiveTab(value as "homepage" | "about" | "ai-workflows" | "digital-marketing" | "case-studies")
+          setActiveTab(value as "homepage" | "about" | "ai-workflows" | "services" | "case-studies")
         }
         className="space-y-6"
       >
@@ -1172,7 +1195,7 @@ export function StudioAdminEditor({
           <TabsTrigger value="homepage">Homepage</TabsTrigger>
           <TabsTrigger value="about">About</TabsTrigger>
           <TabsTrigger value="ai-workflows">AI Workflows</TabsTrigger>
-          <TabsTrigger value="digital-marketing">Digital Marketing</TabsTrigger>
+          <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="case-studies">Case studies</TabsTrigger>
         </TabsList>
 
@@ -1514,12 +1537,7 @@ export function StudioAdminEditor({
 
         <TabsContent value="ai-workflows">
           <form action={saveAiWorkflowsContentAction} className="space-y-6">
-            <input
-              type="hidden"
-              name="payload"
-              value={JSON.stringify(aiWorkflowsDraft)}
-              readOnly
-            />
+            <input type="hidden" name="payload" value={JSON.stringify(aiWorkflowsDraft)} readOnly />
             <Card>
               <CardHeader>
                 <CardTitle>AI Workflows content</CardTitle>
@@ -1532,65 +1550,17 @@ export function StudioAdminEditor({
                   <CardContent className="space-y-4 pb-6">
                     <div className="grid gap-4 lg:grid-cols-3">
                       <Field label="Eyebrow">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.hero.eyebrow}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              hero: {
-                                ...aiWorkflowsDraft.hero,
-                                eyebrow: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.hero.eyebrow} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, hero: { ...aiWorkflowsDraft.hero, eyebrow: event.target.value } })} />
                       </Field>
                       <Field label="Title line one">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.hero.titleLineOne}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              hero: {
-                                ...aiWorkflowsDraft.hero,
-                                titleLineOne: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.hero.titleLineOne} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, hero: { ...aiWorkflowsDraft.hero, titleLineOne: event.target.value } })} />
                       </Field>
                       <Field label="Title line two">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.hero.titleLineTwo}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              hero: {
-                                ...aiWorkflowsDraft.hero,
-                                titleLineTwo: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.hero.titleLineTwo} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, hero: { ...aiWorkflowsDraft.hero, titleLineTwo: event.target.value } })} />
                       </Field>
                     </div>
                     <Field label="Description">
-                      <textarea
-                        className={textareaClassName}
-                        value={aiWorkflowsDraft.hero.description}
-                        onChange={(event) =>
-                          setAiWorkflowsDraft({
-                            ...aiWorkflowsDraft,
-                            hero: {
-                              ...aiWorkflowsDraft.hero,
-                              description: event.target.value,
-                            },
-                          })
-                        }
-                      />
+                      <textarea className={textareaClassName} value={aiWorkflowsDraft.hero.description} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, hero: { ...aiWorkflowsDraft.hero, description: event.target.value } })} />
                     </Field>
                   </CardContent>
                 </Card>
@@ -1602,60 +1572,16 @@ export function StudioAdminEditor({
                   <CardContent className="space-y-4 pb-6">
                     <div className="grid gap-4 lg:grid-cols-2">
                       <Field label="Eyebrow">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.workflow.eyebrow}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              workflow: {
-                                ...aiWorkflowsDraft.workflow,
-                                eyebrow: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.workflow.eyebrow} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, workflow: { ...aiWorkflowsDraft.workflow, eyebrow: event.target.value } })} />
                       </Field>
                       <Field label="Title">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.workflow.title}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              workflow: {
-                                ...aiWorkflowsDraft.workflow,
-                                title: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.workflow.title} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, workflow: { ...aiWorkflowsDraft.workflow, title: event.target.value } })} />
                       </Field>
                     </div>
                     <Field label="Description">
-                      <textarea
-                        className={textareaClassName}
-                        value={aiWorkflowsDraft.workflow.description}
-                        onChange={(event) =>
-                          setAiWorkflowsDraft({
-                            ...aiWorkflowsDraft,
-                            workflow: {
-                              ...aiWorkflowsDraft.workflow,
-                              description: event.target.value,
-                            },
-                          })
-                        }
-                      />
+                      <textarea className={textareaClassName} value={aiWorkflowsDraft.workflow.description} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, workflow: { ...aiWorkflowsDraft.workflow, description: event.target.value } })} />
                     </Field>
-                    <AiWorkflowStagesEditor
-                      items={aiWorkflowsDraft.workflow.stages}
-                      onChange={(stages) =>
-                        setAiWorkflowsDraft({
-                          ...aiWorkflowsDraft,
-                          workflow: { ...aiWorkflowsDraft.workflow, stages },
-                        })
-                      }
-                    />
+                    <AiWorkflowStagesEditor items={aiWorkflowsDraft.workflow.stages} onChange={(stages) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, workflow: { ...aiWorkflowsDraft.workflow, stages } })} />
                   </CardContent>
                 </Card>
 
@@ -1666,60 +1592,16 @@ export function StudioAdminEditor({
                   <CardContent className="space-y-4 pb-6">
                     <div className="grid gap-4 lg:grid-cols-2">
                       <Field label="Eyebrow">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.disciplines.eyebrow}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              disciplines: {
-                                ...aiWorkflowsDraft.disciplines,
-                                eyebrow: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.disciplines.eyebrow} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, disciplines: { ...aiWorkflowsDraft.disciplines, eyebrow: event.target.value } })} />
                       </Field>
                       <Field label="Title">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.disciplines.title}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              disciplines: {
-                                ...aiWorkflowsDraft.disciplines,
-                                title: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.disciplines.title} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, disciplines: { ...aiWorkflowsDraft.disciplines, title: event.target.value } })} />
                       </Field>
                     </div>
                     <Field label="Description">
-                      <textarea
-                        className={textareaClassName}
-                        value={aiWorkflowsDraft.disciplines.description}
-                        onChange={(event) =>
-                          setAiWorkflowsDraft({
-                            ...aiWorkflowsDraft,
-                            disciplines: {
-                              ...aiWorkflowsDraft.disciplines,
-                              description: event.target.value,
-                            },
-                          })
-                        }
-                      />
+                      <textarea className={textareaClassName} value={aiWorkflowsDraft.disciplines.description} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, disciplines: { ...aiWorkflowsDraft.disciplines, description: event.target.value } })} />
                     </Field>
-                    <AiDisciplineItemsEditor
-                      items={aiWorkflowsDraft.disciplines.items}
-                      onChange={(items) =>
-                        setAiWorkflowsDraft({
-                          ...aiWorkflowsDraft,
-                          disciplines: { ...aiWorkflowsDraft.disciplines, items },
-                        })
-                      }
-                    />
+                    <AiDisciplineItemsEditor items={aiWorkflowsDraft.disciplines.items} onChange={(items) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, disciplines: { ...aiWorkflowsDraft.disciplines, items } })} />
                   </CardContent>
                 </Card>
 
@@ -1730,60 +1612,16 @@ export function StudioAdminEditor({
                   <CardContent className="space-y-4 pb-6">
                     <div className="grid gap-4 lg:grid-cols-2">
                       <Field label="Eyebrow">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.guardrails.eyebrow}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              guardrails: {
-                                ...aiWorkflowsDraft.guardrails,
-                                eyebrow: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.guardrails.eyebrow} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, guardrails: { ...aiWorkflowsDraft.guardrails, eyebrow: event.target.value } })} />
                       </Field>
                       <Field label="Title">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.guardrails.title}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              guardrails: {
-                                ...aiWorkflowsDraft.guardrails,
-                                title: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.guardrails.title} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, guardrails: { ...aiWorkflowsDraft.guardrails, title: event.target.value } })} />
                       </Field>
                     </div>
                     <Field label="Description">
-                      <textarea
-                        className={textareaClassName}
-                        value={aiWorkflowsDraft.guardrails.description}
-                        onChange={(event) =>
-                          setAiWorkflowsDraft({
-                            ...aiWorkflowsDraft,
-                            guardrails: {
-                              ...aiWorkflowsDraft.guardrails,
-                              description: event.target.value,
-                            },
-                          })
-                        }
-                      />
+                      <textarea className={textareaClassName} value={aiWorkflowsDraft.guardrails.description} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, guardrails: { ...aiWorkflowsDraft.guardrails, description: event.target.value } })} />
                     </Field>
-                    <AiGuardrailItemsEditor
-                      items={aiWorkflowsDraft.guardrails.items}
-                      onChange={(items) =>
-                        setAiWorkflowsDraft({
-                          ...aiWorkflowsDraft,
-                          guardrails: { ...aiWorkflowsDraft.guardrails, items },
-                        })
-                      }
-                    />
+                    <AiGuardrailItemsEditor items={aiWorkflowsDraft.guardrails.items} onChange={(items) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, guardrails: { ...aiWorkflowsDraft.guardrails, items } })} />
                   </CardContent>
                 </Card>
 
@@ -1794,95 +1632,187 @@ export function StudioAdminEditor({
                   <CardContent className="space-y-4 pb-6">
                     <div className="grid gap-4 lg:grid-cols-2">
                       <Field label="Eyebrow">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.cta.eyebrow}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              cta: {
-                                ...aiWorkflowsDraft.cta,
-                                eyebrow: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.cta.eyebrow} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, cta: { ...aiWorkflowsDraft.cta, eyebrow: event.target.value } })} />
                       </Field>
                       <Field label="Title">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.cta.title}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              cta: {
-                                ...aiWorkflowsDraft.cta,
-                                title: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.cta.title} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, cta: { ...aiWorkflowsDraft.cta, title: event.target.value } })} />
                       </Field>
                     </div>
                     <Field label="Description">
-                      <textarea
-                        className={textareaClassName}
-                        value={aiWorkflowsDraft.cta.description}
-                        onChange={(event) =>
-                          setAiWorkflowsDraft({
-                            ...aiWorkflowsDraft,
-                            cta: {
-                              ...aiWorkflowsDraft.cta,
-                              description: event.target.value,
-                            },
-                          })
-                        }
-                      />
+                      <textarea className={textareaClassName} value={aiWorkflowsDraft.cta.description} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, cta: { ...aiWorkflowsDraft.cta, description: event.target.value } })} />
                     </Field>
                     <div className="grid gap-4 lg:grid-cols-2">
                       <Field label="Primary CTA label">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.cta.primaryCtaLabel}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              cta: {
-                                ...aiWorkflowsDraft.cta,
-                                primaryCtaLabel: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.cta.primaryCtaLabel} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, cta: { ...aiWorkflowsDraft.cta, primaryCtaLabel: event.target.value } })} />
                       </Field>
                       <Field label="Primary CTA href">
-                        <input
-                          className={formControlClassName}
-                          value={aiWorkflowsDraft.cta.primaryCtaHref}
-                          onChange={(event) =>
-                            setAiWorkflowsDraft({
-                              ...aiWorkflowsDraft,
-                              cta: {
-                                ...aiWorkflowsDraft.cta,
-                                primaryCtaHref: event.target.value,
-                              },
-                            })
-                          }
-                        />
+                        <input className={formControlClassName} value={aiWorkflowsDraft.cta.primaryCtaHref} onChange={(event) => setAiWorkflowsDraft({ ...aiWorkflowsDraft, cta: { ...aiWorkflowsDraft.cta, primaryCtaHref: event.target.value } })} />
                       </Field>
                     </div>
                   </CardContent>
                 </Card>
               </CardContent>
             </Card>
-            <StickySaveBar
-              label="Save AI Workflows content"
-              previewHref="/ai-workflows"
-            />
+            <StickySaveBar label="Save AI Workflows content" previewHref="/ai-workflows" />
           </form>
         </TabsContent>
 
-        <TabsContent value="digital-marketing">
+        <TabsContent value="services">
+          <Card>
+            <CardHeader className="space-y-4">
+              <CardTitle>Services content</CardTitle>
+              <Tabs
+                value={servicesSubTab}
+                onValueChange={(v) =>
+                  setServicesSubTab(v as "ai-native-engineering" | "uiux-design" | "digital-marketing")
+                }
+              >
+                <div className="space-y-2">
+                  <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                    Selected service
+                  </p>
+                  <TabsList variant="line">
+                    <TabsTrigger value="ai-native-engineering">AI Native Engineering</TabsTrigger>
+                    <TabsTrigger value="uiux-design">UI/UX Design</TabsTrigger>
+                    <TabsTrigger value="digital-marketing">Digital Marketing</TabsTrigger>
+                  </TabsList>
+                </div>
+              </Tabs>
+            </CardHeader>
+            <CardContent className="space-y-6 pb-6">
+              {servicesSubTab === "ai-native-engineering" && (
+          <form action={saveAiNativeEngineeringContentAction} className="space-y-6">
+            <input
+              type="hidden"
+              name="payload"
+              value={JSON.stringify(aiNativeEngineeringDraft)}
+              readOnly
+            />
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Hero</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Title">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.hero.title} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, hero: { ...aiNativeEngineeringDraft.hero, title: event.target.value } })} />
+                      </Field>
+                      <Field label="Subtitle">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.hero.subtitle} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, hero: { ...aiNativeEngineeringDraft.hero, subtitle: event.target.value } })} />
+                      </Field>
+                    </div>
+                    <Field label="Description">
+                      <textarea className={textareaClassName} value={aiNativeEngineeringDraft.hero.description} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, hero: { ...aiNativeEngineeringDraft.hero, description: event.target.value } })} />
+                    </Field>
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="CTA label">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.hero.ctaLabel ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, hero: { ...aiNativeEngineeringDraft.hero, ctaLabel: event.target.value } })} />
+                      </Field>
+                      <Field label="CTA href">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.hero.ctaHref ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, hero: { ...aiNativeEngineeringDraft.hero, ctaHref: event.target.value } })} />
+                      </Field>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Services section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Section title">
+                      <input className={formControlClassName} value={aiNativeEngineeringDraft.servicesTitle} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, servicesTitle: event.target.value })} />
+                    </Field>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">Service items</p>
+                        <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: [...aiNativeEngineeringDraft.services, { title: "", description: "", iconKey: "cpu" }] })}>Add service</Button>
+                      </div>
+                      {aiNativeEngineeringDraft.services.map((service: StudioAiNativeEngineeringServiceItem, index: number) => (
+                        <Card key={`ane-service-${index}`}>
+                          <CardHeader className="flex flex-row items-center justify-between gap-3">
+                            <CardTitle className="text-body-lg">Service {index + 1}</CardTitle>
+                            <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: removeAt(aiNativeEngineeringDraft.services, index) })}>Remove</Button>
+                          </CardHeader>
+                          <CardContent className="space-y-4 pb-6">
+                            <Field label="Title">
+                              <input className={formControlClassName} value={service.title} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: replaceAt(aiNativeEngineeringDraft.services, index, { ...service, title: event.target.value }) })} />
+                            </Field>
+                            <Field label="Description">
+                              <textarea className={textareaClassName} value={service.description} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: replaceAt(aiNativeEngineeringDraft.services, index, { ...service, description: event.target.value }) })} />
+                            </Field>
+                            <Field label="Icon key">
+                              <select className={formControlClassName} value={service.iconKey} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: replaceAt(aiNativeEngineeringDraft.services, index, { ...service, iconKey: event.target.value as StudioAiNativeEngineeringServiceItem["iconKey"] }) })}>
+                                <option value="cpu">cpu</option>
+                                <option value="code">code</option>
+                                <option value="workflow">workflow</option>
+                                <option value="layers">layers</option>
+                              </select>
+                            </Field>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Case studies section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Section title">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.caseStudiesTitle} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudiesTitle: event.target.value })} />
+                      </Field>
+                    </div>
+                    <Field label="Section description">
+                      <textarea className={textareaClassName} value={aiNativeEngineeringDraft.caseStudiesDescription} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudiesDescription: event.target.value })} />
+                    </Field>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">Case study cards</p>
+                        <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: [...aiNativeEngineeringDraft.caseStudies, { slug: "", title: "", description: "", category: "", ctaLabel: "View Case Study" }] })}>Add case study</Button>
+                      </div>
+                      {aiNativeEngineeringDraft.caseStudies.map((cs: StudioAiNativeEngineeringCaseStudy, index: number) => (
+                        <Card key={`ane-cs-${index}`}>
+                          <CardHeader className="flex flex-row items-center justify-between gap-3">
+                            <CardTitle className="text-body-lg">{cs.title || `Case Study ${index + 1}`}</CardTitle>
+                            <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: removeAt(aiNativeEngineeringDraft.caseStudies, index) })}>Remove</Button>
+                          </CardHeader>
+                          <CardContent className="space-y-4 pb-6">
+                            <div className="grid gap-4 lg:grid-cols-2">
+                              <Field label="Slug">
+                                <input className={formControlClassName} value={cs.slug} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, slug: event.target.value }) })} />
+                              </Field>
+                              <Field label="Title">
+                                <input className={formControlClassName} value={cs.title} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, title: event.target.value }) })} />
+                              </Field>
+                            </div>
+                            <Field label="Description">
+                              <textarea className={textareaClassName} value={cs.description} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, description: event.target.value }) })} />
+                            </Field>
+                            <div className="grid gap-4 lg:grid-cols-2">
+                              <Field label="Category">
+                                <input className={formControlClassName} value={cs.category} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, category: event.target.value }) })} />
+                              </Field>
+                              <Field label="CTA label">
+                                <input className={formControlClassName} value={cs.ctaLabel} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, ctaLabel: event.target.value }) })} />
+                              </Field>
+                            </div>
+                            <Field label="Thumbnail src">
+                              <input className={formControlClassName} value={cs.thumbnailSrc ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, caseStudies: replaceAt(aiNativeEngineeringDraft.caseStudies, index, { ...cs, thumbnailSrc: event.target.value }) })} />
+                            </Field>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+            <StickySaveBar label="Save AI Native Engineering" previewHref="/ai-native-engineering" />
+          </form>
+              )}
+              {servicesSubTab === "digital-marketing" && (
           <form action={saveDigitalMarketingContentAction} className="space-y-6">
             <input
               type="hidden"
@@ -1890,11 +1820,6 @@ export function StudioAdminEditor({
               value={JSON.stringify(digitalMarketingDraft)}
               readOnly
             />
-            <Card>
-              <CardHeader>
-                <CardTitle>Digital Marketing content</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6 pb-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-body-lg">Hero</CardTitle>
@@ -2287,10 +2212,389 @@ export function StudioAdminEditor({
                     </div>
                   </CardContent>
                 </Card>
-              </CardContent>
-            </Card>
             <StickySaveBar label="Save Digital Marketing" previewHref="/digital-marketing" />
           </form>
+              )}
+              {servicesSubTab === "uiux-design" && (
+              <form action={saveUiuxDesignContentAction} className="space-y-6">
+                <input
+                  type="hidden"
+                  name="payload"
+                  value={JSON.stringify(uiuxDesignDraft)}
+                  readOnly
+                />
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Hero</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="Title">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.hero.title}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  hero: { ...uiuxDesignDraft.hero, title: event.target.value },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Subtitle">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.hero.subtitle}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  hero: { ...uiuxDesignDraft.hero, subtitle: event.target.value },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                        <Field label="Description">
+                          <textarea
+                            className={textareaClassName}
+                            value={uiuxDesignDraft.hero.description}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                hero: { ...uiuxDesignDraft.hero, description: event.target.value },
+                              })
+                            }
+                          />
+                        </Field>
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="CTA label">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.hero.ctaLabel ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  hero: { ...uiuxDesignDraft.hero, ctaLabel: event.target.value },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="CTA href">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.hero.ctaHref ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  hero: { ...uiuxDesignDraft.hero, ctaHref: event.target.value },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Services section</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <Field label="Section title">
+                          <input
+                            className={formControlClassName}
+                            value={uiuxDesignDraft.servicesTitle}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                servicesTitle: event.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                              Service items
+                            </p>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  services: [
+                                    ...uiuxDesignDraft.services,
+                                    { title: "", description: "", iconKey: "palette" },
+                                  ],
+                                })
+                              }
+                            >
+                              Add service
+                            </Button>
+                          </div>
+                          {uiuxDesignDraft.services.map(
+                            (service: StudioUiuxDesignServiceItem, index: number) => (
+                              <Card key={`uiux-service-${index}`}>
+                                <CardHeader className="flex flex-row items-center justify-between gap-3">
+                                  <CardTitle className="text-body-lg">
+                                    Service {index + 1}
+                                  </CardTitle>
+                                  <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() =>
+                                      setUiuxDesignDraft({
+                                        ...uiuxDesignDraft,
+                                        services: removeAt(uiuxDesignDraft.services, index),
+                                      })
+                                    }
+                                  >
+                                    Remove
+                                  </Button>
+                                </CardHeader>
+                                <CardContent className="space-y-4 pb-6">
+                                  <Field label="Title">
+                                    <input
+                                      className={formControlClassName}
+                                      value={service.title}
+                                      onChange={(event) =>
+                                        setUiuxDesignDraft({
+                                          ...uiuxDesignDraft,
+                                          services: replaceAt(uiuxDesignDraft.services, index, {
+                                            ...service,
+                                            title: event.target.value,
+                                          }),
+                                        })
+                                      }
+                                    />
+                                  </Field>
+                                  <Field label="Description">
+                                    <textarea
+                                      className={textareaClassName}
+                                      value={service.description}
+                                      onChange={(event) =>
+                                        setUiuxDesignDraft({
+                                          ...uiuxDesignDraft,
+                                          services: replaceAt(uiuxDesignDraft.services, index, {
+                                            ...service,
+                                            description: event.target.value,
+                                          }),
+                                        })
+                                      }
+                                    />
+                                  </Field>
+                                  <Field label="Icon key">
+                                    <select
+                                      className={formControlClassName}
+                                      value={service.iconKey}
+                                      onChange={(event) =>
+                                        setUiuxDesignDraft({
+                                          ...uiuxDesignDraft,
+                                          services: replaceAt(uiuxDesignDraft.services, index, {
+                                            ...service,
+                                            iconKey: event.target.value as StudioUiuxDesignServiceItem["iconKey"],
+                                          }),
+                                        })
+                                      }
+                                    >
+                                      <option value="palette">palette</option>
+                                      <option value="layout">layout</option>
+                                      <option value="search">search</option>
+                                      <option value="pointer">pointer</option>
+                                    </select>
+                                  </Field>
+                                </CardContent>
+                              </Card>
+                            ),
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Case studies section</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="Section title">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.caseStudiesTitle}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  caseStudiesTitle: event.target.value,
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                        <Field label="Section description">
+                          <textarea
+                            className={textareaClassName}
+                            value={uiuxDesignDraft.caseStudiesDescription}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                caseStudiesDescription: event.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                              Case study cards
+                            </p>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  caseStudies: [
+                                    ...uiuxDesignDraft.caseStudies,
+                                    { slug: "", title: "", description: "", category: "", ctaLabel: "View Case Study" },
+                                  ],
+                                })
+                              }
+                            >
+                              Add case study
+                            </Button>
+                          </div>
+                          {uiuxDesignDraft.caseStudies.map(
+                            (cs: StudioUiuxDesignCaseStudy, index: number) => (
+                              <Card key={`uiux-cs-${index}`}>
+                                <CardHeader className="flex flex-row items-center justify-between gap-3">
+                                  <CardTitle className="text-body-lg">
+                                    {cs.title || `Case Study ${index + 1}`}
+                                  </CardTitle>
+                                  <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() =>
+                                      setUiuxDesignDraft({
+                                        ...uiuxDesignDraft,
+                                        caseStudies: removeAt(uiuxDesignDraft.caseStudies, index),
+                                      })
+                                    }
+                                  >
+                                    Remove
+                                  </Button>
+                                </CardHeader>
+                                <CardContent className="space-y-4 pb-6">
+                                  <div className="grid gap-4 lg:grid-cols-2">
+                                    <Field label="Slug">
+                                      <input
+                                        className={formControlClassName}
+                                        value={cs.slug}
+                                        onChange={(event) =>
+                                          setUiuxDesignDraft({
+                                            ...uiuxDesignDraft,
+                                            caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                              ...cs,
+                                              slug: event.target.value,
+                                            }),
+                                          })
+                                        }
+                                      />
+                                    </Field>
+                                    <Field label="Title">
+                                      <input
+                                        className={formControlClassName}
+                                        value={cs.title}
+                                        onChange={(event) =>
+                                          setUiuxDesignDraft({
+                                            ...uiuxDesignDraft,
+                                            caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                              ...cs,
+                                              title: event.target.value,
+                                            }),
+                                          })
+                                        }
+                                      />
+                                    </Field>
+                                  </div>
+                                  <Field label="Description">
+                                    <textarea
+                                      className={textareaClassName}
+                                      value={cs.description}
+                                      onChange={(event) =>
+                                        setUiuxDesignDraft({
+                                          ...uiuxDesignDraft,
+                                          caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                            ...cs,
+                                            description: event.target.value,
+                                          }),
+                                        })
+                                      }
+                                    />
+                                  </Field>
+                                  <div className="grid gap-4 lg:grid-cols-2">
+                                    <Field label="Category">
+                                      <input
+                                        className={formControlClassName}
+                                        value={cs.category}
+                                        onChange={(event) =>
+                                          setUiuxDesignDraft({
+                                            ...uiuxDesignDraft,
+                                            caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                              ...cs,
+                                              category: event.target.value,
+                                            }),
+                                          })
+                                        }
+                                      />
+                                    </Field>
+                                    <Field label="CTA label">
+                                      <input
+                                        className={formControlClassName}
+                                        value={cs.ctaLabel}
+                                        onChange={(event) =>
+                                          setUiuxDesignDraft({
+                                            ...uiuxDesignDraft,
+                                            caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                              ...cs,
+                                              ctaLabel: event.target.value,
+                                            }),
+                                          })
+                                        }
+                                      />
+                                    </Field>
+                                  </div>
+                                  <Field label="Thumbnail src">
+                                    <input
+                                      className={formControlClassName}
+                                      value={cs.thumbnailSrc ?? ""}
+                                      onChange={(event) =>
+                                        setUiuxDesignDraft({
+                                          ...uiuxDesignDraft,
+                                          caseStudies: replaceAt(uiuxDesignDraft.caseStudies, index, {
+                                            ...cs,
+                                            thumbnailSrc: event.target.value,
+                                          }),
+                                        })
+                                      }
+                                    />
+                                  </Field>
+                                </CardContent>
+                              </Card>
+                            ),
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                <StickySaveBar label="Save UI/UX Design" previewHref="/uiux-design" />
+              </form>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="case-studies">

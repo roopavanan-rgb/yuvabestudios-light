@@ -5,15 +5,19 @@ import { redirect } from "next/navigation";
 
 import {
   parseStudioAboutPageContentInput,
+  parseStudioAiNativeEngineeringContentInput,
   parseStudioAiWorkflowsContentInput,
   parseStudioDigitalMarketingContentInput,
   parseStudioEditableCaseStudyInput,
   parseStudioHomepageContentInput,
+  parseStudioUiuxDesignContentInput,
   saveStudioAboutPageContent,
+  saveStudioAiNativeEngineeringContent,
   saveStudioAiWorkflowsContent,
   saveStudioCaseStudy,
   saveStudioDigitalMarketingContent,
   saveStudioHomepageContent,
+  saveStudioUiuxDesignContent,
 } from "@/lib/studio-content";
 
 function expectString(value: FormDataEntryValue | null, label: string) {
@@ -65,7 +69,29 @@ export async function saveDigitalMarketingContentAction(formData: FormData) {
 
   revalidatePath("/digital-marketing");
   revalidatePath("/studio-admin");
-  redirect("/studio-admin?tab=digital-marketing&saved=digital-marketing");
+  redirect("/studio-admin?tab=services&saved=digital-marketing");
+}
+
+export async function saveAiNativeEngineeringContentAction(formData: FormData) {
+  const payload = expectString(formData.get("payload"), "AI Native Engineering payload");
+  const parsedPayload = parseStudioAiNativeEngineeringContentInput(JSON.parse(payload));
+
+  await saveStudioAiNativeEngineeringContent(parsedPayload, { source: "supabase" });
+
+  revalidatePath("/ai-native-engineering");
+  revalidatePath("/studio-admin");
+  redirect("/studio-admin?tab=services&saved=ai-native-engineering");
+}
+
+export async function saveUiuxDesignContentAction(formData: FormData) {
+  const payload = expectString(formData.get("payload"), "UI/UX Design payload");
+  const parsedPayload = parseStudioUiuxDesignContentInput(JSON.parse(payload));
+
+  await saveStudioUiuxDesignContent(parsedPayload, { source: "supabase" });
+
+  revalidatePath("/uiux-design");
+  revalidatePath("/studio-admin");
+  redirect("/studio-admin?tab=services&saved=uiux-design");
 }
 
 export async function saveCaseStudyContentAction(formData: FormData) {
