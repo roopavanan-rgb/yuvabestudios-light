@@ -2251,7 +2251,23 @@ export async function getStudioUiuxDesignContent(options?: StudioContentOptions)
     uiuxDesignFilePath,
     options,
   );
-  return parseUiuxDesignContent(rawContent);
+
+  try {
+    return parseUiuxDesignContent(rawContent);
+  } catch (error) {
+    const contentSource = options?.source ?? getStudioContentSource();
+
+    // Keep production pages renderable when auto mode receives malformed CMS payloads.
+    if (contentSource !== "auto") {
+      throw error;
+    }
+
+    console.warn(
+      "Falling back to local uiux_design content because Supabase payload validation failed.",
+      error,
+    );
+    return parseUiuxDesignContent(await readJsonFile<unknown>(uiuxDesignFilePath));
+  }
 }
 
 export async function saveStudioUiuxDesignContent(
@@ -2290,7 +2306,25 @@ export async function getStudioAiNativeEngineeringContent(options?: StudioConten
     aiNativeEngineeringFilePath,
     options,
   );
-  return parseAiNativeEngineeringContent(rawContent);
+
+  try {
+    return parseAiNativeEngineeringContent(rawContent);
+  } catch (error) {
+    const contentSource = options?.source ?? getStudioContentSource();
+
+    // Keep production pages renderable when auto mode receives malformed CMS payloads.
+    if (contentSource !== "auto") {
+      throw error;
+    }
+
+    console.warn(
+      "Falling back to local ai_native_engineering content because Supabase payload validation failed.",
+      error,
+    );
+    return parseAiNativeEngineeringContent(
+      await readJsonFile<unknown>(aiNativeEngineeringFilePath),
+    );
+  }
 }
 
 export async function saveStudioAiNativeEngineeringContent(
