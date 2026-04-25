@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import {
@@ -1146,6 +1146,31 @@ export function StudioAdminEditor({
   const [selectedCaseStudyId, setSelectedCaseStudyId] = useState(
     initialCaseStudyId ?? caseStudies[0]?.id ?? "",
   );
+  const [caseStudiesExpanded, setCaseStudiesExpanded] = useState(false);
+  const [visibleTabLimit, setVisibleTabLimit] = useState(5);
+
+  useEffect(() => {
+    function updateLimit() {
+      const w = window.innerWidth;
+      if (w >= 1280) setVisibleTabLimit(10);
+      else if (w >= 1024) setVisibleTabLimit(7);
+      else if (w >= 768) setVisibleTabLimit(5);
+      else setVisibleTabLimit(3);
+    }
+    updateLimit();
+    window.addEventListener("resize", updateLimit);
+    return () => window.removeEventListener("resize", updateLimit);
+  }, []);
+
+  useEffect(() => {
+    const idx = caseStudyDrafts.findIndex((cs) => cs.id === selectedCaseStudyId);
+    if (idx >= visibleTabLimit) setCaseStudiesExpanded(true);
+  }, [selectedCaseStudyId, visibleTabLimit, caseStudyDrafts]);
+
+  const visibleCaseStudies = caseStudiesExpanded
+    ? caseStudyDrafts
+    : caseStudyDrafts.slice(0, visibleTabLimit);
+  const hiddenCaseStudyCount = caseStudyDrafts.length - visibleCaseStudies.length;
 
   const selectedCaseStudy = useMemo(
     () =>
@@ -2605,18 +2630,26 @@ export function StudioAdminEditor({
               <Card>
                 <CardHeader className="space-y-4">
                   <CardTitle>Case-study content</CardTitle>
-                  {/* The case-study switcher uses the shared shadcn tabs primitive so selection stays aligned with the system. */}
                   <Tabs value={selectedCaseStudy.id} onValueChange={setSelectedCaseStudyId}>
                     <div className="space-y-2">
                       <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
                         Selected case study
                       </p>
                       <TabsList variant="line">
-                        {caseStudyDrafts.map((caseStudy) => (
+                        {visibleCaseStudies.map((caseStudy) => (
                           <TabsTrigger key={caseStudy.id} value={caseStudy.id}>
                             {caseStudy.title}
                           </TabsTrigger>
                         ))}
+                        {!caseStudiesExpanded && hiddenCaseStudyCount > 0 && (
+                          <button
+                            type="button"
+                            onClick={() => setCaseStudiesExpanded(true)}
+                            className="ml-1 shrink-0 rounded-[var(--ds-radius-sm)] px-2.5 py-1 text-label-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          >
+                            +{hiddenCaseStudyCount} more
+                          </button>
+                        )}
                       </TabsList>
                     </div>
                   </Tabs>

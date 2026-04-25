@@ -1,7 +1,4 @@
-import {
-  createStudioEditableCaseStudy,
-  isStudioCaseStudyId,
-} from "@/components/studio/studio-case-study-content";
+import { createStudioEditableCaseStudy } from "@/components/studio/studio-case-study-content";
 import { StudioAdminEditor } from "@/components/studio/studio-admin-editor";
 import {
   getStudioAboutPageContent,
@@ -49,7 +46,7 @@ export default async function StudioAdminPage({
   const editableCaseStudies = caseStudies.map(createStudioEditableCaseStudy);
   const defaultCaseStudyId = editableCaseStudies[0]?.id;
   const selectedCaseStudyId =
-    caseStudyId && isStudioCaseStudyId(caseStudyId)
+    caseStudyId && editableCaseStudies.some((cs) => cs.id === caseStudyId)
       ? caseStudyId
       : defaultCaseStudyId;
   const initialTab =

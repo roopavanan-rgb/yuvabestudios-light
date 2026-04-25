@@ -1527,7 +1527,7 @@ function parseCaseStudySummary(value: unknown, label: string): StudioCaseStudySu
   const id = expectString(value.id, `${label}.id`);
 
   if (!isStudioCaseStudyId(id)) {
-    throw new Error(`${label}.id is not a supported case-study id.`);
+    throw new Error(`${label}.id must be a valid slug (e.g. "my-project").`);
   }
 
   return {
@@ -1783,7 +1783,6 @@ async function getStudioContentDocument<T>(
 
   if (contentSource === "supabase") {
     const payload = await readContentDocument(key);
-console.log("Fetching key:", key, "Payload result:", payload);
     if (payload === undefined) {
       throw new Error(`Missing Supabase content document "${key}".`);
     }
@@ -1890,16 +1889,43 @@ export async function saveStudioAiWorkflowsContent(
 }
 
 export async function getStudioCaseStudies(options?: StudioContentOptions) {
-  const rawCaseStudies = await getStudioContentDocument<unknown[]>(
-    "case_studies",
-    caseStudiesFilePath,
-    options,
-  );
-  const caseStudies = expectArray(rawCaseStudies, "studio case studies");
+  const contentSource = options?.source ?? getStudioContentSource();
 
-  return caseStudies.map((caseStudy, index) =>
-    parseCaseStudySummary(caseStudy, `studio case studies[${index}]`),
+  const parseEntries = (raw: unknown[]) =>
+    raw.map((cs, index) => parseCaseStudySummary(cs, `studio case studies[${index}]`));
+
+  // The local JSON is always the authoritative case-study roster.
+  // It defines which case studies exist; Supabase stores per-entry editable overrides.
+  const localEntries = parseEntries(
+    expectArray(await readJsonFile<unknown[]>(caseStudiesFilePath), "studio case studies (local)"),
   );
+
+  if (contentSource === "local") {
+    return localEntries;
+  }
+
+  let supabaseEntries: StudioCaseStudySummary[] | undefined;
+
+  try {
+    const payload = await readContentDocument("case_studies");
+    if (Array.isArray(payload)) {
+      supabaseEntries = parseEntries(payload);
+    }
+  } catch (error) {
+    if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) {
+      throw error;
+    }
+    console.warn("Falling back to local case_studies content.", error);
+    return localEntries;
+  }
+
+  if (!supabaseEntries) {
+    return localEntries;
+  }
+
+  // Supabase wins per ID; local fills any gap not yet saved to Supabase.
+  const overrideById = new Map(supabaseEntries.map((cs) => [cs.id, cs]));
+  return localEntries.map((cs) => overrideById.get(cs.id) ?? cs);
 }
 
 export async function getStudioCaseStudyById(
