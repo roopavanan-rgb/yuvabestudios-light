@@ -25,16 +25,44 @@ export type StudioUiuxDesignCaseStudy = {
 export type StudioUiuxDesignServiceItem = {
   title: string;
   description: string;
-  iconKey: "palette" | "layout" | "search" | "pointer";
+  iconKey: "palette" | "layout" | "smartphone" | "layoutDashboard";
+};
+
+export type StudioUiuxDesignBestFit = {
+  label: string;
+  description: string;
+};
+
+export type StudioUiuxDesignApproachPrinciple = {
+  title: string;
+  description: string;
+};
+
+export type StudioUiuxDesignApproach = {
+  label: string;
+  headline: string;
+  principles: StudioUiuxDesignApproachPrinciple[];
+};
+
+export type StudioUiuxDesignPageTestimonial = {
+  label: string;
+  quote: string;
+  name: string;
+  attribution: string;
 };
 
 export type StudioUiuxDesignContent = {
   hero: StudioUiuxDesignHeroContent;
+  bestFit?: StudioUiuxDesignBestFit;
   caseStudiesTitle: string;
   caseStudiesDescription: string;
   caseStudies: StudioUiuxDesignCaseStudy[];
+  approach?: StudioUiuxDesignApproach;
   servicesTitle: string;
   services: StudioUiuxDesignServiceItem[];
+  pageTestimonial?: StudioUiuxDesignPageTestimonial;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
 };
 
 export const studioUiuxDesignContent =

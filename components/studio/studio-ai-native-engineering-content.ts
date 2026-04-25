@@ -25,16 +25,44 @@ export type StudioAiNativeEngineeringCaseStudy = {
 export type StudioAiNativeEngineeringServiceItem = {
   title: string;
   description: string;
-  iconKey: "cpu" | "code" | "workflow" | "layers";
+  iconKey: "cpu" | "database" | "bot" | "cloud";
+};
+
+export type StudioAiNativeEngineeringBestFit = {
+  label: string;
+  description: string;
+};
+
+export type StudioAiNativeEngineeringApproachPrinciple = {
+  title: string;
+  description: string;
+};
+
+export type StudioAiNativeEngineeringApproach = {
+  label: string;
+  headline: string;
+  principles: StudioAiNativeEngineeringApproachPrinciple[];
+};
+
+export type StudioAiNativeEngineeringPageTestimonial = {
+  label: string;
+  quote: string;
+  name: string;
+  attribution: string;
 };
 
 export type StudioAiNativeEngineeringContent = {
   hero: StudioAiNativeEngineeringHeroContent;
+  bestFit?: StudioAiNativeEngineeringBestFit;
   caseStudiesTitle: string;
   caseStudiesDescription: string;
   caseStudies: StudioAiNativeEngineeringCaseStudy[];
+  approach?: StudioAiNativeEngineeringApproach;
   servicesTitle: string;
   services: StudioAiNativeEngineeringServiceItem[];
+  pageTestimonial?: StudioAiNativeEngineeringPageTestimonial;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
 };
 
 export const studioAiNativeEngineeringContent =

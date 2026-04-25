@@ -2133,6 +2133,13 @@ function parseDigitalMarketingContent(value: unknown): StudioDigitalMarketingCon
       ctaLabel: optionalString(value.hero.ctaLabel),
       ctaHref: optionalString(value.hero.ctaHref),
     },
+    bestFit:
+      value.bestFit && typeof value.bestFit === "object"
+        ? {
+            label: expectString((value.bestFit as Record<string, unknown>).label, "digital marketing content.bestFit.label"),
+            description: expectString((value.bestFit as Record<string, unknown>).description, "digital marketing content.bestFit.description"),
+          }
+        : undefined,
     caseStudiesTitle: expectString(
       value.caseStudiesTitle,
       "digital marketing content.caseStudiesTitle",
@@ -2150,6 +2157,22 @@ function parseDigitalMarketingContent(value: unknown): StudioDigitalMarketingCon
         `digital marketing content.caseStudies[${index}]`,
       ),
     ),
+    approach:
+      value.approach && typeof value.approach === "object"
+        ? {
+            label: expectString((value.approach as Record<string, unknown>).label, "digital marketing content.approach.label"),
+            headline: expectString((value.approach as Record<string, unknown>).headline, "digital marketing content.approach.headline"),
+            principles: expectArray((value.approach as Record<string, unknown>).principles, "digital marketing content.approach.principles").map(
+              (p, i) => {
+                assertRecord(p, `digital marketing content.approach.principles[${i}]`);
+                return {
+                  title: expectString(p.title, `digital marketing content.approach.principles[${i}].title`),
+                  description: expectString(p.description, `digital marketing content.approach.principles[${i}].description`),
+                };
+              },
+            ),
+          }
+        : undefined,
     servicesTitle: expectString(
       value.servicesTitle,
       "digital marketing content.servicesTitle",
@@ -2163,6 +2186,17 @@ function parseDigitalMarketingContent(value: unknown): StudioDigitalMarketingCon
         `digital marketing content.services[${index}]`,
       ),
     ),
+    pageTestimonial:
+      value.pageTestimonial && typeof value.pageTestimonial === "object"
+        ? {
+            label: expectString((value.pageTestimonial as Record<string, unknown>).label, "digital marketing content.pageTestimonial.label"),
+            quote: expectString((value.pageTestimonial as Record<string, unknown>).quote, "digital marketing content.pageTestimonial.quote"),
+            name: expectString((value.pageTestimonial as Record<string, unknown>).name, "digital marketing content.pageTestimonial.name"),
+            attribution: expectString((value.pageTestimonial as Record<string, unknown>).attribution, "digital marketing content.pageTestimonial.attribution"),
+          }
+        : undefined,
+    secondaryCtaLabel: optionalString(value.secondaryCtaLabel),
+    secondaryCtaHref: optionalString(value.secondaryCtaHref),
   };
 }
 
@@ -2222,18 +2256,84 @@ export function parseStudioDigitalMarketingContentInput(
         ),
       )
       .filter((item): item is StudioDigitalMarketingServiceItem => Boolean(item)),
+    bestFit:
+      value.bestFit && typeof value.bestFit === "object"
+        ? {
+            label: expectString((value.bestFit as Record<string, unknown>).label, "digital marketing content payload.bestFit.label").trim(),
+            description: expectString((value.bestFit as Record<string, unknown>).description, "digital marketing content payload.bestFit.description").trim(),
+          }
+        : undefined,
+    approach:
+      value.approach && typeof value.approach === "object"
+        ? {
+            label: expectString((value.approach as Record<string, unknown>).label, "digital marketing content payload.approach.label").trim(),
+            headline: expectString((value.approach as Record<string, unknown>).headline, "digital marketing content payload.approach.headline").trim(),
+            principles: expectArray((value.approach as Record<string, unknown>).principles, "digital marketing content payload.approach.principles").map(
+              (p, i) => {
+                assertRecord(p, `digital marketing content payload.approach.principles[${i}]`);
+                return {
+                  title: expectString(p.title, `digital marketing content payload.approach.principles[${i}].title`).trim(),
+                  description: expectString(p.description, `digital marketing content payload.approach.principles[${i}].description`).trim(),
+                };
+              },
+            ),
+          }
+        : undefined,
+    pageTestimonial:
+      value.pageTestimonial && typeof value.pageTestimonial === "object"
+        ? {
+            label: expectString((value.pageTestimonial as Record<string, unknown>).label, "digital marketing content payload.pageTestimonial.label").trim(),
+            quote: expectString((value.pageTestimonial as Record<string, unknown>).quote, "digital marketing content payload.pageTestimonial.quote").trim(),
+            name: expectString((value.pageTestimonial as Record<string, unknown>).name, "digital marketing content payload.pageTestimonial.name").trim(),
+            attribution: expectString((value.pageTestimonial as Record<string, unknown>).attribution, "digital marketing content payload.pageTestimonial.attribution").trim(),
+          }
+        : undefined,
+    secondaryCtaLabel: normalizeOptionalString(value.secondaryCtaLabel),
+    secondaryCtaHref: normalizeOptionalString(value.secondaryCtaHref),
   };
 }
 
 export async function getStudioDigitalMarketingContent(
   options?: StudioContentOptions,
 ) {
-  const rawContent = await getStudioContentDocument<unknown>(
-    "digital_marketing",
-    digitalMarketingFilePath,
-    options,
-  );
-  return parseDigitalMarketingContent(rawContent);
+  const contentSource = options?.source ?? getStudioContentSource();
+
+  // Local JSON is always the structural baseline — new fields added here should appear immediately.
+  const localRaw = await readJsonFile<Record<string, unknown>>(digitalMarketingFilePath);
+
+  if (contentSource === "local") {
+    return parseDigitalMarketingContent(localRaw);
+  }
+
+  let supabaseRaw: Record<string, unknown> | undefined;
+
+  try {
+    const payload = await readContentDocument("digital_marketing");
+    if (payload && typeof payload === "object") {
+      supabaseRaw = payload as Record<string, unknown>;
+    }
+  } catch (error) {
+    if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) throw error;
+    console.warn("Falling back to local digital_marketing content.", error);
+    return parseDigitalMarketingContent(localRaw);
+  }
+
+  if (!supabaseRaw) {
+    try { await writeContentDocument("digital_marketing", localRaw); } catch {}
+    return parseDigitalMarketingContent(localRaw);
+  }
+
+  // When the local JSON has top-level keys Supabase lacks (new fields added in code),
+  // reset Supabase to the local JSON so all structural changes appear immediately.
+  const localKeys = Object.keys(localRaw);
+  const supabaseIsMissingNewFields = localKeys.some((k) => !(k in supabaseRaw!));
+
+  if (supabaseIsMissingNewFields) {
+    try { await writeContentDocument("digital_marketing", localRaw); } catch {}
+    return parseDigitalMarketingContent(localRaw);
+  }
+
+  return parseDigitalMarketingContent(supabaseRaw);
 }
 
 export async function saveStudioDigitalMarketingContent(
@@ -2259,15 +2359,49 @@ function parseUiuxDesignContent(value: unknown): StudioUiuxDesignContent {
       ctaLabel: optionalString(value.hero.ctaLabel),
       ctaHref: optionalString(value.hero.ctaHref),
     },
+    bestFit:
+      value.bestFit && typeof value.bestFit === "object"
+        ? {
+            label: expectString((value.bestFit as Record<string, unknown>).label, "uiux design content.bestFit.label"),
+            description: expectString((value.bestFit as Record<string, unknown>).description, "uiux design content.bestFit.description"),
+          }
+        : undefined,
     caseStudiesTitle: expectString(value.caseStudiesTitle, "uiux design content.caseStudiesTitle"),
     caseStudiesDescription: expectString(value.caseStudiesDescription, "uiux design content.caseStudiesDescription"),
     caseStudies: expectArray(value.caseStudies, "uiux design content.caseStudies").map((item, index) =>
       parseUiuxDesignCaseStudy(item, `uiux design content.caseStudies[${index}]`),
     ),
+    approach:
+      value.approach && typeof value.approach === "object"
+        ? {
+            label: expectString((value.approach as Record<string, unknown>).label, "uiux design content.approach.label"),
+            headline: expectString((value.approach as Record<string, unknown>).headline, "uiux design content.approach.headline"),
+            principles: expectArray((value.approach as Record<string, unknown>).principles, "uiux design content.approach.principles").map(
+              (p, i) => {
+                assertRecord(p, `uiux design content.approach.principles[${i}]`);
+                return {
+                  title: expectString(p.title, `uiux design content.approach.principles[${i}].title`),
+                  description: expectString(p.description, `uiux design content.approach.principles[${i}].description`),
+                };
+              },
+            ),
+          }
+        : undefined,
     servicesTitle: expectString(value.servicesTitle, "uiux design content.servicesTitle"),
     services: expectArray(value.services, "uiux design content.services").map((item, index) =>
       parseUiuxDesignServiceItem(item, `uiux design content.services[${index}]`),
     ),
+    pageTestimonial:
+      value.pageTestimonial && typeof value.pageTestimonial === "object"
+        ? {
+            label: expectString((value.pageTestimonial as Record<string, unknown>).label, "uiux design content.pageTestimonial.label"),
+            quote: expectString((value.pageTestimonial as Record<string, unknown>).quote, "uiux design content.pageTestimonial.quote"),
+            name: expectString((value.pageTestimonial as Record<string, unknown>).name, "uiux design content.pageTestimonial.name"),
+            attribution: expectString((value.pageTestimonial as Record<string, unknown>).attribution, "uiux design content.pageTestimonial.attribution"),
+          }
+        : undefined,
+    secondaryCtaLabel: optionalString(value.secondaryCtaLabel),
+    secondaryCtaHref: optionalString(value.secondaryCtaHref),
   };
 }
 
@@ -2301,27 +2435,47 @@ export function parseStudioUiuxDesignContentInput(
 }
 
 export async function getStudioUiuxDesignContent(options?: StudioContentOptions) {
-  const rawContent = await getStudioContentDocument<unknown>(
-    "uiux_design",
-    uiuxDesignFilePath,
-    options,
-  );
+  const contentSource = options?.source ?? getStudioContentSource();
+
+  const localRaw = await readJsonFile<Record<string, unknown>>(uiuxDesignFilePath);
+
+  if (contentSource === "local") {
+    return parseUiuxDesignContent(localRaw);
+  }
+
+  let supabaseRaw: Record<string, unknown> | undefined;
 
   try {
-    return parseUiuxDesignContent(rawContent);
-  } catch (error) {
-    const contentSource = options?.source ?? getStudioContentSource();
-
-    // Keep production pages renderable when auto mode receives malformed CMS payloads.
-    if (contentSource !== "auto") {
-      throw error;
+    const payload = await readContentDocument("uiux_design");
+    if (payload && typeof payload === "object") {
+      supabaseRaw = payload as Record<string, unknown>;
     }
+  } catch (error) {
+    if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) throw error;
+    console.warn("Falling back to local uiux_design content.", error);
+    return parseUiuxDesignContent(localRaw);
+  }
 
-    console.warn(
-      "Falling back to local uiux_design content because Supabase payload validation failed.",
-      error,
-    );
-    return parseUiuxDesignContent(await readJsonFile<unknown>(uiuxDesignFilePath));
+  if (!supabaseRaw) {
+    try { await writeContentDocument("uiux_design", localRaw); } catch {}
+    return parseUiuxDesignContent(localRaw);
+  }
+
+  const localKeys = Object.keys(localRaw);
+  const supabaseIsMissingNewFields = localKeys.some((k) => !(k in supabaseRaw!));
+
+  if (supabaseIsMissingNewFields) {
+    try { await writeContentDocument("uiux_design", localRaw); } catch {}
+    return parseUiuxDesignContent(localRaw);
+  }
+
+  try {
+    return parseUiuxDesignContent(supabaseRaw);
+  } catch (error) {
+    const contentSource2 = options?.source ?? getStudioContentSource();
+    if (contentSource2 !== "auto") throw error;
+    console.warn("Falling back to local uiux_design content because Supabase payload validation failed.", error);
+    return parseUiuxDesignContent(localRaw);
   }
 }
 
@@ -2343,15 +2497,49 @@ function parseAiNativeEngineeringContent(value: unknown): StudioAiNativeEngineer
       ctaLabel: optionalString(value.hero.ctaLabel),
       ctaHref: optionalString(value.hero.ctaHref),
     },
+    bestFit:
+      value.bestFit && typeof value.bestFit === "object"
+        ? {
+            label: expectString((value.bestFit as Record<string, unknown>).label, "ai native engineering content.bestFit.label"),
+            description: expectString((value.bestFit as Record<string, unknown>).description, "ai native engineering content.bestFit.description"),
+          }
+        : undefined,
     caseStudiesTitle: expectString(value.caseStudiesTitle, "ai native engineering content.caseStudiesTitle"),
     caseStudiesDescription: expectString(value.caseStudiesDescription, "ai native engineering content.caseStudiesDescription"),
     caseStudies: expectArray(value.caseStudies, "ai native engineering content.caseStudies").map((item, index) =>
       parseAiNativeEngineeringCaseStudy(item, `ai native engineering content.caseStudies[${index}]`),
     ),
+    approach:
+      value.approach && typeof value.approach === "object"
+        ? {
+            label: expectString((value.approach as Record<string, unknown>).label, "ai native engineering content.approach.label"),
+            headline: expectString((value.approach as Record<string, unknown>).headline, "ai native engineering content.approach.headline"),
+            principles: expectArray((value.approach as Record<string, unknown>).principles, "ai native engineering content.approach.principles").map(
+              (p, i) => {
+                assertRecord(p, `ai native engineering content.approach.principles[${i}]`);
+                return {
+                  title: expectString(p.title, `ai native engineering content.approach.principles[${i}].title`),
+                  description: expectString(p.description, `ai native engineering content.approach.principles[${i}].description`),
+                };
+              },
+            ),
+          }
+        : undefined,
     servicesTitle: expectString(value.servicesTitle, "ai native engineering content.servicesTitle"),
     services: expectArray(value.services, "ai native engineering content.services").map((item, index) =>
       parseAiNativeEngineeringServiceItem(item, `ai native engineering content.services[${index}]`),
     ),
+    pageTestimonial:
+      value.pageTestimonial && typeof value.pageTestimonial === "object"
+        ? {
+            label: expectString((value.pageTestimonial as Record<string, unknown>).label, "ai native engineering content.pageTestimonial.label"),
+            quote: expectString((value.pageTestimonial as Record<string, unknown>).quote, "ai native engineering content.pageTestimonial.quote"),
+            name: expectString((value.pageTestimonial as Record<string, unknown>).name, "ai native engineering content.pageTestimonial.name"),
+            attribution: expectString((value.pageTestimonial as Record<string, unknown>).attribution, "ai native engineering content.pageTestimonial.attribution"),
+          }
+        : undefined,
+    secondaryCtaLabel: optionalString(value.secondaryCtaLabel),
+    secondaryCtaHref: optionalString(value.secondaryCtaHref),
   };
 }
 
@@ -2385,17 +2573,43 @@ export function parseStudioAiNativeEngineeringContentInput(
 }
 
 export async function getStudioAiNativeEngineeringContent(options?: StudioContentOptions) {
-  const rawContent = await getStudioContentDocument<unknown>(
-    "ai_native_engineering",
-    aiNativeEngineeringFilePath,
-    options,
-  );
+  const contentSource = options?.source ?? getStudioContentSource();
+
+  const localRaw = await readJsonFile<Record<string, unknown>>(aiNativeEngineeringFilePath);
+
+  if (contentSource === "local") {
+    return parseAiNativeEngineeringContent(localRaw);
+  }
+
+  let supabaseRaw: Record<string, unknown> | undefined;
 
   try {
-    return parseAiNativeEngineeringContent(rawContent);
+    const payload = await readContentDocument("ai_native_engineering");
+    if (payload && typeof payload === "object") {
+      supabaseRaw = payload as Record<string, unknown>;
+    }
   } catch (error) {
-    const contentSource = options?.source ?? getStudioContentSource();
+    if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) throw error;
+    console.warn("Falling back to local ai_native_engineering content.", error);
+    return parseAiNativeEngineeringContent(localRaw);
+  }
 
+  if (!supabaseRaw) {
+    try { await writeContentDocument("ai_native_engineering", localRaw); } catch {}
+    return parseAiNativeEngineeringContent(localRaw);
+  }
+
+  const localKeys = Object.keys(localRaw);
+  const supabaseIsMissingNewFields = localKeys.some((k) => !(k in supabaseRaw!));
+
+  if (supabaseIsMissingNewFields) {
+    try { await writeContentDocument("ai_native_engineering", localRaw); } catch {}
+    return parseAiNativeEngineeringContent(localRaw);
+  }
+
+  try {
+    return parseAiNativeEngineeringContent(supabaseRaw);
+  } catch (error) {
     // Keep production pages renderable when auto mode receives malformed CMS payloads.
     if (contentSource !== "auto") {
       throw error;

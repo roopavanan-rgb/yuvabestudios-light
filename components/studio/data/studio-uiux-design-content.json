@@ -1,10 +1,14 @@
 {
   "hero": {
-    "title": "UI/UX Design",
-    "subtitle": "Interfaces people actually use",
-    "description": "Research-led design, product flows, and visual systems built for clarity, conversion, and the real contexts founders are shipping into.",
+    "title": "Interfaces designed for clarity, speed, and real use.",
+    "subtitle": "UI/UX Design",
+    "description": "From first interaction to daily workflows, we create experiences that feel intuitive, guide users seamlessly, and support better decisions.",
     "ctaLabel": "Start Your Project",
     "ctaHref": "/#process"
+  },
+  "bestFit": {
+    "label": "Best fit",
+    "description": "Founders whose product has grown faster than its interface — or teams shipping something new that needs to feel trustworthy from day one."
   },
   "caseStudiesTitle": "UI/UX Design Case Studies",
   "caseStudiesDescription": "Proof from product design systems, interface builds, and visual language work shipped for founders who care about how things feel.",
@@ -174,27 +178,53 @@
       }
     }
   ],
+  "approach": {
+    "label": "How we design it",
+    "headline": "Design that earns trust before users read a word.",
+    "principles": [
+      {
+        "title": "Clarity before aesthetics",
+        "description": "A beautiful interface that confuses people is a failed interface. We design for comprehension first — then make it look like it means business."
+      },
+      {
+        "title": "Design and engineering in the same room",
+        "description": "Our design decisions are made with the build in mind. No specs that can't be shipped. No handoff surprises."
+      },
+      {
+        "title": "Systems, not screens",
+        "description": "We design component systems that scale with the product — so the tenth screen is as considered as the first."
+      }
+    ]
+  },
   "servicesTitle": "UI/UX Design Services",
   "services": [
     {
-      "title": "Product Design",
-      "description": "End-to-end UX from discovery to polished interface, built around how your users actually make decisions and take action.",
+      "title": "Product UX and flow design",
+      "description": "User flows, information architecture, and interaction design for products that need to feel intuitive on first contact — not after onboarding.",
       "iconKey": "palette"
     },
     {
-      "title": "Design Systems",
-      "description": "Build a visual language and component library that makes your product faster to ship and consistent to trust across every surface.",
+      "title": "Interface design and design systems",
+      "description": "Component libraries, visual systems, and screen design built to be consistent, scalable, and fast for engineering to implement.",
       "iconKey": "layout"
     },
     {
-      "title": "User Research",
-      "description": "Structured discovery sessions, prototype testing, and insight synthesis that reduce the guesswork in every product decision.",
-      "iconKey": "search"
+      "title": "Mobile and cross-platform design",
+      "description": "iOS, Android, and responsive web — designed as one coherent experience, not three separate projects adapted from each other.",
+      "iconKey": "smartphone"
     },
     {
-      "title": "Prototyping & Flows",
-      "description": "High-fidelity prototypes and interaction flows that prove ideas before engineering begins — so no sprint starts on a bad assumption.",
-      "iconKey": "pointer"
+      "title": "Admin and operator interfaces",
+      "description": "Dashboards, control surfaces, and data-heavy interfaces designed for the people who run the product — not just the people who buy it.",
+      "iconKey": "layoutDashboard"
     }
-  ]
+  ],
+  "pageTestimonial": {
+    "label": "Client perspective",
+    "quote": "The work made a technically complex drone business easier to understand and easier to trust. Website, product UX, and supporting assets finally reinforced the same story instead of fragmenting it.",
+    "name": "General Aeronautics engagement",
+    "attribution": "Aviation Technology"
+  },
+  "secondaryCtaLabel": "See how we'd approach your product",
+  "secondaryCtaHref": "/#process"
 }

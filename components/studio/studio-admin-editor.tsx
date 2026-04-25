@@ -1742,6 +1742,58 @@ export function StudioAdminEditor({
 
                 <Card>
                   <CardHeader>
+                    <CardTitle className="text-body-lg">Best fit section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Label">
+                      <input className={formControlClassName} value={aiNativeEngineeringDraft.bestFit?.label ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, bestFit: { label: event.target.value, description: aiNativeEngineeringDraft.bestFit?.description ?? "" } })} />
+                    </Field>
+                    <Field label="Description">
+                      <textarea className={textareaClassName} value={aiNativeEngineeringDraft.bestFit?.description ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, bestFit: { label: aiNativeEngineeringDraft.bestFit?.label ?? "", description: event.target.value } })} />
+                    </Field>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Approach section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Label">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.approach?.label ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { label: event.target.value, headline: aiNativeEngineeringDraft.approach?.headline ?? "", principles: aiNativeEngineeringDraft.approach?.principles ?? [] } })} />
+                      </Field>
+                      <Field label="Headline">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.approach?.headline ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { label: aiNativeEngineeringDraft.approach?.label ?? "", headline: event.target.value, principles: aiNativeEngineeringDraft.approach?.principles ?? [] } })} />
+                      </Field>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">Principles</p>
+                        <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { label: aiNativeEngineeringDraft.approach?.label ?? "", headline: aiNativeEngineeringDraft.approach?.headline ?? "", principles: [...(aiNativeEngineeringDraft.approach?.principles ?? []), { title: "", description: "" }] } })}>Add principle</Button>
+                      </div>
+                      {(aiNativeEngineeringDraft.approach?.principles ?? []).map((principle, index) => (
+                        <Card key={`ane-principle-${index}`}>
+                          <CardHeader className="flex flex-row items-center justify-between gap-3">
+                            <CardTitle className="text-body-lg">Principle {index + 1}</CardTitle>
+                            <Button type="button" variant="secondary" size="sm" onClick={() => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { ...aiNativeEngineeringDraft.approach!, principles: removeAt(aiNativeEngineeringDraft.approach!.principles, index) } })}>Remove</Button>
+                          </CardHeader>
+                          <CardContent className="space-y-4 pb-6">
+                            <Field label="Title">
+                              <input className={formControlClassName} value={principle.title} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { ...aiNativeEngineeringDraft.approach!, principles: replaceAt(aiNativeEngineeringDraft.approach!.principles, index, { ...principle, title: event.target.value }) } })} />
+                            </Field>
+                            <Field label="Description">
+                              <textarea className={textareaClassName} value={principle.description} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, approach: { ...aiNativeEngineeringDraft.approach!, principles: replaceAt(aiNativeEngineeringDraft.approach!.principles, index, { ...principle, description: event.target.value }) } })} />
+                            </Field>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
                     <CardTitle className="text-body-lg">Services section</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4 pb-6">
@@ -1769,9 +1821,9 @@ export function StudioAdminEditor({
                             <Field label="Icon key">
                               <select className={formControlClassName} value={service.iconKey} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, services: replaceAt(aiNativeEngineeringDraft.services, index, { ...service, iconKey: event.target.value as StudioAiNativeEngineeringServiceItem["iconKey"] }) })}>
                                 <option value="cpu">cpu</option>
-                                <option value="code">code</option>
-                                <option value="workflow">workflow</option>
-                                <option value="layers">layers</option>
+                                <option value="database">database</option>
+                                <option value="bot">bot</option>
+                                <option value="cloud">cloud</option>
                               </select>
                             </Field>
                           </CardContent>
@@ -1831,6 +1883,43 @@ export function StudioAdminEditor({
                           </CardContent>
                         </Card>
                       ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Page testimonial</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Label">
+                      <input className={formControlClassName} value={aiNativeEngineeringDraft.pageTestimonial?.label ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, pageTestimonial: { label: event.target.value, quote: aiNativeEngineeringDraft.pageTestimonial?.quote ?? "", name: aiNativeEngineeringDraft.pageTestimonial?.name ?? "", attribution: aiNativeEngineeringDraft.pageTestimonial?.attribution ?? "" } })} />
+                    </Field>
+                    <Field label="Quote">
+                      <textarea className={textareaClassName} value={aiNativeEngineeringDraft.pageTestimonial?.quote ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, pageTestimonial: { label: aiNativeEngineeringDraft.pageTestimonial?.label ?? "", quote: event.target.value, name: aiNativeEngineeringDraft.pageTestimonial?.name ?? "", attribution: aiNativeEngineeringDraft.pageTestimonial?.attribution ?? "" } })} />
+                    </Field>
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Name">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.pageTestimonial?.name ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, pageTestimonial: { label: aiNativeEngineeringDraft.pageTestimonial?.label ?? "", quote: aiNativeEngineeringDraft.pageTestimonial?.quote ?? "", name: event.target.value, attribution: aiNativeEngineeringDraft.pageTestimonial?.attribution ?? "" } })} />
+                      </Field>
+                      <Field label="Attribution">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.pageTestimonial?.attribution ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, pageTestimonial: { label: aiNativeEngineeringDraft.pageTestimonial?.label ?? "", quote: aiNativeEngineeringDraft.pageTestimonial?.quote ?? "", name: aiNativeEngineeringDraft.pageTestimonial?.name ?? "", attribution: event.target.value } })} />
+                      </Field>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Secondary CTA</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Label">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.secondaryCtaLabel ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, secondaryCtaLabel: event.target.value })} />
+                      </Field>
+                      <Field label="Href">
+                        <input className={formControlClassName} value={aiNativeEngineeringDraft.secondaryCtaHref ?? ""} onChange={(event) => setAiNativeEngineeringDraft({ ...aiNativeEngineeringDraft, secondaryCtaHref: event.target.value })} />
+                      </Field>
                     </div>
                   </CardContent>
                 </Card>
@@ -1922,6 +2011,174 @@ export function StudioAdminEditor({
                           }
                         />
                       </Field>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Best fit section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Label">
+                      <input
+                        className={formControlClassName}
+                        value={digitalMarketingDraft.bestFit?.label ?? ""}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            bestFit: {
+                              label: event.target.value,
+                              description: digitalMarketingDraft.bestFit?.description ?? "",
+                            },
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label="Description">
+                      <textarea
+                        className={textareaClassName}
+                        value={digitalMarketingDraft.bestFit?.description ?? ""}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            bestFit: {
+                              label: digitalMarketingDraft.bestFit?.label ?? "",
+                              description: event.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </Field>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Approach section</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Label">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.approach?.label ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              approach: {
+                                label: event.target.value,
+                                headline: digitalMarketingDraft.approach?.headline ?? "",
+                                principles: digitalMarketingDraft.approach?.principles ?? [],
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="Headline">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.approach?.headline ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              approach: {
+                                label: digitalMarketingDraft.approach?.label ?? "",
+                                headline: event.target.value,
+                                principles: digitalMarketingDraft.approach?.principles ?? [],
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                          Principles
+                        </p>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          onClick={() =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              approach: {
+                                label: digitalMarketingDraft.approach?.label ?? "",
+                                headline: digitalMarketingDraft.approach?.headline ?? "",
+                                principles: [
+                                  ...(digitalMarketingDraft.approach?.principles ?? []),
+                                  { title: "", description: "" },
+                                ],
+                              },
+                            })
+                          }
+                        >
+                          Add principle
+                        </Button>
+                      </div>
+                      {(digitalMarketingDraft.approach?.principles ?? []).map((principle, index) => (
+                        <Card key={`dm-principle-${index}`}>
+                          <CardHeader className="flex flex-row items-center justify-between gap-3">
+                            <CardTitle className="text-body-lg">Principle {index + 1}</CardTitle>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() =>
+                                setDigitalMarketingDraft({
+                                  ...digitalMarketingDraft,
+                                  approach: {
+                                    ...digitalMarketingDraft.approach!,
+                                    principles: removeAt(digitalMarketingDraft.approach!.principles, index),
+                                  },
+                                })
+                              }
+                            >
+                              Remove
+                            </Button>
+                          </CardHeader>
+                          <CardContent className="space-y-4 pb-6">
+                            <Field label="Title">
+                              <input
+                                className={formControlClassName}
+                                value={principle.title}
+                                onChange={(event) =>
+                                  setDigitalMarketingDraft({
+                                    ...digitalMarketingDraft,
+                                    approach: {
+                                      ...digitalMarketingDraft.approach!,
+                                      principles: replaceAt(digitalMarketingDraft.approach!.principles, index, {
+                                        ...principle,
+                                        title: event.target.value,
+                                      }),
+                                    },
+                                  })
+                                }
+                              />
+                            </Field>
+                            <Field label="Description">
+                              <textarea
+                                className={textareaClassName}
+                                value={principle.description}
+                                onChange={(event) =>
+                                  setDigitalMarketingDraft({
+                                    ...digitalMarketingDraft,
+                                    approach: {
+                                      ...digitalMarketingDraft.approach!,
+                                      principles: replaceAt(digitalMarketingDraft.approach!.principles, index, {
+                                        ...principle,
+                                        description: event.target.value,
+                                      }),
+                                    },
+                                  })
+                                }
+                              />
+                            </Field>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
@@ -2237,6 +2494,117 @@ export function StudioAdminEditor({
                     </div>
                   </CardContent>
                 </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Page testimonial</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <Field label="Label">
+                      <input
+                        className={formControlClassName}
+                        value={digitalMarketingDraft.pageTestimonial?.label ?? ""}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            pageTestimonial: {
+                              label: event.target.value,
+                              quote: digitalMarketingDraft.pageTestimonial?.quote ?? "",
+                              name: digitalMarketingDraft.pageTestimonial?.name ?? "",
+                              attribution: digitalMarketingDraft.pageTestimonial?.attribution ?? "",
+                            },
+                          })
+                        }
+                      />
+                    </Field>
+                    <Field label="Quote">
+                      <textarea
+                        className={textareaClassName}
+                        value={digitalMarketingDraft.pageTestimonial?.quote ?? ""}
+                        onChange={(event) =>
+                          setDigitalMarketingDraft({
+                            ...digitalMarketingDraft,
+                            pageTestimonial: {
+                              label: digitalMarketingDraft.pageTestimonial?.label ?? "",
+                              quote: event.target.value,
+                              name: digitalMarketingDraft.pageTestimonial?.name ?? "",
+                              attribution: digitalMarketingDraft.pageTestimonial?.attribution ?? "",
+                            },
+                          })
+                        }
+                      />
+                    </Field>
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Name">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.pageTestimonial?.name ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              pageTestimonial: {
+                                label: digitalMarketingDraft.pageTestimonial?.label ?? "",
+                                quote: digitalMarketingDraft.pageTestimonial?.quote ?? "",
+                                name: event.target.value,
+                                attribution: digitalMarketingDraft.pageTestimonial?.attribution ?? "",
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="Attribution">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.pageTestimonial?.attribution ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              pageTestimonial: {
+                                label: digitalMarketingDraft.pageTestimonial?.label ?? "",
+                                quote: digitalMarketingDraft.pageTestimonial?.quote ?? "",
+                                name: digitalMarketingDraft.pageTestimonial?.name ?? "",
+                                attribution: event.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-body-lg">Secondary CTA</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 pb-6">
+                    <div className="grid gap-4 lg:grid-cols-2">
+                      <Field label="Label">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.secondaryCtaLabel ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              secondaryCtaLabel: event.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+                      <Field label="Href">
+                        <input
+                          className={formControlClassName}
+                          value={digitalMarketingDraft.secondaryCtaHref ?? ""}
+                          onChange={(event) =>
+                            setDigitalMarketingDraft({
+                              ...digitalMarketingDraft,
+                              secondaryCtaHref: event.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+                    </div>
+                  </CardContent>
+                </Card>
             <StickySaveBar label="Save Digital Marketing" previewHref="/digital-marketing" />
           </form>
               )}
@@ -2316,6 +2684,174 @@ export function StudioAdminEditor({
                               }
                             />
                           </Field>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Best fit section</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <Field label="Label">
+                          <input
+                            className={formControlClassName}
+                            value={uiuxDesignDraft.bestFit?.label ?? ""}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                bestFit: {
+                                  label: event.target.value,
+                                  description: uiuxDesignDraft.bestFit?.description ?? "",
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field label="Description">
+                          <textarea
+                            className={textareaClassName}
+                            value={uiuxDesignDraft.bestFit?.description ?? ""}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                bestFit: {
+                                  label: uiuxDesignDraft.bestFit?.label ?? "",
+                                  description: event.target.value,
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Approach section</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="Label">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.approach?.label ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  approach: {
+                                    label: event.target.value,
+                                    headline: uiuxDesignDraft.approach?.headline ?? "",
+                                    principles: uiuxDesignDraft.approach?.principles ?? [],
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Headline">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.approach?.headline ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  approach: {
+                                    label: uiuxDesignDraft.approach?.label ?? "",
+                                    headline: event.target.value,
+                                    principles: uiuxDesignDraft.approach?.principles ?? [],
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between gap-3">
+                            <p className="text-label-sm uppercase tracking-[0.16em] text-[var(--color-text-tertiary)]">
+                              Principles
+                            </p>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              onClick={() =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  approach: {
+                                    label: uiuxDesignDraft.approach?.label ?? "",
+                                    headline: uiuxDesignDraft.approach?.headline ?? "",
+                                    principles: [
+                                      ...(uiuxDesignDraft.approach?.principles ?? []),
+                                      { title: "", description: "" },
+                                    ],
+                                  },
+                                })
+                              }
+                            >
+                              Add principle
+                            </Button>
+                          </div>
+                          {(uiuxDesignDraft.approach?.principles ?? []).map((principle, index) => (
+                            <Card key={`uiux-principle-${index}`}>
+                              <CardHeader className="flex flex-row items-center justify-between gap-3">
+                                <CardTitle className="text-body-lg">Principle {index + 1}</CardTitle>
+                                <Button
+                                  type="button"
+                                  variant="secondary"
+                                  size="sm"
+                                  onClick={() =>
+                                    setUiuxDesignDraft({
+                                      ...uiuxDesignDraft,
+                                      approach: {
+                                        ...uiuxDesignDraft.approach!,
+                                        principles: removeAt(uiuxDesignDraft.approach!.principles, index),
+                                      },
+                                    })
+                                  }
+                                >
+                                  Remove
+                                </Button>
+                              </CardHeader>
+                              <CardContent className="space-y-4 pb-6">
+                                <Field label="Title">
+                                  <input
+                                    className={formControlClassName}
+                                    value={principle.title}
+                                    onChange={(event) =>
+                                      setUiuxDesignDraft({
+                                        ...uiuxDesignDraft,
+                                        approach: {
+                                          ...uiuxDesignDraft.approach!,
+                                          principles: replaceAt(uiuxDesignDraft.approach!.principles, index, {
+                                            ...principle,
+                                            title: event.target.value,
+                                          }),
+                                        },
+                                      })
+                                    }
+                                  />
+                                </Field>
+                                <Field label="Description">
+                                  <textarea
+                                    className={textareaClassName}
+                                    value={principle.description}
+                                    onChange={(event) =>
+                                      setUiuxDesignDraft({
+                                        ...uiuxDesignDraft,
+                                        approach: {
+                                          ...uiuxDesignDraft.approach!,
+                                          principles: replaceAt(uiuxDesignDraft.approach!.principles, index, {
+                                            ...principle,
+                                            description: event.target.value,
+                                          }),
+                                        },
+                                      })
+                                    }
+                                  />
+                                </Field>
+                              </CardContent>
+                            </Card>
+                          ))}
                         </div>
                       </CardContent>
                     </Card>
@@ -2427,8 +2963,8 @@ export function StudioAdminEditor({
                                     >
                                       <option value="palette">palette</option>
                                       <option value="layout">layout</option>
-                                      <option value="search">search</option>
-                                      <option value="pointer">pointer</option>
+                                      <option value="smartphone">smartphone</option>
+                                      <option value="layoutDashboard">layoutDashboard</option>
                                     </select>
                                   </Field>
                                 </CardContent>
@@ -2612,6 +3148,117 @@ export function StudioAdminEditor({
                               </Card>
                             ),
                           )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Page testimonial</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <Field label="Label">
+                          <input
+                            className={formControlClassName}
+                            value={uiuxDesignDraft.pageTestimonial?.label ?? ""}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                pageTestimonial: {
+                                  label: event.target.value,
+                                  quote: uiuxDesignDraft.pageTestimonial?.quote ?? "",
+                                  name: uiuxDesignDraft.pageTestimonial?.name ?? "",
+                                  attribution: uiuxDesignDraft.pageTestimonial?.attribution ?? "",
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+                        <Field label="Quote">
+                          <textarea
+                            className={textareaClassName}
+                            value={uiuxDesignDraft.pageTestimonial?.quote ?? ""}
+                            onChange={(event) =>
+                              setUiuxDesignDraft({
+                                ...uiuxDesignDraft,
+                                pageTestimonial: {
+                                  label: uiuxDesignDraft.pageTestimonial?.label ?? "",
+                                  quote: event.target.value,
+                                  name: uiuxDesignDraft.pageTestimonial?.name ?? "",
+                                  attribution: uiuxDesignDraft.pageTestimonial?.attribution ?? "",
+                                },
+                              })
+                            }
+                          />
+                        </Field>
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="Name">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.pageTestimonial?.name ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  pageTestimonial: {
+                                    label: uiuxDesignDraft.pageTestimonial?.label ?? "",
+                                    quote: uiuxDesignDraft.pageTestimonial?.quote ?? "",
+                                    name: event.target.value,
+                                    attribution: uiuxDesignDraft.pageTestimonial?.attribution ?? "",
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Attribution">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.pageTestimonial?.attribution ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  pageTestimonial: {
+                                    label: uiuxDesignDraft.pageTestimonial?.label ?? "",
+                                    quote: uiuxDesignDraft.pageTestimonial?.quote ?? "",
+                                    name: uiuxDesignDraft.pageTestimonial?.name ?? "",
+                                    attribution: event.target.value,
+                                  },
+                                })
+                              }
+                            />
+                          </Field>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-body-lg">Secondary CTA</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4 pb-6">
+                        <div className="grid gap-4 lg:grid-cols-2">
+                          <Field label="Label">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.secondaryCtaLabel ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  secondaryCtaLabel: event.target.value,
+                                })
+                              }
+                            />
+                          </Field>
+                          <Field label="Href">
+                            <input
+                              className={formControlClassName}
+                              value={uiuxDesignDraft.secondaryCtaHref ?? ""}
+                              onChange={(event) =>
+                                setUiuxDesignDraft({
+                                  ...uiuxDesignDraft,
+                                  secondaryCtaHref: event.target.value,
+                                })
+                              }
+                            />
+                          </Field>
                         </div>
                       </CardContent>
                     </Card>

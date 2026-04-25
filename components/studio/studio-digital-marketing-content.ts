@@ -28,13 +28,41 @@ export type StudioDigitalMarketingServiceItem = {
   iconKey: "megaphone" | "layout" | "penTool" | "lineChart";
 };
 
+export type StudioDigitalMarketingBestFit = {
+  label: string;
+  description: string;
+};
+
+export type StudioDigitalMarketingApproachPrinciple = {
+  title: string;
+  description: string;
+};
+
+export type StudioDigitalMarketingApproach = {
+  label: string;
+  headline: string;
+  principles: StudioDigitalMarketingApproachPrinciple[];
+};
+
+export type StudioDigitalMarketingPageTestimonial = {
+  label: string;
+  quote: string;
+  name: string;
+  attribution: string;
+};
+
 export type StudioDigitalMarketingContent = {
   hero: StudioDigitalMarketingHeroContent;
+  bestFit?: StudioDigitalMarketingBestFit;
   caseStudiesTitle: string;
   caseStudiesDescription: string;
   caseStudies: StudioDigitalMarketingCaseStudy[];
+  approach?: StudioDigitalMarketingApproach;
   servicesTitle: string;
   services: StudioDigitalMarketingServiceItem[];
+  pageTestimonial?: StudioDigitalMarketingPageTestimonial;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
 };
 
 // JSON-backed contract keeps Digital Marketing content aligned across local fallback, Supabase, and the internal editor.

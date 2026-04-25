@@ -1,10 +1,14 @@
 {
   "hero": {
-    "title": "AI-Native Engineering",
-    "subtitle": "End-to-end build, shipped right",
-    "description": "Product strategy, AI-native apps, and launch-ready engineering for B2B and B2C teams — one connected system from brief to build.",
+    "title": "Build AI into the product. Not on top of it.",
+    "subtitle": "AI-Native Engineering",
+    "description": "We design and ship AI systems that are native to the product — shaping how it works, adapts, and delivers value.",
     "ctaLabel": "Start Your Project",
     "ctaHref": "/#process"
+  },
+  "bestFit": {
+    "label": "Best fit",
+    "description": "Founders building products where AI is the core experience — not a feature. Especially teams moving from prototype to production, or replacing brittle integrations with something that actually scales."
   },
   "caseStudiesTitle": "AI-Native Engineering Case Studies",
   "caseStudiesDescription": "Proof from AI product builds, copilot deployments, and full-stack systems shipped for founders moving fast.",
@@ -100,50 +104,83 @@
       }
     },
     {
-      "slug": "yuvanext",
-      "title": "YuvaNext",
-      "description": "Built the AI-powered coaching and career intelligence system connecting youth talent to structured learning and professional growth.",
-      "category": "EdTech AI",
-      "services": ["AI Architecture", "Full-Stack Engineering", "Product Strategy"],
+      "slug": "tvam",
+      "title": "tvam",
+      "description": "Unified product narrative and campaign touchpoints to improve trust, response quality, and acquisition efficiency.",
+      "category": "Health Insurance AI",
+      "services": ["AI Integration", "Product Engineering", "Cloud Deployment"],
       "outcomes": [
-        "Built an AI coaching system connecting youth to structured career pathways.",
-        "Reduced career counselor workload through intelligent question routing.",
-        "Improved learner engagement with personalized learning recommendations.",
-        "Delivered a scalable platform ready for institutional partnerships."
+        "Unified product messaging across all digital touchpoints.",
+        "Improved lead quality through clearer positioning on landing pages.",
+        "Reduced cost-per-acquisition with tighter campaign targeting.",
+        "Built a scalable analytics foundation for ongoing optimization."
       ],
+      "thumbnailSrc": "/assets/tvam/cover-summary.png",
       "ctaLabel": "View Case Study",
+      "workGallery": [
+        { "src": "/assets/tvam/cover-home.png", "alt": "Website cover", "label": "WEBSITE COVER" },
+        { "src": "/assets/tvam/mock1.png", "alt": "Product interface", "label": "PRODUCT INTERFACE" },
+        { "src": "/assets/tvam/mock2.png", "alt": "UI design", "label": "UI DESIGN" },
+        { "src": "/assets/tvam/mock3.png", "alt": "Campaign mock", "label": "CAMPAIGN MOCK" }
+      ],
       "proofPoints": [
-        { "iconKey": "bot", "title": "AI-powered career coaching", "description": "Built an intelligent system that connected youth to structured pathways through personalised question routing." },
-        { "iconKey": "sparkles", "title": "Improved learner engagement", "description": "Personalised recommendations kept learners on track and reduced dropout through adaptive coaching flows." },
-        { "iconKey": "layoutGrid", "title": "Institutional-ready platform", "description": "Delivered a scalable architecture ready for partnerships with educational institutions and employers." }
+        { "iconKey": "sparkles", "title": "Unified product messaging", "description": "Aligned all digital touchpoints around a clearer product narrative that improved trust and response quality." },
+        { "iconKey": "layoutGrid", "title": "Improved acquisition efficiency", "description": "Tighter campaign targeting reduced cost-per-acquisition while clearer positioning improved lead quality." },
+        { "iconKey": "barChart3", "title": "Scalable analytics foundation", "description": "Set up tracking and insight loops that turned campaign data into smarter, faster growth decisions." }
       ],
       "testimonial": {
-        "quote": "The platform changed how we thought about career guidance. The AI routing made it feel less like a form and more like a conversation that actually went somewhere.",
-        "attribution": "YuvaNext team"
+        "quote": "Partnering with Yuvabe Studios for over a year, we've seen exceptional results. Their deep understanding of our vision and customer segments, combined with prompt responsiveness, has strengthened our brand.",
+        "attribution": "Aruna Sampige, tvam Technologies Pvt. Ltd."
       }
     }
   ],
+  "approach": {
+    "label": "How we build it",
+    "headline": "AI that works in production, not just in demos.",
+    "principles": [
+      {
+        "title": "Product-first, AI-second",
+        "description": "We start with what the user actually needs to do, then decide where AI creates the most leverage. Not the other way around."
+      },
+      {
+        "title": "Built to be reliable",
+        "description": "Retrieval, orchestration, validation, fallback. We build the infrastructure that makes AI behaviour predictable at scale."
+      },
+      {
+        "title": "Shipped, not prototyped",
+        "description": "Every AI workstream is paired with the cloud infrastructure, deployment pipelines, and scaling patterns it needs to stay up in production — not just pass a demo."
+      }
+    ]
+  },
   "servicesTitle": "AI-Native Engineering Services",
   "services": [
     {
-      "title": "AI Product Strategy",
-      "description": "Shape where AI creates real leverage in your product: agent flows, copilot entry points, and automation layers that stay maintainable as the product grows.",
+      "title": "AI product architecture",
+      "description": "Designing the AI layer before writing the first line of code. Model selection, retrieval strategy, orchestration, and the system logic that holds it together.",
       "iconKey": "cpu"
     },
     {
-      "title": "Full-Stack Engineering",
-      "description": "End-to-end engineering from backend API to frontend interface, scoped to production standards from the first sprint.",
-      "iconKey": "code"
+      "title": "RAG and retrieval systems",
+      "description": "Vector search, document ingestion, and retrieval pipelines that give AI the right context at the right moment — without hallucinating the rest.",
+      "iconKey": "database"
     },
     {
-      "title": "AI Workflow Design",
-      "description": "Design and deploy the workflow systems that make your AI product repeatable, trainable, and safe at scale.",
-      "iconKey": "workflow"
+      "title": "LLM integration and orchestration",
+      "description": "GPT, Claude, Gemini, or open-source — integrated into product flows with prompt engineering, output validation, and fallback logic built in.",
+      "iconKey": "bot"
     },
     {
-      "title": "Technical Architecture",
-      "description": "Platform decisions, tech stack selection, and system design that keeps your product adaptable as requirements evolve.",
-      "iconKey": "layers"
+      "title": "Cloud infrastructure and deployment",
+      "description": "CI/CD pipelines, secure cloud deployment, and scalable backend architecture. AI products that stay up, stay fast, and stay auditable.",
+      "iconKey": "cloud"
     }
-  ]
+  ],
+  "pageTestimonial": {
+    "label": "Client perspective",
+    "quote": "What mattered most here was orchestration. Multiple AI tools, retrieval workflows, and cloud systems were brought into one product experience that felt useful, reliable, and much easier to navigate.",
+    "name": "TVAM engagement",
+    "attribution": "Health Insurance AI"
+  },
+  "secondaryCtaLabel": "See how we'd approach your build",
+  "secondaryCtaHref": "/#process"
 }
