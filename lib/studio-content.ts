@@ -6,6 +6,7 @@ import path from "node:path";
 import { unstable_noStore as noStore } from "next/cache";
 
 import {
+  homepageCaseStudyIds,
   isStudioCaseStudyId,
   type StudioCaseStudyGalleryItem,
   type StudioCaseStudyGalleryRow,
@@ -1910,6 +1911,18 @@ export async function getStudioCaseStudies(options?: StudioContentOptions) {
     const payload = await readContentDocument("case_studies");
     if (Array.isArray(payload)) {
       supabaseEntries = parseEntries(payload);
+
+      // Self-heal: strip IDs that aren't in the shared-safe set so older builds
+      // of other sites using the same Supabase DB (which validate against a fixed
+      // list) don't crash on unknown IDs. Fire-and-forget to never block reads.
+      const safeSet = new Set<string>(homepageCaseStudyIds);
+      const safeEntries = supabaseEntries.filter((cs) => safeSet.has(cs.id));
+      if (safeEntries.length !== supabaseEntries.length) {
+        writeContentDocument("case_studies", safeEntries).catch((err) =>
+          console.warn("Failed to clean up case_studies in Supabase.", err),
+        );
+        supabaseEntries = safeEntries;
+      }
     }
   } catch (error) {
     if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) {
@@ -1948,20 +1961,38 @@ export async function saveStudioCaseStudy(
     throw new Error(`Case study "${id}" was not found.`);
   }
 
-  const currentCaseStudy = caseStudies[caseStudyIndex];
-  const nextCaseStudies = [...caseStudies];
-  nextCaseStudies[caseStudyIndex] = {
-    ...currentCaseStudy,
-    ...updates,
-  };
-
-  await saveStudioContentDocument(
-    "case_studies",
-    caseStudiesFilePath,
-    nextCaseStudies,
-    options,
+  const updatedEntry = { ...caseStudies[caseStudyIndex], ...updates };
+  const nextCaseStudies = caseStudies.map((cs, i) =>
+    i === caseStudyIndex ? updatedEntry : cs,
   );
-  return nextCaseStudies[caseStudyIndex];
+
+  const contentSource = options?.source ?? getStudioContentSource();
+
+  if (contentSource === "local") {
+    await writeJsonFile(caseStudiesFilePath, nextCaseStudies);
+    return updatedEntry;
+  }
+
+  // When writing to the shared Supabase DB, restrict to the safe-set of IDs
+  // (homepageCaseStudyIds) so older builds of other sites that validate against
+  // a fixed list never encounter an unknown ID.
+  const safeSet = new Set<string>(homepageCaseStudyIds);
+  const supabasePayload = nextCaseStudies.filter((cs) => safeSet.has(cs.id));
+
+  try {
+    await writeContentDocument("case_studies", supabasePayload);
+  } catch (error) {
+    if (contentSource === "supabase" || !shouldUseLocalContentFallback(error)) {
+      throw error;
+    }
+    console.warn(
+      "Saved case_studies content locally because Supabase could not be reached.",
+      error,
+    );
+    await writeJsonFile(caseStudiesFilePath, nextCaseStudies);
+  }
+
+  return updatedEntry;
 }
 
 function parseServiceCaseStudyBase(value: unknown, label: string) {
